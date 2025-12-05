@@ -183,10 +183,11 @@ const Calculator: React.FC<CalculatorProps> = ({ onComplete }) => {
                 <p className="text-gray-500 text-lg">Куда отправить смету с разбивкой цен?</p>
             </div>
             
-            <div className="grid grid-cols-3 gap-3 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
               {[
                   {id: 'WhatsApp', label: 'WhatsApp', color: 'bg-[#25D366] text-white', ring: 'ring-[#25D366]/30'}, 
                   {id: 'Telegram', label: 'Telegram', color: 'bg-[#229ED9] text-white', ring: 'ring-[#229ED9]/30'}, 
+                  {id: 'MAX', label: 'MAX', color: 'bg-purple-600 text-white', ring: 'ring-purple-600/30'},
                   {id: 'Звонок', label: 'Звонок', color: 'bg-slate-800 text-white', ring: 'ring-slate-800/30'}
                 ].map(m => (
                 <button

@@ -117,8 +117,8 @@ export const Hero = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) =>
 
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">Куда прислать расчет?</label>
-                    <div className="grid grid-cols-3 gap-2">
-                        {['call', 'whatsapp', 'telegram'].map((m) => (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {['call', 'whatsapp', 'telegram', 'max'].map((m) => (
                              <button 
                                 key={m}
                                 type="button"
@@ -132,6 +132,7 @@ export const Hero = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) =>
                                  {m === 'call' && 'Звонок'}
                                  {m === 'whatsapp' && 'WhatsApp'}
                                  {m === 'telegram' && 'Telegram'}
+                                 {m === 'max' && 'MAX'}
                              </button>
                         ))}
                     </div>

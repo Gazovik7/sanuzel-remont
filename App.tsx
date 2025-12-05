@@ -128,8 +128,8 @@ function App() {
                 
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-400 uppercase tracking-wide ml-1">Как ответить?</label>
-                    <div className="grid grid-cols-3 gap-2">
-                        {['call', 'whatsapp', 'telegram'].map((m) => (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {['call', 'whatsapp', 'telegram', 'max'].map((m) => (
                             <button 
                                 key={m}
                                 type="button" 
@@ -143,6 +143,7 @@ function App() {
                                 {m === 'call' && 'Звонок'}
                                 {m === 'whatsapp' && 'WhatsApp'}
                                 {m === 'telegram' && 'Telegram'}
+                                {m === 'max' && 'MAX'}
                             </button>
                         ))}
                     </div>
@@ -172,16 +173,16 @@ function App() {
               <button onClick={() => setMobileMenuOpen(false)}><X className="w-6 h-6 text-gray-400 hover:text-gray-900" /></button>
            </div>
            <div className="flex flex-col p-6 space-y-6">
-              <nav className="flex flex-col space-y-4">
-                <button onClick={() => scrollToSection('portfolio')} className="text-left font-medium text-lg text-gray-600 hover:text-blue-600 transition-colors">Примеры работ</button>
-                <button onClick={() => scrollToSection('why-us')} className="text-left font-medium text-lg text-gray-600 hover:text-blue-600 transition-colors">Преимущества</button>
-                <button onClick={() => scrollToSection('calculator-section')} className="text-left font-medium text-lg text-gray-600 hover:text-blue-600 transition-colors">Калькулятор</button>
-                <button onClick={() => scrollToSection('packages')} className="text-left font-medium text-lg text-gray-600 hover:text-blue-600 transition-colors">Стоимость</button>
-                <button onClick={() => scrollToSection('reviews')} className="text-left font-medium text-lg text-gray-600 hover:text-blue-600 transition-colors">Отзывы</button>
+              <nav className="flex flex-col space-y-4 font-heading">
+                <button onClick={() => scrollToSection('portfolio')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors">Примеры работ</button>
+                <button onClick={() => scrollToSection('why-us')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors">Преимущества</button>
+                <button onClick={() => scrollToSection('calculator-section')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors">Калькулятор</button>
+                <button onClick={() => scrollToSection('packages')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors">Стоимость</button>
+                <button onClick={() => scrollToSection('reviews')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors">Отзывы</button>
               </nav>
               
               <div className="pt-8 border-t border-gray-100 mt-auto">
-                <a href={`tel:${COMPANY_PHONE}`} className="flex items-center gap-3 text-xl font-bold text-slate-900 mb-6">
+                <a href={`tel:${COMPANY_PHONE}`} className="flex items-center gap-3 text-xl font-heading font-bold text-slate-900 mb-6">
                   <Phone className="w-5 h-5 text-blue-600" /> {COMPANY_PHONE}
                 </a>
                 <button 
@@ -196,7 +197,7 @@ function App() {
       </div>
 
       {/* --- HEADER --- */}
-      <header className={`fixed top-0 w-full z-40 transition-all duration-500 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm py-3' : 'bg-gradient-to-b from-slate-900/80 to-transparent py-6'}`}>
+      <header className={`fixed top-0 w-full z-40 transition-all duration-500 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm py-3' : 'bg-gradient-to-b from-slate-900/90 to-transparent py-6'}`}>
         <div className="container mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
              {/* Logo */}
@@ -210,17 +211,17 @@ function App() {
           </div>
           
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-8">
-            <button onClick={() => scrollToSection('portfolio')} className={`text-sm font-extrabold tracking-wide hover:text-blue-500 transition-all ${scrolled ? 'text-slate-800' : 'text-white [text-shadow:_0_1px_3px_rgba(0,0,0,0.8)]'}`}>ПОРТФОЛИО</button>
-            <button onClick={() => scrollToSection('calculator-section')} className={`text-sm font-extrabold tracking-wide hover:text-blue-500 transition-all ${scrolled ? 'text-slate-800' : 'text-white [text-shadow:_0_1px_3px_rgba(0,0,0,0.8)]'}`}>КАЛЬКУЛЯТОР</button>
-            <button onClick={() => scrollToSection('packages')} className={`text-sm font-extrabold tracking-wide hover:text-blue-500 transition-all ${scrolled ? 'text-slate-800' : 'text-white [text-shadow:_0_1px_3px_rgba(0,0,0,0.8)]'}`}>ЦЕНЫ</button>
-            <button onClick={() => scrollToSection('reviews')} className={`text-sm font-extrabold tracking-wide hover:text-blue-500 transition-all ${scrolled ? 'text-slate-800' : 'text-white [text-shadow:_0_1px_3px_rgba(0,0,0,0.8)]'}`}>ОТЗЫВЫ</button>
+          <nav className="hidden lg:flex items-center gap-8 font-heading">
+            <button onClick={() => scrollToSection('portfolio')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${scrolled ? 'text-slate-800' : 'text-white'}`}>ПОРТФОЛИО</button>
+            <button onClick={() => scrollToSection('calculator-section')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${scrolled ? 'text-slate-800' : 'text-white'}`}>КАЛЬКУЛЯТОР</button>
+            <button onClick={() => scrollToSection('packages')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${scrolled ? 'text-slate-800' : 'text-white'}`}>ЦЕНЫ</button>
+            <button onClick={() => scrollToSection('reviews')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${scrolled ? 'text-slate-800' : 'text-white'}`}>ОТЗЫВЫ</button>
           </nav>
 
           {/* Actions */}
           <div className="flex items-center gap-4 lg:gap-6">
             <div className="hidden md:block text-right">
-              <a href={`tel:${COMPANY_PHONE}`} className={`block font-extrabold text-xl tracking-tight hover:text-blue-600 transition-colors ${scrolled ? 'text-slate-900' : 'text-white [text-shadow:_0_1px_4px_rgba(0,0,0,0.8)] drop-shadow-lg'}`}>
+              <a href={`tel:${COMPANY_PHONE}`} className={`block font-heading font-bold text-xl tracking-tight hover:text-blue-600 transition-colors ${scrolled ? 'text-slate-900' : 'text-white drop-shadow-sm'}`}>
                 {COMPANY_PHONE}
               </a>
             </div>
@@ -382,8 +383,8 @@ function App() {
 
               <div>
                   <label className="block text-xs font-bold text-gray-800 uppercase tracking-wide mb-2 ml-1">Как удобнее ответить?</label>
-                  <div className="grid grid-cols-3 gap-3">
-                    {['call', 'whatsapp', 'telegram'].map((m) => (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {['call', 'whatsapp', 'telegram', 'max'].map((m) => (
                       <button 
                         key={m}
                         type="button"
@@ -397,6 +398,7 @@ function App() {
                          {m === 'call' && 'Звонок'}
                          {m === 'whatsapp' && 'WhatsApp'}
                          {m === 'telegram' && 'Telegram'}
+                         {m === 'max' && 'MAX'}
                       </button>
                     ))}
                   </div>
