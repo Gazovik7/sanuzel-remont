@@ -3,7 +3,21 @@ import React, { useState, useEffect } from 'react';
 import { CheckCircle, Clock, FileText, Shield, ArrowRight, Star, Zap } from 'lucide-react';
 import { formatPhone } from '../constants';
 
-export const Hero = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) => {
+interface HeroProps {
+  onFormSubmit: (data: any) => void;
+  title?: string;
+  subtitle?: React.ReactNode;
+  badgeText?: string;
+  backgroundImage?: string;
+}
+
+export const Hero: React.FC<HeroProps> = ({ 
+  onFormSubmit, 
+  title = "Ремонт ванной комнаты", 
+  subtitle = <><span className="text-blue-400">Без авансов и скрытых доплат.</span> <br/><span className="text-white">Платите только за результат.</span></>,
+  badgeText = "Гарантия 10 лет по договору",
+  backgroundImage = "https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=2000"
+}) => {
   const [form, setForm] = useState({ name: '', phone: '', type: 'Ванная', method: 'call' });
   const [isVisible, setIsVisible] = useState(false);
 
@@ -21,7 +35,7 @@ export const Hero = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) =>
       {/* Background Image with Cinematic Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=2000" 
+          src={backgroundImage} 
           alt="Luxury Bathroom" 
           className="w-full h-full object-cover" 
         />
@@ -37,18 +51,17 @@ export const Hero = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) =>
           <div className={`flex-1 space-y-6 max-w-3xl transition-all duration-1000 transform ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 backdrop-blur-sm text-xs font-bold tracking-wider uppercase text-yellow-400">
                 <Star className="w-3 h-3 fill-yellow-400" />
-                Гарантия 10 лет по договору
+                {badgeText}
             </div>
             
             {/* SEO H1 */}
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-heading font-extrabold leading-tight text-white drop-shadow-lg">
-              Ремонт ванной комнаты
+              {title}
             </h1>
             
             {/* Strong USP Subheadline */}
             <div className="text-2xl md:text-3xl font-heading font-bold leading-tight">
-               <span className="text-blue-400">Без авансов и скрытых доплат.</span> <br/>
-               <span className="text-white">Платите только за результат.</span>
+               {subtitle}
             </div>
             
             <p className="text-lg text-gray-300 leading-relaxed max-w-xl border-l-2 border-blue-500 pl-6 font-sans">
@@ -58,7 +71,7 @@ export const Hero = ({ onFormSubmit }: { onFormSubmit: (data: any) => void }) =>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
               {[
                 { icon: FileText, text: "0₽ предоплата", sub: "Платите только за результат" },
-                { icon: Shield, text: "Гарантия 10 лет", sub: "Юридическая ответственность" },
+                { icon: Shield, text: "Договор и Гарантия", sub: "Юридическая ответственность" },
                 { icon: Clock, text: "Смета не растет", sub: "Фиксируем стоимость в договоре" },
                 { icon: CheckCircle, text: "Мастера РФ/РБ", sub: "Стаж строго 7+ лет" }
               ].map((item, idx) => (

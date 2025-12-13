@@ -1,10 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, Check, ChevronLeft, Calculator as CalcIcon, Home, Ruler, Layers, Sparkles } from 'lucide-react';
 import { formatPhone } from '../constants';
 
 interface CalculatorProps {
   onComplete: (data: any) => void;
+  defaultFinish?: string;
 }
 
 const steps = [
@@ -13,18 +14,22 @@ const steps = [
   { id: 'contact', title: 'Расчет' }
 ];
 
-const Calculator: React.FC<CalculatorProps> = ({ onComplete }) => {
+const Calculator: React.FC<CalculatorProps> = ({ onComplete, defaultFinish = 'Стандарт (Капитальный)' }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     type: 'Ванная комната',
     area: '',
     height: '2.5',
     condition: 'Новостройка (бетон)',
-    finish: 'Стандарт (Капитальный)',
+    finish: defaultFinish,
     name: '',
     phone: '',
     method: 'call'
   });
+
+  useEffect(() => {
+    setFormData(prev => ({ ...prev, finish: defaultFinish }));
+  }, [defaultFinish]);
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {

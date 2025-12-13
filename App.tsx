@@ -1,15 +1,18 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Phone, MessageCircle, MapPin, X, Menu, ArrowUp, Check } from 'lucide-react';
+import { Phone, MessageCircle, Menu, ArrowUp, Check, X, ChevronDown, MapPin, Users, Briefcase, FileText, Star } from 'lucide-react';
 import { Hero } from './components/Hero';
 import Calculator from './components/Calculator';
+import { PriceList } from './components/PriceList';
+import { ContactsPage } from './components/ContactsPage';
+import { Breadcrumbs } from './components/Breadcrumbs';
 import { 
   ComparisonSection, PackagesSection, PortfolioSection, 
   WhyUsSection, WorkflowSection, VisualizationSection,
   MaterialsSection, TeamSection, GuaranteeSection,
   ReviewsSection, FaqSection, GeographySection, IncludedSection, QualityControlSection
 } from './components/ContentSections';
-import { COMPANY_PHONE, COMPANY_LOGO, formatPhone } from './constants';
+import { COMPANY_PHONE, COMPANY_LOGO, COMPANY_ADDRESS, BUDGET_PACKAGES, BUDGET_PORTFOLIO, BUDGET_FAQ, PACKAGES, PORTFOLIO, FAQ } from './constants';
 
 // Animation Wrapper Component
 const RevealOnScroll = ({ children, id, className }: { children?: React.ReactNode, id?: string, className?: string }) => {
@@ -17,23 +20,99 @@ const RevealOnScroll = ({ children, id, className }: { children?: React.ReactNod
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         setIsVisible(true);
-        observer.unobserve(entry.target);
+        observer.unobserve(element);
       }
     }, { threshold: 0.1 });
 
-    if (ref.current) observer.observe(ref.current);
+    observer.observe(element);
 
     return () => {
-      if (ref.current) observer.unobserve(ref.current);
+      if (element) {
+        observer.unobserve(element);
+      }
     };
   }, []);
 
   return (
     <div id={id} ref={ref} className={`reveal ${isVisible ? 'active' : ''} ${className || ''}`}>
       {children}
+    </div>
+  );
+};
+
+// Modal Component
+const Modal = ({ isOpen, onClose, type, onSubmit }: { isOpen: boolean, onClose: () => void, type: 'callback' | 'success', onSubmit: (data: any) => void }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
+      <div className="bg-white rounded-3xl p-8 max-w-md w-full relative shadow-2xl animate-in zoom-in-95 duration-300 border border-white/20">
+        <button 
+          onClick={onClose} 
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition-colors"
+        >
+          <X className="w-6 h-6" />
+        </button>
+        
+        {type === 'success' ? (
+          <div className="text-center py-6">
+            <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6 ring-8 ring-green-50/50">
+              <Check className="w-10 h-10 text-green-600" />
+            </div>
+            <h3 className="text-2xl font-bold font-heading mb-3 text-slate-900">Заявка принята!</h3>
+            <p className="text-gray-600 mb-8 leading-relaxed">Наш менеджер свяжется с вами выбранным способом в течение 15 минут.</p>
+            <button 
+              onClick={onClose} 
+              className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors"
+            >
+              Отлично
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={(e) => { e.preventDefault(); onSubmit({}); }} className="space-y-6">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold font-heading text-slate-900 mb-2">Обсудить проект</h3>
+              <p className="text-sm text-gray-500">Оставьте контакты для связи с инженером.</p>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="space-y-1">
+                  <label className="text-xs font-bold text-gray-400 uppercase tracking-wide ml-1">Имя</label>
+                  <input type="text" placeholder="Алексей" required className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all font-medium text-slate-900" />
+              </div>
+              <div className="space-y-1">
+                  <label className="text-xs font-bold text-gray-400 uppercase tracking-wide ml-1">Телефон</label>
+                  <input type="tel" placeholder="+7 (999) 000-00-00" required className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all font-medium text-slate-900" />
+              </div>
+              
+              <div className="space-y-1">
+                  <label className="text-xs font-bold text-gray-400 uppercase tracking-wide ml-1">Как ответить?</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      {['call', 'whatsapp', 'telegram', 'max'].map((m) => (
+                          <button key={m} type="button" className="py-3 px-2 border border-gray-200 rounded-xl text-xs font-bold text-gray-500 hover:border-gray-400 hover:bg-gray-50 transition-all uppercase">
+                              {m === 'call' && 'Звонок'}
+                              {m === 'whatsapp' && 'WhatsApp'}
+                              {m === 'telegram' && 'Telegram'}
+                              {m === 'max' && 'MAX'}
+                          </button>
+                      ))}
+                  </div>
+              </div>
+            </div>
+
+            <button type="submit" className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all transform hover:-translate-y-0.5 active:scale-95">
+              Отправить заявку
+            </button>
+            <p className="text-center text-xs text-gray-400 leading-tight">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</p>
+          </form>
+        )}
+      </div>
     </div>
   );
 };
@@ -45,9 +124,82 @@ function App() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   
-  // Form states
-  const [footerForm, setFooterForm] = useState({ name: '', phone: '', method: 'call' });
-  const [modalForm, setModalForm] = useState({ name: '', phone: '', method: 'call' });
+  // -- ROUTING LOGIC (Query Params) --
+  const [isBudgetPage, setIsBudgetPage] = useState(false);
+  const [view, setView] = useState<'landing' | 'prices' | 'contacts'>('landing');
+
+  useEffect(() => {
+    // Check initial path
+    const checkPath = () => {
+      const params = new URLSearchParams(window.location.search);
+      const pageParam = params.get('page');
+      
+      if (pageParam === 'prices') {
+        setView('prices');
+        setIsBudgetPage(false);
+      } else if (pageParam === 'contacts') {
+        setView('contacts');
+        setIsBudgetPage(false);
+      } else if (pageParam === 'budget') {
+        setView('landing');
+        setIsBudgetPage(true);
+      } else {
+        setView('landing');
+        setIsBudgetPage(false);
+      }
+    };
+    checkPath();
+
+    // Handle browser back/forward buttons
+    const handlePopState = () => {
+      checkPath();
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Function to handle navigation without page reload
+  const navigate = (mode: 'premium' | 'budget' | 'prices' | 'contacts' | 'landing') => {
+    try {
+      const url = new URL(window.location.href);
+      if (mode === 'prices') {
+        url.searchParams.set('page', 'prices');
+        setView('prices');
+        setIsBudgetPage(false);
+      } else if (mode === 'contacts') {
+        url.searchParams.set('page', 'contacts');
+        setView('contacts');
+        setIsBudgetPage(false);
+      } else if (mode === 'budget') {
+        url.searchParams.set('page', 'budget');
+        setView('landing');
+        setIsBudgetPage(true);
+      } else if (mode === 'landing') {
+        url.searchParams.delete('page');
+        setView('landing');
+        setIsBudgetPage(false);
+      } else {
+        // default to premium landing
+        url.searchParams.delete('page');
+        setView('landing');
+        setIsBudgetPage(false);
+      }
+      
+      window.history.pushState({}, '', url.toString());
+    } catch (e) {
+      console.warn('URL update suppressed due to environment restrictions.');
+      // Fallback state update if URL update fails
+      if (mode === 'prices') setView('prices');
+      else if (mode === 'contacts') setView('contacts');
+      else {
+        setView('landing');
+        setIsBudgetPage(mode === 'budget');
+      }
+    }
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setMobileMenuOpen(false);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,104 +218,52 @@ function App() {
 
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    
+    if (view !== 'landing') {
+       // Navigate to landing first
+       navigate(isBudgetPage ? 'budget' : 'premium');
+       // Small delay to allow render
+       setTimeout(() => {
+         document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+       }, 100);
+    } else {
+       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
-  const Modal = () => {
-    if (!isModalOpen) return null;
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
-        <div className="bg-white rounded-3xl p-8 max-w-md w-full relative shadow-2xl animate-in zoom-in-95 duration-300 border border-white/20">
-          <button 
-            onClick={() => setIsModalOpen(false)} 
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
-          
-          {modalType === 'success' ? (
-            <div className="text-center py-6">
-              <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6 ring-8 ring-green-50/50">
-                <Check className="w-10 h-10 text-green-600" />
-              </div>
-              <h3 className="text-2xl font-bold font-heading mb-3 text-slate-900">Заявка принята!</h3>
-              <p className="text-gray-600 mb-8 leading-relaxed">Наш менеджер свяжется с вами выбранным способом в течение 15 минут.</p>
-              <button 
-                onClick={() => setIsModalOpen(false)} 
-                className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors"
-              >
-                Отлично
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={(e) => { e.preventDefault(); handleFormSubmit(modalForm); }} className="space-y-6">
-              <div className="text-center">
-                <h3 className="text-2xl font-bold font-heading text-slate-900 mb-2">Обсудить проект</h3>
-                <p className="text-sm text-gray-500">Оставьте контакты для связи с инженером.</p>
-              </div>
-              
-              <div className="space-y-4">
-                <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wide ml-1">Имя</label>
-                    <input 
-                        type="text" 
-                        placeholder="Алексей" 
-                        required 
-                        value={modalForm.name}
-                        onChange={(e) => setModalForm({...modalForm, name: e.target.value})}
-                        className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all font-medium text-slate-900" 
-                    />
-                </div>
-                <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wide ml-1">Телефон</label>
-                    <input 
-                        type="tel" 
-                        placeholder="+7 (999) 000-00-00" 
-                        required 
-                        value={modalForm.phone}
-                        onChange={(e) => setModalForm({...modalForm, phone: formatPhone(e.target.value)})}
-                        className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all font-medium text-slate-900" 
-                    />
-                </div>
-                
-                <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wide ml-1">Как ответить?</label>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        {['call', 'whatsapp', 'telegram', 'max'].map((m) => (
-                            <button 
-                                key={m}
-                                type="button" 
-                                onClick={() => setModalForm({...modalForm, method: m})}
-                                className={`py-3 px-2 border rounded-xl text-xs font-bold transition-all ${
-                                    modalForm.method === m 
-                                    ? 'bg-slate-900 text-white border-slate-900 shadow-md transform scale-105' 
-                                    : 'border-gray-200 text-gray-500 hover:border-gray-400 hover:bg-gray-50'
-                                }`}
-                            >
-                                {m === 'call' && 'Звонок'}
-                                {m === 'whatsapp' && 'WhatsApp'}
-                                {m === 'telegram' && 'Telegram'}
-                                {m === 'max' && 'MAX'}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-              </div>
-
-              <button type="submit" className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all transform hover:-translate-y-0.5 active:scale-95">
-                Отправить заявку
-              </button>
-              <p className="text-center text-xs text-gray-400 leading-tight">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</p>
-            </form>
-          )}
-        </div>
-      </div>
-    );
+  // Define content based on the current route
+  const pageData = isBudgetPage ? {
+    heroTitle: "Бюджетный ремонт ванной",
+    heroSubtitle: <><span className="text-blue-400">Сжатые сроки и низкая смета.</span> <br/><span className="text-white">Идеально под сдачу или продажу.</span></>,
+    heroBadge: "Эконом-класс под ключ",
+    heroImage: "https://images.unsplash.com/photo-1595408796414-b6c8673a76e9?auto=format&fit=crop&q=80&w=2000",
+    packages: BUDGET_PACKAGES,
+    portfolio: BUDGET_PORTFOLIO,
+    faq: BUDGET_FAQ,
+    calculatorDefault: "Эконом (Панели/Краска)"
+  } : {
+    heroTitle: "Ремонт ванной комнаты",
+    heroSubtitle: <><span className="text-blue-400">Без авансов и скрытых доплат.</span> <br/><span className="text-white">Платите только за результат.</span></>,
+    heroBadge: "Гарантия 10 лет по договору",
+    heroImage: "https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=2000",
+    packages: PACKAGES,
+    portfolio: PORTFOLIO,
+    faq: FAQ,
+    calculatorDefault: "Стандарт (Капитальный)"
   };
+
+  const isLanding = view === 'landing';
+  // If we are not on landing page, header should always be solid white (scrolled style)
+  const showSolidHeader = scrolled || !isLanding;
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900">
-      <Modal />
+    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col">
+      <Modal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        type={modalType} 
+        onSubmit={handleFormSubmit}
+      />
       
       {/* Mobile Menu Overlay */}
       <div className={`fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} onClick={() => setMobileMenuOpen(false)}>
@@ -172,16 +272,50 @@ function App() {
               <span className="font-heading font-bold text-xl text-slate-900">Меню</span>
               <button onClick={() => setMobileMenuOpen(false)}><X className="w-6 h-6 text-gray-400 hover:text-gray-900" /></button>
            </div>
-           <div className="flex flex-col p-6 space-y-6">
+           <div className="flex flex-col p-6 space-y-4 overflow-y-auto max-h-[calc(100vh-100px)]">
               <nav className="flex flex-col space-y-4 font-heading">
-                <button onClick={() => scrollToSection('portfolio')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors">Примеры работ</button>
-                <button onClick={() => scrollToSection('why-us')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors">Преимущества</button>
-                <button onClick={() => scrollToSection('calculator-section')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors">Калькулятор</button>
-                <button onClick={() => scrollToSection('packages')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors">Стоимость</button>
-                <button onClick={() => scrollToSection('reviews')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors">Отзывы</button>
+                
+                {/* Mobile Dropdown Replacement - Repair Types */}
+                <div className="space-y-3 pb-4 border-b border-gray-100">
+                   <div className="text-xs font-bold text-gray-400 uppercase tracking-widest">Виды ремонта</div>
+                   <button 
+                    onClick={() => navigate('premium')}
+                    className={`flex items-center gap-2 w-full text-left font-bold text-lg ${!isBudgetPage && isLanding ? 'text-blue-600' : 'text-gray-600'}`}
+                   >
+                    {!isBudgetPage && isLanding && <Check className="w-4 h-4" />} Капитальный / Премиум
+                   </button>
+                   <button 
+                    onClick={() => navigate('budget')}
+                    className={`flex items-center gap-2 w-full text-left font-bold text-lg ${isBudgetPage && isLanding ? 'text-blue-600' : 'text-gray-600'}`}
+                   >
+                    {isBudgetPage && isLanding && <Check className="w-4 h-4" />} Эконом / Бюджетный
+                   </button>
+                </div>
+
+                <button onClick={() => scrollToSection('geography')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-3">
+                   <MapPin className="w-5 h-5 text-gray-400" /> Районы
+                </button>
+                <button onClick={() => scrollToSection('reviews')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-3">
+                   <MessageCircle className="w-5 h-5 text-gray-400" /> Отзывы
+                </button>
+                <button onClick={() => scrollToSection('why-us')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-3">
+                   <Users className="w-5 h-5 text-gray-400" /> О компании
+                </button>
+                <button onClick={() => scrollToSection('packages')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-3">
+                   <FileText className="w-5 h-5 text-gray-400" /> Цены
+                </button>
+                <button onClick={() => scrollToSection('portfolio')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-3">
+                   <Briefcase className="w-5 h-5 text-gray-400" /> Портфолио
+                </button>
+                <button onClick={() => navigate('prices')} className={`text-left font-bold text-lg transition-colors flex items-center gap-3 ${view === 'prices' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-800'}`}>
+                   <FileText className={`w-5 h-5 ${view === 'prices' ? 'text-blue-600' : 'text-gray-400'}`} /> Прайс-лист
+                </button>
+                <button onClick={() => navigate('contacts')} className={`text-left font-bold text-lg transition-colors flex items-center gap-3 ${view === 'contacts' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-800'}`}>
+                   <Phone className={`w-5 h-5 ${view === 'contacts' ? 'text-blue-600' : 'text-gray-400'}`} /> Контакты
+                </button>
               </nav>
               
-              <div className="pt-8 border-t border-gray-100 mt-auto">
+              <div className="pt-6 mt-auto">
                 <a href={`tel:${COMPANY_PHONE}`} className="flex items-center gap-3 text-xl font-heading font-bold text-slate-900 mb-6">
                   <Phone className="w-5 h-5 text-blue-600" /> {COMPANY_PHONE}
                 </a>
@@ -197,31 +331,79 @@ function App() {
       </div>
 
       {/* --- HEADER --- */}
-      <header className={`fixed top-0 w-full z-40 transition-all duration-500 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm py-3' : 'bg-gradient-to-b from-slate-900/90 to-transparent py-6'}`}>
+      <header className={`fixed top-0 w-full z-40 transition-all duration-500 ${showSolidHeader ? 'bg-white/95 backdrop-blur-md shadow-sm py-3' : 'bg-gradient-to-b from-slate-900/90 to-transparent py-6'}`}>
         <div className="container mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-             {/* Logo */}
-             <a href="/" className="flex-shrink-0 flex items-center gap-2 group">
+             {/* Logo Link to Root with interception */}
+             <a 
+               href="?" 
+               onClick={(e) => { e.preventDefault(); navigate('landing'); }}
+               className="flex-shrink-0 flex items-center gap-2 group"
+             >
                 <img 
                     src={COMPANY_LOGO} 
                     alt="Логотип" 
-                    className={`h-10 md:h-12 w-auto object-contain transition-all duration-300 ${!scrolled ? 'brightness-0 invert drop-shadow-md' : ''}`} 
+                    className={`h-10 md:h-12 w-auto object-contain transition-all duration-300 ${!showSolidHeader ? 'brightness-0 invert drop-shadow-md' : ''}`} 
                 />
              </a>
           </div>
           
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-8 font-heading">
-            <button onClick={() => scrollToSection('portfolio')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${scrolled ? 'text-slate-800' : 'text-white'}`}>ПОРТФОЛИО</button>
-            <button onClick={() => scrollToSection('calculator-section')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${scrolled ? 'text-slate-800' : 'text-white'}`}>КАЛЬКУЛЯТОР</button>
-            <button onClick={() => scrollToSection('packages')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${scrolled ? 'text-slate-800' : 'text-white'}`}>ЦЕНЫ</button>
-            <button onClick={() => scrollToSection('reviews')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${scrolled ? 'text-slate-800' : 'text-white'}`}>ОТЗЫВЫ</button>
+          <nav className="hidden xl:flex items-center gap-6 font-heading">
+            
+            {/* Dropdown Menu */}
+            <div className="relative group">
+              <button className={`flex items-center gap-1.5 text-sm font-extrabold tracking-wide px-3 py-2 rounded-lg transition-all ${
+                  showSolidHeader 
+                    ? 'text-slate-800 hover:bg-slate-50' 
+                    : 'text-white hover:bg-white/10'
+                }`}>
+                ВИДЫ РЕМОНТА <ChevronDown className="w-4 h-4 opacity-70" />
+              </button>
+              {/* Dropdown Content */}
+              <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0">
+                <div className="p-2">
+                   <a 
+                    onClick={() => navigate('premium')}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 cursor-pointer transition-colors"
+                   >
+                      <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                         <Star className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-slate-900">Капитальный</div>
+                        <div className="text-[10px] text-gray-500">Дизайн и качество</div>
+                      </div>
+                   </a>
+                   <a 
+                    onClick={() => navigate('budget')}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 cursor-pointer transition-colors"
+                   >
+                      <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                         <Briefcase className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-slate-900">Эконом ремонт</div>
+                        <div className="text-[10px] text-gray-500">Быстро и недорого</div>
+                      </div>
+                   </a>
+                </div>
+              </div>
+            </div>
+
+            <button onClick={() => scrollToSection('geography')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>РАЙОНЫ</button>
+            <button onClick={() => scrollToSection('reviews')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>ОТЗЫВЫ</button>
+            <button onClick={() => navigate('contacts')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'contacts' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>КОНТАКТЫ</button>
+            <button onClick={() => scrollToSection('why-us')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>О КОМПАНИИ</button>
+            <button onClick={() => scrollToSection('packages')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>ЦЕНЫ</button>
+            <button onClick={() => navigate('prices')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'prices' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>ПРАЙС</button>
+            <button onClick={() => scrollToSection('portfolio')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>ПОРТФОЛИО</button>
           </nav>
 
           {/* Actions */}
           <div className="flex items-center gap-4 lg:gap-6">
             <div className="hidden md:block text-right">
-              <a href={`tel:${COMPANY_PHONE}`} className={`block font-heading font-bold text-xl tracking-tight hover:text-blue-600 transition-colors ${scrolled ? 'text-slate-900' : 'text-white drop-shadow-sm'}`}>
+              <a href={`tel:${COMPANY_PHONE}`} className={`block font-heading font-bold text-xl tracking-tight hover:text-blue-600 transition-colors ${showSolidHeader ? 'text-slate-900' : 'text-white drop-shadow-sm'}`}>
                 {COMPANY_PHONE}
               </a>
             </div>
@@ -229,7 +411,7 @@ function App() {
             <button 
               onClick={() => { setModalType('callback'); setIsModalOpen(true); }}
               className={`hidden lg:block px-6 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg transform hover:-translate-y-0.5 ${
-                  scrolled 
+                  showSolidHeader 
                   ? 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-blue-600/30' 
                   : 'bg-white text-slate-900 hover:bg-gray-100 hover:shadow-white/20'
               }`}
@@ -238,9 +420,9 @@ function App() {
             </button>
 
             {/* Mobile Controls */}
-            <div className="flex lg:hidden items-center gap-3">
+            <div className="flex xl:hidden items-center gap-3">
               <a href={`tel:${COMPANY_PHONE}`} className={`w-10 h-10 backdrop-blur border rounded-full flex items-center justify-center transition-all ${
-                  scrolled 
+                  showSolidHeader 
                   ? 'bg-blue-600 border-blue-600 text-white shadow-md' 
                   : 'bg-white/10 border-white/20 text-white'
               }`}>
@@ -249,7 +431,7 @@ function App() {
               <button 
                 onClick={() => setMobileMenuOpen(true)} 
                 className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                    scrolled 
+                    showSolidHeader 
                     ? 'bg-slate-900 text-white hover:bg-slate-800' 
                     : 'bg-white/10 text-white hover:bg-white/20'
                 }`}
@@ -262,89 +444,116 @@ function App() {
       </header>
 
       {/* --- MAIN CONTENT --- */}
-      <main>
-        <Hero onFormSubmit={handleFormSubmit} />
-        
-        {/* REORDERED SECTIONS FOR BETTER FUNNEL */}
-        
-        <RevealOnScroll id="comparison" className="bg-white">
-          <ComparisonSection onAction={() => { setModalType('callback'); setIsModalOpen(true); }} />
-        </RevealOnScroll>
+      {/* Key forces re-render when switching modes to reset animations and ensure clean state */}
+      <main key={view} className={`flex-1 ${!isLanding ? 'pt-20 lg:pt-24' : ''}`}>
+        {view === 'landing' && (
+          <>
+            <Hero 
+              onFormSubmit={handleFormSubmit} 
+              title={pageData.heroTitle}
+              subtitle={pageData.heroSubtitle}
+              badgeText={pageData.heroBadge}
+              backgroundImage={pageData.heroImage}
+            />
 
-        {/* Portfolio Moved Up: Build desire early */}
-        <RevealOnScroll id="portfolio" className="bg-slate-100">
-          <PortfolioSection onAction={() => { setModalType('callback'); setIsModalOpen(true); }} />
-        </RevealOnScroll>
+            {isBudgetPage && (
+              <div className="bg-white">
+                <div className="container mx-auto px-4">
+                  <Breadcrumbs 
+                    items={[{ label: 'Эконом ремонт', isActive: true }]} 
+                    onNavigate={navigate} 
+                  />
+                </div>
+              </div>
+            )}
+            
+            <RevealOnScroll id="comparison" className="bg-white">
+              <ComparisonSection onAction={() => { setModalType('callback'); setIsModalOpen(true); }} />
+            </RevealOnScroll>
 
-        {/* Quality Standards: Prove reliability before price */}
-        <RevealOnScroll id="quality" className="bg-white">
-          <QualityControlSection />
-        </RevealOnScroll>
-        
-        {/* Why Us / Standards: Reinforce trust */}
-        <RevealOnScroll id="why-us" className="bg-slate-100">
-          <WhyUsSection />
-        </RevealOnScroll>
+            <RevealOnScroll id="portfolio" className="bg-slate-100">
+              <PortfolioSection 
+                onAction={() => { setModalType('callback'); setIsModalOpen(true); }} 
+                portfolio={pageData.portfolio}
+              />
+            </RevealOnScroll>
 
-        {/* Materials: Show brand authority */}
-        <RevealOnScroll className="bg-white">
-          <MaterialsSection />
-        </RevealOnScroll>
-        
-        {/* Calculator: Engage user */}
-        <RevealOnScroll id="calculator-section" className="bg-slate-100">
-          <section className="py-24">
-            <div className="container mx-auto px-4 text-center mb-16">
-              <span className="text-blue-600 font-bold tracking-wider uppercase text-xs mb-3 block">Планирование бюджета</span>
-              <h2 className="text-3xl md:text-5xl font-heading font-extrabold mb-6 text-slate-900">Рассчитайте стоимость ремонта</h2>
-              <p className="text-gray-500 max-w-2xl mx-auto text-lg">Ответьте на 6 вопросов, и мы сформируем 3 варианта сметы (Эконом, Стандарт, Премиум) специально под ваши размеры.</p>
-            </div>
-            <div className="container mx-auto px-4">
-              <Calculator onComplete={handleFormSubmit} />
-            </div>
-          </section>
-        </RevealOnScroll>
+            <RevealOnScroll id="quality" className="bg-white">
+              <QualityControlSection />
+            </RevealOnScroll>
+            
+            <RevealOnScroll id="why-us" className="bg-slate-100">
+              <WhyUsSection />
+            </RevealOnScroll>
 
-        {/* Pricing: Finally show the price */}
-        <RevealOnScroll id="packages" className="bg-white">
-          <PackagesSection onSelect={(pkg) => { setModalType('callback'); setIsModalOpen(true); }} />
-        </RevealOnScroll>
-        
-        <RevealOnScroll>
-          <WorkflowSection />
-        </RevealOnScroll>
+            <RevealOnScroll className="bg-white">
+              <MaterialsSection />
+            </RevealOnScroll>
+            
+            <RevealOnScroll id="calculator-section" className="bg-slate-100">
+              <section className="py-24">
+                <div className="container mx-auto px-4 text-center mb-16">
+                  <span className="text-blue-600 font-bold tracking-wider uppercase text-xs mb-3 block">Планирование бюджета</span>
+                  <h2 className="text-3xl md:text-5xl font-heading font-extrabold mb-6 text-slate-900">Рассчитайте стоимость ремонта</h2>
+                  <p className="text-gray-500 max-w-2xl mx-auto text-lg">Ответьте на 6 вопросов, и мы сформируем 3 варианта сметы специально под ваши размеры.</p>
+                </div>
+                <div className="container mx-auto px-4">
+                  <Calculator 
+                    onComplete={handleFormSubmit} 
+                    defaultFinish={pageData.calculatorDefault}
+                  />
+                </div>
+              </section>
+            </RevealOnScroll>
 
-        <RevealOnScroll className="bg-white">
-          <IncludedSection />
-        </RevealOnScroll>
+            <RevealOnScroll id="packages" className="bg-white">
+              <PackagesSection 
+                onSelect={(pkg) => { setModalType('callback'); setIsModalOpen(true); }} 
+                onShowPriceList={() => navigate('prices')}
+                packages={pageData.packages}
+              />
+            </RevealOnScroll>
+            
+            <RevealOnScroll>
+              <WorkflowSection />
+            </RevealOnScroll>
 
-        <RevealOnScroll className="bg-slate-100">
-          <VisualizationSection />
-        </RevealOnScroll>
-        
-        <RevealOnScroll className="bg-white">
-          <TeamSection />
-        </RevealOnScroll>
+            <RevealOnScroll className="bg-white">
+              <IncludedSection />
+            </RevealOnScroll>
 
-        <RevealOnScroll className="bg-slate-100">
-          <GuaranteeSection />
-        </RevealOnScroll>
+            <RevealOnScroll className="bg-slate-100">
+              <VisualizationSection />
+            </RevealOnScroll>
+            
+            <RevealOnScroll className="bg-white">
+              <TeamSection />
+            </RevealOnScroll>
 
-        <RevealOnScroll id="reviews" className="bg-white">
-          <ReviewsSection />
-        </RevealOnScroll>
+            <RevealOnScroll className="bg-slate-100">
+              <GuaranteeSection />
+            </RevealOnScroll>
 
-        <RevealOnScroll id="faq" className="bg-slate-100">
-          <FaqSection />
-        </RevealOnScroll>
+            <RevealOnScroll id="reviews" className="bg-white">
+              <ReviewsSection />
+            </RevealOnScroll>
 
-        <RevealOnScroll className="bg-white">
-          <GeographySection />
-        </RevealOnScroll>
+            <RevealOnScroll id="faq" className="bg-slate-100">
+              <FaqSection faqItems={pageData.faq} />
+            </RevealOnScroll>
+
+            <RevealOnScroll id="geography" className="bg-white">
+              <GeographySection />
+            </RevealOnScroll>
+          </>
+        )}
+
+        {view === 'prices' && <PriceList onNavigate={navigate} />}
+        {view === 'contacts' && <ContactsPage onSubmit={handleFormSubmit} onNavigate={navigate} onBack={() => navigate('landing')} />}
       </main>
 
       {/* --- FOOTER --- */}
-      <RevealOnScroll>
+      <RevealOnScroll id="contacts">
         <section className="py-24 bg-slate-900 text-white relative overflow-hidden">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600 rounded-full blur-[150px] opacity-20 pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-purple-600 rounded-full blur-[100px] opacity-10 pointer-events-none"></div>
@@ -355,29 +564,15 @@ function App() {
               Оставьте заявку сейчас, и мы закрепим за вами скидку 10% на материалы и бесплатный дизайн-проект.
             </p>
             
-            <form onSubmit={(e) => { e.preventDefault(); handleFormSubmit(footerForm); }} className="glass rounded-3xl p-8 md:p-12 max-w-4xl mx-auto shadow-2xl flex flex-col gap-6 text-left border border-white/10">
+            <form onSubmit={(e) => { e.preventDefault(); handleFormSubmit({}); }} className="glass rounded-3xl p-8 md:p-12 max-w-4xl mx-auto shadow-2xl flex flex-col gap-6 text-left border border-white/10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-xs font-bold text-gray-800 uppercase tracking-wide mb-2 ml-1">Как вас зовут?</label>
-                    <input 
-                      type="text" 
-                      placeholder="Иван" 
-                      value={footerForm.name}
-                      onChange={(e) => setFooterForm({...footerForm, name: e.target.value})}
-                      className="w-full p-4 rounded-xl border-0 bg-white/80 text-slate-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 transition-all shadow-inner" 
-                      required 
-                    />
+                    <input type="text" placeholder="Иван" className="w-full p-4 rounded-xl border-0 bg-white/80 text-slate-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 transition-all shadow-inner" required />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-gray-800 uppercase tracking-wide mb-2 ml-1">Номер телефона</label>
-                    <input 
-                      type="tel" 
-                      placeholder="+7 (___) ___-__-__" 
-                      value={footerForm.phone}
-                      onChange={(e) => setFooterForm({...footerForm, phone: formatPhone(e.target.value)})}
-                      className="w-full p-4 rounded-xl border-0 bg-white/80 text-slate-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 transition-all shadow-inner" 
-                      required 
-                    />
+                    <input type="tel" placeholder="+7 (___) ___-__-__" className="w-full p-4 rounded-xl border-0 bg-white/80 text-slate-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 transition-all shadow-inner" required />
                   </div>
               </div>
 
@@ -385,16 +580,7 @@ function App() {
                   <label className="block text-xs font-bold text-gray-800 uppercase tracking-wide mb-2 ml-1">Как удобнее ответить?</label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {['call', 'whatsapp', 'telegram', 'max'].map((m) => (
-                      <button 
-                        key={m}
-                        type="button"
-                        onClick={() => setFooterForm({...footerForm, method: m})}
-                        className={`py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${
-                          footerForm.method === m 
-                            ? 'bg-slate-900 text-white shadow-lg transform scale-105 ring-2 ring-slate-900/20' 
-                            : 'bg-white/50 text-slate-700 hover:bg-white'
-                        }`}
-                      >
+                      <button key={m} type="button" className="py-3 rounded-xl border border-transparent bg-white/50 text-slate-700 font-bold text-sm hover:bg-white transition-all shadow-sm">
                          {m === 'call' && 'Звонок'}
                          {m === 'whatsapp' && 'WhatsApp'}
                          {m === 'telegram' && 'Telegram'}
@@ -417,12 +603,13 @@ function App() {
         </section>
       </RevealOnScroll>
 
-      <footer className="bg-slate-950 text-gray-400 py-12 border-t border-slate-900">
+      <footer className="bg-slate-950 text-gray-400 py-12 border-t border-slate-900 mt-auto">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="text-center md:text-left">
              <img src={COMPANY_LOGO} alt="Логотип" className="h-10 w-auto object-contain brightness-0 invert opacity-50 mb-4 mx-auto md:mx-0" />
             <p className="text-sm max-w-xs leading-relaxed text-gray-500">
-              Профессиональный ремонт ванных комнат и санузлов под ключ в Москве и МО.
+              {COMPANY_ADDRESS} <br />
+              Профессиональный ремонт ванных комнат и санузлов под ключ.
             </p>
           </div>
           

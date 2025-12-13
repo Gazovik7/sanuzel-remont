@@ -11,6 +11,21 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImag
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const observer = new ResizeObserver((entries) => {
+      if (entries[0]) {
+        setContainerWidth(entries[0].contentRect.width);
+      }
+    });
+    
+    observer.observe(containerRef.current);
+    
+    return () => observer.disconnect();
+  }, []);
 
   const handleMove = (clientX: number) => {
     if (containerRef.current) {
@@ -22,29 +37,39 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImag
   };
 
   const handleMouseDown = () => setIsDragging(true);
-  const handleMouseUp = () => setIsDragging(false);
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (isDragging) handleMove(e.clientX);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    handleMove(e.touches[0].clientX);
-  };
-
-  // Global mouse up handler to stop dragging even if mouse leaves component
+  
+  // Handlers for dragging logic
   useEffect(() => {
-    const stopDragging = () => setIsDragging(false);
-    window.addEventListener('mouseup', stopDragging);
-    return () => window.removeEventListener('mouseup', stopDragging);
-  }, []);
+    const handleMouseUp = () => setIsDragging(false);
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) handleMove(e.clientX);
+    };
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isDragging) handleMove(e.touches[0].clientX);
+    };
+    const handleTouchEnd = () => setIsDragging(false);
+
+    if (isDragging) {
+      window.addEventListener('mouseup', handleMouseUp);
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('touchmove', handleTouchMove);
+      window.addEventListener('touchend', handleTouchEnd);
+    }
+
+    return () => {
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isDragging]);
 
   return (
     <div 
       ref={containerRef}
       className="relative w-full h-64 lg:h-96 rounded-2xl overflow-hidden cursor-ew-resize select-none shadow-xl border border-gray-200"
       onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onTouchMove={handleTouchMove}
+      onTouchStart={() => setIsDragging(true)}
     >
       {/* After Image (Background) */}
       <img 
@@ -65,7 +90,7 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImag
           src={beforeImage} 
           alt={`До - ${alt}`} 
           className="absolute top-0 left-0 max-w-none h-full object-cover"
-          style={{ width: containerRef.current ? containerRef.current.offsetWidth : '100%' }} 
+          style={{ width: containerWidth ? `${containerWidth}px` : '100%' }} 
         />
         <div className="absolute top-4 left-4 bg-gray-900/80 backdrop-blur text-white px-3 py-1 rounded text-xs font-bold tracking-wider shadow-lg">
           ДО

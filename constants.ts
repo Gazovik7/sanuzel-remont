@@ -1,6 +1,9 @@
-import { TeamMember, Package, FaqItem, PortfolioItem, Review } from './types';
 
-export const COMPANY_PHONE = "+7 (495) 123-45-67";
+import type { TeamMember, Package, FaqItem, PortfolioItem, Review } from './types';
+
+export const COMPANY_PHONE = "8 (495) 137-52-39";
+export const COMPANY_ADDRESS = "г. Москва, Большой Саввинский пер., 9С1";
+export const COMPANY_EMAIL = "info@remont-sanuzlov.ru";
 export const COMPANY_LOGO = "https://remont-sanuzlov.ru/wp-content/uploads/2022/02/9545814_transparent-3.png";
 
 // Phone masking utility
@@ -77,6 +80,30 @@ export const PACKAGES: Package[] = [
   }
 ];
 
+export const BUDGET_PACKAGES: Package[] = [
+  {
+    title: "Косметический",
+    subtitle: "Чисто и свежо",
+    price: "от 45 000 ₽",
+    time: "3-5 дней",
+    features: ["Демонтаж старой плитки", "Укладка новой плитки", "Замена смесителей", "Реечный потолок", "Установка унитаза"]
+  },
+  {
+    title: "Эконом",
+    subtitle: "Под сдачу в аренду",
+    price: "от 75 000 ₽",
+    time: "7-9 дней",
+    features: ["Выравнивание стен", "Укладка плитки (эконом)", "Трубы полипропилен", "Установка ванны", "Новая электрика"]
+  },
+  {
+    title: "Оптимальный",
+    subtitle: "Капитальный недорого",
+    price: "от 95 000 ₽",
+    time: "10-12 дней",
+    features: ["Гидроизоляция пола", "Скрытая разводка", "Короб для стояка", "Укладка керамогранита", "Принудительная вытяжка"]
+  }
+];
+
 export const PORTFOLIO: PortfolioItem[] = [
   {
     before: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=600",
@@ -107,6 +134,36 @@ export const PORTFOLIO: PortfolioItem[] = [
   }
 ];
 
+export const BUDGET_PORTFOLIO: PortfolioItem[] = [
+  {
+    before: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=600",
+    after: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=600&blur=2", 
+    title: "Квартира под сдачу",
+    desc: "Быстрый ремонт в новостройке. Задача: сделать чисто, аккуратно и максимально бюджетно.",
+    workList: "Плитка Cersanit, натяжной потолок, акриловая ванна, внешняя разводка труб.",
+    time: "8 дней",
+    price: "72 000 ₽"
+  },
+  {
+    before: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=600",
+    after: "https://images.unsplash.com/photo-1564540586988-aa4e53c3d003?auto=format&fit=crop&q=80&w=600",
+    title: "Панельный дом",
+    desc: "Замена советской плитки на современную недорогую керамику.",
+    workList: "Выравнивание стен, замена труб на полипропилен, укладка плитки 30x30, установка унитаза.",
+    time: "9 дней",
+    price: "85 000 ₽"
+  },
+  {
+    before: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&q=80&w=600",
+    after: "https://images.unsplash.com/photo-1595408796414-b6c8673a76e9?auto=format&fit=crop&q=80&w=600",
+    title: "Студия в области",
+    desc: "Бюджетный санузел 'под ключ' в новой студии.",
+    workList: "Душевой поддон, шторка, недорогая инсталляция, покраска стен над плиткой.",
+    time: "7 дней",
+    price: "68 000 ₽"
+  }
+];
+
 export const STEPS = [
   { title: "Заявка или звонок", desc: "Оставьте контакты на сайте или позвоните нам." },
   { title: "Быстрый расчёт", desc: "Предварительная оценка стоимости по телефону." },
@@ -125,6 +182,14 @@ export const FAQ: FaqItem[] = [
   { question: "Какая гарантия?", answer: "Гарантия на все работы 10 лет, прописана в договоре." },
   { question: "Можно ли жить в квартире?", answer: "Мы стараемся минимизировать дискомфорт, но рекомендуем освободить помещение на время грязных работ." },
   { question: "Как происходит оплата?", answer: "Поэтапно. Вы платите только за выполненный и принятый этап работ." }
+];
+
+export const BUDGET_FAQ: FaqItem[] = [
+  { question: "Почему так дешево?", answer: "Мы используем проверенные бюджетные материалы, оптимизированную логистику и стандартные решения без сложных дизайнерских элементов." },
+  { question: "Материалы входят в стоимость?", answer: "В пакетах 'Эконом' указана стоимость работ. Черновые материалы мы закупаем оптом, чистовые помогаем подобрать в Леруа Мерлен или Петровиче." },
+  { question: "Сроки реальные?", answer: "Да, бюджетный ремонт делается быстрее (7-10 дней), так как отсутствуют сложные этапы вроде запила под 45 градусов или монтажа скрытых люков." },
+  { question: "Есть ли гарантия на эконом?", answer: "Безусловно. Мы предоставляем официальную гарантию 3 года на все виды работ по договору." },
+  { question: "Можно ли сэкономить на плитке?", answer: "Да, мы подскажем коллекции российской и белорусской плитки, которая выглядит дороже своей цены и имеет хорошую геометрию." }
 ];
 
 export const INCLUDED_WORKS: string[] = [

@@ -1,14 +1,14 @@
-
 import React from 'react';
 import { 
   Check, X, Hammer, Clock, Shield, Trash2, 
   Ruler, Search, ShoppingBag, HardHat, FileText, 
-  Users, MapPin, Play, Star, BadgeCheck, CheckCircle2, ArrowRight, CheckCheck, MoreVertical, ShieldCheck, Umbrella, Microscope, Factory, PhoneCall
+  Users, MapPin, Play, Star, BadgeCheck, CheckCircle2, ArrowRight, CheckCheck, MoreVertical, ShieldCheck, Microscope, Factory, PhoneCall
 } from 'lucide-react';
 import { 
   PACKAGES, PORTFOLIO, 
   STEPS, TEAM, FAQ, INCLUDED_WORKS, INCLUDED_DOCS, REVIEWS, CITIES_LIST, QUALITY_CHECKLIST, MATERIAL_BRANDS
 } from '../constants';
+import type { Package, PortfolioItem, FaqItem } from '../types';
 import { BeforeAfterSlider } from './BeforeAfterSlider';
 
 // Note: Background classes (bg-white/bg-slate-100) are handled in App.tsx for zebra striping.
@@ -100,14 +100,14 @@ export const ComparisonSection = ({ onAction }: { onAction: () => void }) => (
   </section>
 );
 
-export const PackagesSection = ({ onSelect }: { onSelect: (pkg: string) => void }) => (
+export const PackagesSection = ({ onSelect, onShowPriceList, packages }: { onSelect: (pkg: string) => void, onShowPriceList?: () => void, packages?: Package[] }) => (
   <section className="py-24" id="packages">
     <div className="container mx-auto px-4 max-w-6xl">
       <h2 className="text-3xl md:text-5xl font-heading font-extrabold text-center mb-6 text-slate-900">Готовые решения</h2>
       <p className="text-center text-gray-600 mb-16 max-w-2xl mx-auto text-lg">Выберите пакет, который подходит под ваши задачи. Материалы можно заменить или исключить.</p>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-        {PACKAGES.map((pkg, idx) => (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-12">
+        {(packages || PACKAGES).map((pkg, idx) => (
           <div key={idx} className={`rounded-3xl transition-all flex flex-col relative group ${idx === 1 ? 'border-2 border-blue-600 shadow-2xl scale-105 z-10 bg-white' : 'border border-gray-200 hover:shadow-xl hover:border-gray-300 bg-white'}`}>
             {idx === 1 && (
                 <div className="absolute -top-4 left-0 right-0 mx-auto w-max bg-blue-600 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg uppercase tracking-wider">
@@ -148,11 +148,22 @@ export const PackagesSection = ({ onSelect }: { onSelect: (pkg: string) => void 
           </div>
         ))}
       </div>
+
+      {onShowPriceList && (
+        <div className="text-center">
+          <button 
+            onClick={onShowPriceList}
+            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-bold transition-colors border-b-2 border-blue-600 hover:border-blue-800 pb-0.5"
+          >
+            Посмотреть подробный прайс-лист <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </div>
   </section>
 );
 
-export const PortfolioSection = ({ onAction }: { onAction: () => void }) => (
+export const PortfolioSection = ({ onAction, portfolio }: { onAction: () => void, portfolio?: PortfolioItem[] }) => (
   <section className="py-24" id="portfolio">
     <div className="container mx-auto px-4 max-w-7xl">
       <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
@@ -166,7 +177,7 @@ export const PortfolioSection = ({ onAction }: { onAction: () => void }) => (
       </div>
       
       <div className="grid grid-cols-1 gap-16">
-        {PORTFOLIO.map((item, idx) => (
+        {(portfolio || PORTFOLIO).map((item, idx) => (
           <div key={idx} className="bg-white rounded-[2rem] overflow-hidden shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-500 group">
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="relative h-[400px] lg:h-auto">
@@ -645,14 +656,16 @@ export const ReviewsSection = () => (
   </section>
 );
 
-export const FaqSection = () => {
+export const FaqSection = ({ faqItems }: { faqItems?: FaqItem[] }) => {
   const [openIdx, setOpenIdx] = React.useState<number | null>(0);
+  
+  const items = faqItems || FAQ;
 
   // Generate Schema.org JSON-LD
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": FAQ.map(item => ({
+    "mainEntity": items.map(item => ({
       "@type": "Question",
       "name": item.question,
       "acceptedAnswer": {
@@ -672,7 +685,7 @@ export const FaqSection = () => {
       <div className="container mx-auto px-4 max-w-3xl">
         <h2 className="text-3xl md:text-5xl font-heading font-extrabold text-center mb-12 text-slate-900">Вопросы и ответы</h2>
         <div className="space-y-4">
-          {FAQ.map((item, idx) => (
+          {items.map((item, idx) => (
             <div key={idx} className={`bg-white rounded-2xl overflow-hidden transition-all duration-300 ${openIdx === idx ? 'bg-gray-50' : ''}`}>
               <button 
                 onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
@@ -699,7 +712,7 @@ export const FaqSection = () => {
 };
 
 export const GeographySection = () => (
-   <section className="py-24 border-t border-gray-200">
+   <section className="py-24 border-t border-gray-200" id="geography">
       <div className="container mx-auto px-4 max-w-6xl">
          <div className="flex flex-col md:flex-row gap-16 items-center">
             <div className="flex-1">
