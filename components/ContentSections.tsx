@@ -98,8 +98,7 @@ export const ComparisonSection = ({ onAction }: { onAction: () => void }) => (
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 );
 
 export const PackagesSection = ({ onSelect, onShowPriceList, packages }: { onSelect: (pkg: string) => void, onShowPriceList?: () => void, packages?: Package[] }) => (
@@ -685,6 +684,45 @@ export const ReviewsSection = ({ onShowAllReviews }: { onShowAllReviews?: () => 
             </div>
         </section>
     );
+};
+
+export const SeoTextSection = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <section className="py-16">
+      <div className="container mx-auto px-4 max-w-4xl">
+        <button 
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="w-full text-left group flex items-start md:items-center justify-between gap-4 select-none"
+        >
+          <h2 className="text-2xl md:text-3xl font-heading font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+            Ремонт ванной комнаты под ключ: особенности и этапы
+          </h2>
+          <div className={`mt-1 md:mt-0 p-2 rounded-full bg-gray-50 group-hover:bg-blue-50 transition-colors shrink-0 border border-gray-100 group-hover:border-blue-100`}>
+             {isExpanded ? <ChevronUp className="w-6 h-6 text-blue-600" /> : <ChevronDown className="w-6 h-6 text-gray-400 group-hover:text-blue-600" />}
+          </div>
+        </button>
+
+        <div className={`grid transition-all duration-500 ease-in-out ${isExpanded ? 'grid-rows-[1fr] opacity-100 mt-8' : 'grid-rows-[0fr] opacity-0 mt-0'}`}>
+          <div className="overflow-hidden">
+            <div className="prose prose-slate max-w-none text-gray-600 space-y-4">
+               <p>Качественный <strong>ремонт ванной комнаты под ключ</strong> — это сложный технологический процесс, требующий участия профильных специалистов: сантехников, электриков, плиточников и отделочников. Наша компания предлагает полный цикл работ в Москве и Московской области, гарантируя соблюдение СНиП и ГОСТ.</p>
+               <p>Мы берем на себя все заботы: от демонтажа старой плитки и выноса мусора до установки чистовой сантехники и зеркал. В процессе используются только проверенные влагостойкие материалы (Knauf, Ceresit, Rehau), что исключает риск протечек и появления плесени в будущем.</p>
+               <p><strong>Основные этапы ремонта санузла:</strong></p>
+               <ul className="list-disc pl-5 space-y-2">
+                  <li><strong>Проектирование:</strong> Бесплатный замер, составление точной сметы и 3D-визуализация интерьера.</li>
+                  <li><strong>Черновые работы:</strong> Выравнивание стен по маякам, гидроизоляция мокрых зон в 2-3 слоя, стяжка пола.</li>
+                  <li><strong>Инженерные коммуникации:</strong> Коллекторная разводка труб Rehau/Far, монтаж фильтров и защиты от протечек, новая электропроводка.</li>
+                  <li><strong>Чистовая отделка:</strong> Укладка керамогранита (в том числе крупноформатного), затирка швов эпоксидной смесью, монтаж натяжных или реечных потолков.</li>
+               </ul>
+               <p>Стоимость ремонта ванной комнаты зависит от выбранного пакета («Эконом», «Стандарт», «Премиум») и площади помещения. Мы работаем без предоплаты: вы оплачиваете результат только после приемки этапа работ. На все услуги предоставляется официальная гарантия до 10 лет.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export const FaqSection = ({ faqItems }: { faqItems?: FaqItem[] }) => {

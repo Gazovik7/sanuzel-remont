@@ -13,7 +13,8 @@ import {
   ComparisonSection, PackagesSection, PortfolioSection, 
   WhyUsSection, WorkflowSection, VisualizationSection,
   MaterialsSection, TeamSection, GuaranteeSection,
-  ReviewsSection, FaqSection, GeographySection, IncludedSection, QualityControlSection
+  ReviewsSection, FaqSection, GeographySection, IncludedSection, QualityControlSection,
+  SeoTextSection
 } from './components/ContentSections';
 import { COMPANY_PHONE, COMPANY_LOGO, COMPANY_ADDRESS, BUDGET_PACKAGES, BUDGET_PORTFOLIO, BUDGET_FAQ, PACKAGES, PORTFOLIO, FAQ } from './constants';
 
@@ -638,6 +639,10 @@ function App() {
 
             <RevealOnScroll id="reviews" className="bg-white">
               <ReviewsSection onShowAllReviews={() => navigate('reviews')} />
+            </RevealOnScroll>
+
+            <RevealOnScroll className="bg-white">
+                 <SeoTextSection />
             </RevealOnScroll>
 
             <RevealOnScroll id="faq" className="bg-slate-100">
