@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Phone, MessageCircle, Menu, ArrowUp, Check, X, ChevronDown, MapPin, Users, Briefcase, FileText, Star, Paintbrush, Wrench, Home } from 'lucide-react';
+import { Phone, MessageCircle, Menu, ArrowUp, Check, X, ChevronDown, MapPin, Users, Briefcase, FileText, Star, Paintbrush, Wrench, Home, Clock, CreditCard } from 'lucide-react';
 import { Hero } from './components/Hero';
 import Calculator from './components/Calculator';
 import { PriceList } from './components/PriceList';
@@ -314,7 +314,7 @@ function App() {
     faq: BUDGET_FAQ,
     calculatorDefault: "Эконом (Панели/Краска)"
   } : {
-    heroTitle: "Ремонт ванной комнаты",
+    heroTitle: "Ремонт ванных комнат",
     heroSubtitle: <><span className="text-blue-400">Без авансов и скрытых доплат.</span> <br/><span className="text-white">Платите только за результат.</span></>,
     heroBadge: "Гарантия 10 лет по договору",
     heroImage: "https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=2000",
@@ -337,8 +337,8 @@ function App() {
         onSubmit={handleFormSubmit}
       />
       
-      {/* Mobile Menu Overlay */}
-      <div className={`fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} onClick={() => setMobileMenuOpen(false)}>
+      {/* Mobile Menu Overlay - Changed lg:hidden to xl:hidden */}
+      <div className={`fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300 xl:hidden ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} onClick={() => setMobileMenuOpen(false)}>
         <div className={`absolute top-0 right-0 w-[85%] max-w-sm h-full bg-white shadow-2xl transition-transform duration-300 transform ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`} onClick={e => e.stopPropagation()}>
            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
               <span className="font-heading font-bold text-xl text-slate-900">Меню</span>
@@ -435,6 +435,9 @@ function App() {
                     className={`h-10 md:h-12 w-auto object-contain transition-all duration-300 ${!showSolidHeader ? 'brightness-0 invert drop-shadow-md' : ''}`} 
                 />
              </a>
+             <div className={`hidden md:block text-xs font-medium leading-tight transition-colors duration-300 ${showSolidHeader ? 'text-gray-500' : 'text-white/80'}`}>
+                Ремонт ванных комнат<br/>в Москве и области
+             </div>
           </div>
           
           {/* Desktop Nav */}
@@ -713,23 +716,102 @@ function App() {
         </section>
       </RevealOnScroll>
 
-      <footer className="bg-slate-950 text-gray-400 py-12 border-t border-slate-900 mt-auto">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="text-center md:text-left">
-             <img src={COMPANY_LOGO} alt="Логотип" className="h-10 w-auto object-contain brightness-0 invert opacity-50 mb-4 mx-auto md:mx-0" />
-            <p className="text-sm max-w-xs leading-relaxed text-gray-500">
-              {COMPANY_ADDRESS} <br />
-              Профессиональный ремонт ванных комнат и санузлов под ключ.
-            </p>
+      <footer className="bg-slate-950 text-white py-16 border-t border-slate-900 mt-auto">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            
+            {/* Column 1: Logo & Socials */}
+            <div className="space-y-8">
+               <div className="flex flex-col items-start">
+                   <img src={COMPANY_LOGO} alt="Ремонт Санузлов" className="h-16 w-auto object-contain brightness-0 invert mb-4" />
+                   <div className="font-heading font-bold text-xl tracking-wider uppercase mb-6">Ремонт Санузлов</div>
+                   
+                   <p className="text-sm text-gray-400 mb-4">Поделись в соц. сети и получи скидку на ремонт</p>
+                   <div className="flex gap-4 mb-8">
+                       <a href="#" className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center hover:bg-blue-400 transition-colors"><MessageCircle className="w-5 h-5 text-white" /></a>
+                       <a href="#" className="w-10 h-10 rounded-full bg-blue-700 flex items-center justify-center hover:bg-blue-600 transition-colors"><div className="font-bold text-xs">VK</div></a>
+                   </div>
+
+                   <div className="text-sm text-gray-400 mb-3">Принимаем к оплате:</div>
+                   <div className="flex gap-2 opacity-80">
+                       <div className="w-10 h-6 bg-white rounded flex items-center justify-center"><span className="text-[8px] text-slate-900 font-bold">VISA</span></div>
+                       <div className="w-10 h-6 bg-white rounded flex items-center justify-center"><span className="text-[8px] text-slate-900 font-bold">MIR</span></div>
+                       <div className="w-10 h-6 bg-white rounded flex items-center justify-center"><span className="text-[8px] text-slate-900 font-bold">MC</span></div>
+                       <div className="w-10 h-6 bg-white rounded flex items-center justify-center"><CreditCard className="w-4 h-4 text-slate-900" /></div>
+                   </div>
+               </div>
+            </div>
+
+            {/* Column 2: Services */}
+            <div>
+              <h3 className="font-heading font-bold text-2xl mb-6">Виды ремонтных работ</h3>
+              <ul className="space-y-3 text-sm text-gray-400">
+                 {[
+                    'Демонтажные работы', 'Подготовительные работы', 'Сантехнические работы', 
+                    'Ремонт туалета панелями ПВХ', 'Перепланировка санузла', 'Укладка плитки', 
+                    'Капитальный ремонт', 'Косметический ремонт', 'Евроремонт санузла', 
+                    'Ремонт в хрущевке', 'Ремонт в панельном доме', 'Ремонт в новостройке', 
+                    'Ремонт маленькой ванной', 'Ремонт туалета в рассрочку'
+                 ].map(item => (
+                     <li key={item}><a href="#" className="hover:text-white hover:underline decoration-slate-700 underline-offset-4 transition-all">{item}</a></li>
+                 ))}
+              </ul>
+            </div>
+
+            {/* Column 3: Districts */}
+            <div>
+              <h3 className="font-heading font-bold text-2xl mb-6">Районы</h3>
+              <ul className="space-y-3 text-sm text-gray-400">
+                 {['ЦАО', 'СВАО', 'ВАО', 'ЮВАО', 'ЮАО', 'ЮЗАО', 'ЗАО', 'СЗАО', 'Станции метро'].map(item => (
+                     <li key={item}><a href="#" className="hover:text-white hover:underline decoration-slate-700 underline-offset-4 transition-all">{item}</a></li>
+                 ))}
+              </ul>
+            </div>
+
+            {/* Column 4: Contacts */}
+            <div>
+              <h3 className="font-heading font-bold text-2xl mb-6">Контакты</h3>
+              <div className="space-y-6">
+                  <a href={`tel:${COMPANY_PHONE}`} className="block text-2xl font-bold hover:text-blue-400 transition-colors">{COMPANY_PHONE}</a>
+                  
+                  <div className="flex items-start gap-3 text-sm text-gray-400">
+                      <MapPin className="w-5 h-5 text-blue-600 shrink-0" />
+                      <span>{COMPANY_ADDRESS}</span>
+                  </div>
+                  
+                  <div className="flex items-start gap-3 text-sm text-gray-400">
+                      <Clock className="w-5 h-5 text-blue-600 shrink-0" />
+                      <div>
+                          <div>Режим работы:</div>
+                          <div>пн-вс: 09.00-20.00</div>
+                      </div>
+                  </div>
+
+                  <a href="#" className="block text-sm text-gray-500 hover:text-white underline decoration-gray-700 underline-offset-4">Политика конфиденциальности</a>
+              </div>
+            </div>
+
           </div>
-          
-          <div className="text-center md:text-right">
-             <a href={`tel:${COMPANY_PHONE}`} className="text-2xl font-bold text-white block hover:text-blue-500 mb-3 transition-colors font-heading">{COMPANY_PHONE}</a>
-             <div className="flex justify-center md:justify-end gap-4 mb-4">
-                <a href="#" className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all"><MessageCircle className="w-5 h-5" /></a>
-                <a href="#" className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all"><Phone className="w-5 h-5" /></a>
-             </div>
-            <div className="text-xs text-gray-600">© {new Date().getFullYear()} Все права защищены</div>
+
+          {/* Bottom Bar */}
+          <div className="border-t border-slate-900 pt-8 text-xs text-gray-500 space-y-4">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div>Ремонт санузлов в Москве © 2018-{new Date().getFullYear()}</div>
+                  <div className="flex gap-6">
+                      <a href="#" className="hover:text-white">Карта сайта</a>
+                      <span>Все права защищены</span>
+                  </div>
+              </div>
+              <p className="max-w-4xl opacity-60 leading-relaxed">Сайт носит информационный характер и не является публичной офертой. Информация на сайте носит ознакомительный характер и не является публичной офертой, определяемой положениями статьи 437 Гражданского кодекса РФ.</p>
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 border-t border-slate-900 mt-4">
+                  <a href="#" className="hover:text-white uppercase font-bold tracking-wider text-[10px]">SEO ПРОДВИЖЕНИЕ</a>
+                  <a href="#" className="hover:text-white text-[10px]">Создание и продвижение сайта Smirnov.Marketing</a>
+              </div>
+              <div className="pt-2 text-[10px] text-gray-600 flex flex-wrap gap-4">
+                  <a href="#" className="hover:text-white">Согласие на обработку персональных данных</a>
+                  <a href="#" className="hover:text-white">Политика обработки файлов Cookies</a>
+                  <a href="#" className="hover:text-white">Политика конфиденциальности персональных данных</a>
+              </div>
           </div>
         </div>
       </footer>

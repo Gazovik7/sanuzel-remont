@@ -4,7 +4,7 @@ import {
   Check, X, Hammer, Clock, Shield, Trash2, 
   Ruler, Search, ShoppingBag, HardHat, FileText, 
   Users, MapPin, Play, Star, BadgeCheck, CheckCircle2, ArrowRight, CheckCheck, MoreVertical, ShieldCheck, Microscope, Factory, PhoneCall,
-  ChevronDown, ChevronUp, Map, Train, Video, FileSignature
+  ChevronDown, ChevronUp, Map, Train, Video, FileSignature, MessageCircle
 } from 'lucide-react';
 import { 
   PACKAGES, PORTFOLIO, 
@@ -602,10 +602,7 @@ export const GuaranteeSection = () => (
 );
 
 export const ReviewsSection = ({ onShowAllReviews }: { onShowAllReviews?: () => void }) => {
-    // We pick one of each type for the landing page teaser
     const video = VIDEO_REVIEWS[0];
-    const paper = PAPER_REVIEWS[0];
-    const chat = REVIEWS[0];
 
     return (
         <section className="py-24" id="reviews">
@@ -617,10 +614,10 @@ export const ReviewsSection = ({ onShowAllReviews }: { onShowAllReviews?: () => 
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
                     
-                    {/* Video Card */}
-                    <div className="lg:col-span-2 relative group overflow-hidden rounded-[2rem] shadow-xl bg-slate-900 cursor-pointer h-[350px] lg:h-[450px]">
+                    {/* Video Card - Left Column */}
+                    <div className="relative group overflow-hidden rounded-[2rem] shadow-xl bg-slate-900 cursor-pointer h-[400px] lg:h-auto min-h-[400px]">
                          <img src={video.preview} alt={video.author} className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
                          <div className="absolute inset-0 flex items-center justify-center">
                               <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-white/50">
@@ -637,37 +634,65 @@ export const ReviewsSection = ({ onShowAllReviews }: { onShowAllReviews?: () => 
                          </div>
                     </div>
 
-                    {/* Stacked Side Column */}
-                    <div className="flex flex-col gap-8 h-[450px]">
+                    {/* Stacked Side Column - Right Column */}
+                    <div className="flex flex-col gap-6 h-full min-h-[450px]">
                         
-                        {/* Chat Card (Mini) */}
-                        <div className="flex-1 bg-[#E5DDD5] rounded-3xl overflow-hidden shadow-lg border border-gray-200 relative p-4 flex flex-col">
-                            <div className="flex items-center gap-3 mb-3 pb-3 border-b border-gray-300/50">
-                                <img src={chat.avatar} className="w-8 h-8 rounded-full" alt="avatar" />
-                                <div>
-                                    <div className="text-xs font-bold text-slate-800">{chat.name}</div>
-                                    <div className="text-[10px] text-slate-500">WhatsApp</div>
+                        {/* WhatsApp Screenshot Card - Horizontal Layout of multiple vertical phones */}
+                        <div className="flex-1 bg-[#E5DDD5] rounded-3xl overflow-hidden shadow-lg border border-gray-200 relative group cursor-pointer min-h-[220px]">
+                             <div className="absolute top-4 left-6 z-20">
+                                <div className="bg-white/90 backdrop-blur border border-white/50 px-4 py-2 rounded-full flex items-center gap-2 shadow-sm">
+                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                                    <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">WhatsApp</span>
                                 </div>
-                            </div>
-                            <div className="bg-white p-3 rounded-lg shadow-sm rounded-tl-none text-xs text-gray-800 line-clamp-3">
-                                {chat.chat[0].text}
-                            </div>
-                            <div className="mt-auto pt-2 text-right">
-                                <span className="text-[10px] text-gray-500 font-bold uppercase">Читать чат</span>
-                            </div>
+                             </div>
+
+                             {/* Fan of phones */}
+                             <div className="absolute inset-0 flex items-end justify-center pb-0 translate-y-12 group-hover:translate-y-8 transition-transform duration-500">
+                                 {REVIEWS.slice(0, 3).map((review, i) => (
+                                     <div 
+                                        key={i} 
+                                        className={`w-32 aspect-[9/16] bg-slate-800 rounded-t-2xl border-4 border-slate-800 shadow-xl overflow-hidden relative transform transition-transform duration-500 ${
+                                            i === 0 ? '-rotate-12 -mr-12 z-10 translate-y-4' : 
+                                            i === 1 ? 'z-20 -translate-y-2 scale-110' : 
+                                            'rotate-12 -ml-12 z-10 translate-y-4'
+                                        }`}
+                                     >
+                                         <img src={review.screenshot} className="w-full h-full object-cover" alt="" />
+                                     </div>
+                                 ))}
+                             </div>
                         </div>
 
-                        {/* Paper Card (Mini) */}
-                        <div className="flex-1 bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200 p-6 relative group cursor-pointer hover:bg-gray-50 transition-colors">
-                            <div className="absolute top-4 right-4 text-gray-300">
-                                <FileSignature className="w-8 h-8" />
-                            </div>
-                            <div className="h-full flex flex-col justify-end">
-                                <div className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2">Бланк отзыва</div>
-                                <div className="font-bold text-slate-900 mb-1">{paper.author}</div>
-                                <div className="text-xs text-gray-400">{paper.date}</div>
-                            </div>
-                            <img src={paper.image} className="absolute top-4 left-4 w-16 h-20 object-cover shadow-sm -rotate-6 border border-gray-100 bg-white p-1" alt="scan" />
+                        {/* Paper Stack - Horizontal Fan Layout */}
+                        <div className="flex-1 relative group cursor-pointer bg-slate-50 rounded-3xl border border-gray-200 overflow-hidden min-h-[220px]">
+                             <div className="absolute top-4 left-6 z-20">
+                                <div className="bg-white/90 backdrop-blur border border-white/50 px-4 py-2 rounded-full flex items-center gap-2 shadow-sm">
+                                    <FileSignature className="w-4 h-4 text-blue-600" />
+                                    <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">Благодарности</span>
+                                </div>
+                             </div>
+
+                             {/* Fan of papers */}
+                             <div className="absolute inset-0 flex items-center justify-center top-8">
+                                 {PAPER_REVIEWS.slice(0, 3).map((paper, idx) => (
+                                     <div 
+                                        key={idx}
+                                        className={`absolute w-36 h-48 bg-white shadow-md border border-gray-100 p-2 transition-all duration-500 transform group-hover:scale-105 ${
+                                            idx === 0 ? '-translate-x-16 rotate-[-10deg]' :
+                                            idx === 1 ? 'z-10 -translate-y-2' :
+                                            'translate-x-16 rotate-[10deg]'
+                                        }`}
+                                     >
+                                         <div className="w-full h-full overflow-hidden bg-gray-50 relative">
+                                            <img src={paper.image} className="w-full h-full object-cover opacity-90" alt="review" />
+                                            {/* Simulate text lines if image fails or looks plain */}
+                                            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/20"></div>
+                                         </div>
+                                     </div>
+                                 ))}
+                             </div>
+                             
+                             <div className="absolute bottom-0 w-full h-24 bg-gradient-to-t from-slate-50 to-transparent z-20 pointer-events-none"></div>
                         </div>
 
                     </div>
@@ -678,7 +703,7 @@ export const ReviewsSection = ({ onShowAllReviews }: { onShowAllReviews?: () => 
                       onClick={() => onShowAllReviews && onShowAllReviews()}
                       className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/30 transform hover:-translate-y-1"
                     >
-                        Смотреть все отзывы (Видео, Чаты, Фото) <ArrowRight className="w-5 h-5 ml-2" />
+                        Смотреть все отзывы <ArrowRight className="w-5 h-5 ml-2" />
                     </button>
                 </div>
             </div>

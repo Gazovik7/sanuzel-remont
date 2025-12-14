@@ -200,33 +200,25 @@ export const INCLUDED_DOCS: string[] = [
     "Договор подряда", "Смета работ", "Акт скрытых работ", "Акт приемки-передачи", "Гарантийный талон"
 ];
 
+// Updated Reviews to use screenshots
 export const REVIEWS: Review[] = [
   {
     name: "Ольга",
     location: "Москва",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-    chat: [
-      { time: "10:00", isManager: false, text: "Добрый день! Хочу сказать спасибо за ванную, все супер!" },
-      { time: "10:05", isManager: true, text: "Ольга, рады стараться! Обращайтесь." }
-    ]
+    screenshot: "https://images.unsplash.com/photo-1596742578443-7682e525c489?auto=format&fit=crop&q=80&w=400&h=800" // Placeholder for WhatsApp screenshot
   },
   {
     name: "Дмитрий",
     location: "Химки",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    chat: [
-       { time: "14:00", isManager: false, text: "Приветствую. Плитку положили отлично, швы ровные." },
-       { time: "14:10", isManager: true, text: "Спасибо, Дмитрий! Завтра начнем затирку." }
-    ]
+    screenshot: "https://images.unsplash.com/photo-1555421689-d68471e189f2?auto=format&fit=crop&q=80&w=400&h=800"
   },
   {
     name: "Анна",
     location: "Мытищи",
     avatar: "https://randomuser.me/api/portraits/women/68.jpg",
-    chat: [
-       { time: "09:30", isManager: true, text: "Анна, доброе утро. Объект готов к сдаче." },
-       { time: "11:15", isManager: false, text: "Только что посмотрела. Я в восторге! Спасибо вам огромное!" }
-    ]
+    screenshot: "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?auto=format&fit=crop&q=80&w=400&h=800"
   }
 ];
 

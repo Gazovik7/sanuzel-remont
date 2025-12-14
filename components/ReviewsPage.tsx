@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Breadcrumbs } from './Breadcrumbs';
-import { Play, FileText, MessageCircle, ArrowRight, Video, FileSignature, CheckCheck, MoreVertical, X } from 'lucide-react';
+import { Play, FileText, MessageCircle, ArrowRight, Video, FileSignature, CheckCheck, MoreVertical, X, ZoomIn } from 'lucide-react';
 import { REVIEWS, VIDEO_REVIEWS, PAPER_REVIEWS } from '../constants';
 
 interface ReviewsPageProps {
@@ -16,7 +16,7 @@ export const ReviewsPage: React.FC<ReviewsPageProps> = ({ onNavigate, onCalculat
   return (
     <div className="min-h-screen bg-slate-50 animate-in fade-in duration-500 pb-12">
       
-      {/* Lightbox for Paper Reviews */}
+      {/* Lightbox */}
       {selectedImage && (
         <div 
             className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 animate-in fade-in duration-200"
@@ -39,7 +39,7 @@ export const ReviewsPage: React.FC<ReviewsPageProps> = ({ onNavigate, onCalculat
             <h1 className="text-3xl md:text-5xl font-bold font-heading text-slate-900 mb-6">Отзывы о нас</h1>
             <p className="text-gray-600 text-lg">
                 Мы ценим доверие наших клиентов и открыто публикуем обратную связь.
-                Здесь собраны видео-обзоры готовых ремонтов, переписки с заказчиками и официальные благодарственные письма.
+                Здесь собраны видео-обзоры готовых ремонтов, скриншоты переписок с заказчиками и официальные благодарственные письма.
             </p>
         </div>
 
@@ -97,43 +97,36 @@ export const ReviewsPage: React.FC<ReviewsPageProps> = ({ onNavigate, onCalculat
             </div>
         )}
 
-        {/* Chat Reviews Section */}
+        {/* Chat Reviews Section (Screenshots) */}
         {(activeTab === 'all' || activeTab === 'chat') && (
             <div className="mb-16 animate-in slide-in-from-bottom-4 duration-500 delay-100">
                 <div className="flex items-center gap-3 mb-6">
                     <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
                         <MessageCircle className="w-5 h-5" />
                     </div>
-                    <h2 className="text-2xl font-bold font-heading text-slate-900">Переписки в мессенджерах</h2>
+                    <h2 className="text-2xl font-bold font-heading text-slate-900">Скриншоты из WhatsApp</h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {REVIEWS.map((review, idx) => (
-                        <div key={idx} className="bg-[#E5DDD5] rounded-[2rem] overflow-hidden shadow-md border border-gray-200 flex flex-col h-[500px]">
-                            {/* Header */}
-                            <div className="bg-[#075E54] p-4 flex items-center gap-3 text-white">
-                                <ArrowRight className="w-5 h-5 rotate-180" />
-                                <img src={review.avatar} alt={review.name} className="w-10 h-10 rounded-full object-cover" />
-                                <div className="flex-1">
-                                    <div className="font-bold text-sm">{review.name}</div>
-                                    <div className="text-[10px] opacity-80">{review.location}</div>
-                                </div>
-                                <MoreVertical className="w-5 h-5" />
-                            </div>
-                            {/* Chat Body */}
-                            <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')] bg-repeat">
-                                {review.chat.map((msg, mIdx) => (
-                                    <div key={mIdx} className={`flex ${msg.isManager ? 'justify-end' : 'justify-start'}`}>
-                                        <div className={`max-w-[85%] rounded-lg p-3 shadow-sm text-sm relative ${
-                                            msg.isManager ? 'bg-[#DCF8C6] rounded-tr-none' : 'bg-white rounded-tl-none'
-                                        }`}>
-                                            {msg.text && <p className="text-gray-800 leading-snug">{msg.text}</p>}
-                                            <div className="text-[10px] text-gray-400 text-right mt-1 flex items-center justify-end gap-1">
-                                                {msg.time}
-                                                {msg.isManager && <CheckCheck className="w-3 h-3 text-blue-500" />}
-                                            </div>
-                                        </div>
+                        <div 
+                            key={idx} 
+                            onClick={() => setSelectedImage(review.screenshot)}
+                            className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 cursor-zoom-in group hover:shadow-xl transition-all"
+                        >
+                            <div className="relative aspect-[9/16] bg-gray-100">
+                                <img src={review.screenshot} alt={review.name} className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                    <div className="opacity-0 group-hover:opacity-100 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition-all">
+                                        <ZoomIn className="w-5 h-5 text-gray-700" />
                                     </div>
-                                ))}
+                                </div>
+                            </div>
+                            <div className="p-4 bg-white border-t border-gray-100">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <img src={review.avatar} alt={review.name} className="w-6 h-6 rounded-full" />
+                                    <span className="font-bold text-sm text-slate-900">{review.name}</span>
+                                </div>
+                                <span className="text-xs text-gray-400">{review.location}</span>
                             </div>
                         </div>
                     ))}

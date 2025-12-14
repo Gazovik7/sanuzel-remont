@@ -37,19 +37,11 @@ export interface ComparisonRow {
   isUsBest: boolean;
 }
 
-export interface ChatMessage {
-  text?: string;
-  image?: string;
-  isManager: boolean; // true = right (green), false = left (white)
-  time: string;
-  status?: 'read';
-}
-
 export interface Review {
   name: string;
   location: string;
-  avatar: string;
-  chat: ChatMessage[];
+  avatar: string; // Optional, can be used for thumbnail or removed if screenshot covers it
+  screenshot: string; // New field for the WhatsApp screenshot image
 }
 
 export interface VideoReview {
