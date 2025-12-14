@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Phone, MessageCircle, Menu, ArrowUp, Check, X, ChevronDown, MapPin, Users, Briefcase, FileText, Star } from 'lucide-react';
+import { Phone, MessageCircle, Menu, ArrowUp, Check, X, ChevronDown, MapPin, Users, Briefcase, FileText, Star, Paintbrush, Wrench, Home } from 'lucide-react';
 import { Hero } from './components/Hero';
 import Calculator from './components/Calculator';
 import { PriceList } from './components/PriceList';
 import { ContactsPage } from './components/ContactsPage';
 import { PortfolioPage } from './components/PortfolioPage';
 import { AboutPage } from './components/AboutPage';
+import { ReviewsPage } from './components/ReviewsPage';
 import { Breadcrumbs } from './components/Breadcrumbs';
 import { 
   ComparisonSection, PackagesSection, PortfolioSection, 
@@ -123,12 +124,52 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'callback' | 'success'>('callback');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileRepairsOpen, setMobileRepairsOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   
   // -- ROUTING LOGIC (Query Params) --
   const [isBudgetPage, setIsBudgetPage] = useState(false);
-  const [view, setView] = useState<'landing' | 'prices' | 'contacts' | 'portfolio' | 'about'>('landing');
+  const [view, setView] = useState<'landing' | 'prices' | 'contacts' | 'portfolio' | 'about' | 'reviews'>('landing');
+
+  // Categorized Menu Data
+  const REPAIR_MENU = [
+    {
+      title: "По типу ремонта",
+      icon: Paintbrush,
+      items: [
+        { label: "Капитальный ремонт", action: 'premium' },
+        { label: "Евроремонт", action: 'premium' },
+        { label: "Косметический ремонт", action: 'budget' },
+        { label: "Бюджетный ремонт", action: 'budget' },
+        { label: "Дизайнерский ремонт", action: 'premium' },
+      ]
+    },
+    {
+      title: "По объекту",
+      icon: Home,
+      items: [
+        { label: "Ванная в новостройке", action: 'premium' },
+        { label: "Ванная в панельном доме", action: 'premium' },
+        { label: "Ванная в хрущевке", action: 'premium' },
+        { label: "Совмещенный санузел", action: 'premium' },
+        { label: "Раздельный санузел", action: 'premium' },
+        { label: "Маленькая ванная", action: 'premium' },
+      ]
+    },
+    {
+      title: "Отдельные услуги",
+      icon: Wrench,
+      items: [
+        { label: "Укладка плитки", action: 'prices' },
+        { label: "Сантехнические работы", action: 'prices' },
+        { label: "Разводка труб", action: 'prices' },
+        { label: "Демонтажные работы", action: 'prices' },
+        { label: "Обшивка панелями ПВХ", action: 'budget' },
+        { label: "Перепланировка", action: 'premium' },
+      ]
+    }
+  ];
 
   useEffect(() => {
     // Check initial path
@@ -147,6 +188,9 @@ function App() {
         setIsBudgetPage(false);
       } else if (pageParam === 'about') {
         setView('about');
+        setIsBudgetPage(false);
+      } else if (pageParam === 'reviews') {
+        setView('reviews');
         setIsBudgetPage(false);
       } else if (pageParam === 'budget') {
         setView('landing');
@@ -167,7 +211,7 @@ function App() {
   }, []);
 
   // Function to handle navigation without page reload
-  const navigate = (mode: 'premium' | 'budget' | 'prices' | 'contacts' | 'portfolio' | 'about' | 'landing') => {
+  const navigate = (mode: 'premium' | 'budget' | 'prices' | 'contacts' | 'portfolio' | 'about' | 'reviews' | 'landing') => {
     try {
       const url = new URL(window.location.href);
       if (mode === 'prices') {
@@ -185,6 +229,10 @@ function App() {
       } else if (mode === 'about') {
         url.searchParams.set('page', 'about');
         setView('about');
+        setIsBudgetPage(false);
+      } else if (mode === 'reviews') {
+        url.searchParams.set('page', 'reviews');
+        setView('reviews');
         setIsBudgetPage(false);
       } else if (mode === 'budget') {
         url.searchParams.set('page', 'budget');
@@ -213,6 +261,7 @@ function App() {
       else if (mode === 'contacts') setView('contacts');
       else if (mode === 'portfolio') setView('portfolio');
       else if (mode === 'about') setView('about');
+      else if (mode === 'reviews') setView('reviews');
       else {
         setView('landing');
         setIsBudgetPage(mode === 'budget');
@@ -297,28 +346,45 @@ function App() {
            <div className="flex flex-col p-6 space-y-4 overflow-y-auto max-h-[calc(100vh-100px)]">
               <nav className="flex flex-col space-y-4 font-heading">
                 
-                {/* Mobile Dropdown Replacement - Repair Types */}
-                <div className="space-y-3 pb-4 border-b border-gray-100">
-                   <div className="text-xs font-bold text-gray-400 uppercase tracking-widest">Виды ремонта</div>
+                {/* Mobile Repair Types - Enhanced */}
+                <div className="pb-4 border-b border-gray-100">
                    <button 
-                    onClick={() => navigate('premium')}
-                    className={`flex items-center gap-2 w-full text-left font-bold text-lg ${!isBudgetPage && isLanding ? 'text-blue-600' : 'text-gray-600'}`}
+                      onClick={() => setMobileRepairsOpen(!mobileRepairsOpen)}
+                      className="flex items-center justify-between w-full text-xs font-bold text-gray-400 uppercase tracking-widest mb-3"
                    >
-                    {!isBudgetPage && isLanding && <Check className="w-4 h-4" />} Капитальный / Премиум
+                      Виды ремонта <ChevronDown className={`w-4 h-4 transition-transform ${mobileRepairsOpen ? 'rotate-180' : ''}`} />
                    </button>
-                   <button 
-                    onClick={() => navigate('budget')}
-                    className={`flex items-center gap-2 w-full text-left font-bold text-lg ${isBudgetPage && isLanding ? 'text-blue-600' : 'text-gray-600'}`}
-                   >
-                    {isBudgetPage && isLanding && <Check className="w-4 h-4" />} Эконом / Бюджетный
-                   </button>
+                   
+                   {mobileRepairsOpen && (
+                      <div className="flex flex-col gap-6 pl-2 border-l-2 border-gray-100 animate-in fade-in slide-in-from-top-2 duration-200 mt-4">
+                          {REPAIR_MENU.map((cat, idx) => (
+                            <div key={idx}>
+                                <div className="flex items-center gap-2 mb-2 text-slate-900 font-bold text-sm">
+                                    <cat.icon className="w-4 h-4 text-blue-600" />
+                                    {cat.title}
+                                </div>
+                                <div className="flex flex-col gap-2 pl-6">
+                                    {cat.items.map((item, i) => (
+                                        <button 
+                                            key={i}
+                                            onClick={() => navigate(item.action as any)}
+                                            className="text-left font-medium text-gray-500 hover:text-blue-600 py-1.5 text-sm"
+                                        >
+                                            {item.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                          ))}
+                      </div>
+                   )}
                 </div>
 
                 <button onClick={() => scrollToSection('geography')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-3">
                    <MapPin className="w-5 h-5 text-gray-400" /> Районы
                 </button>
-                <button onClick={() => scrollToSection('reviews')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-3">
-                   <MessageCircle className="w-5 h-5 text-gray-400" /> Отзывы
+                <button onClick={() => navigate('reviews')} className={`text-left font-bold text-lg transition-colors flex items-center gap-3 ${view === 'reviews' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-800'}`}>
+                   <MessageCircle className={`w-5 h-5 ${view === 'reviews' ? 'text-blue-600' : 'text-gray-400'}`} /> Отзывы
                 </button>
                 <button onClick={() => navigate('about')} className={`text-left font-bold text-lg transition-colors flex items-center gap-3 ${view === 'about' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-800'}`}>
                    <Users className={`w-5 h-5 ${view === 'about' ? 'text-blue-600' : 'text-gray-400'}`} /> О компании
@@ -373,7 +439,7 @@ function App() {
           {/* Desktop Nav */}
           <nav className="hidden xl:flex items-center gap-6 font-heading">
             
-            {/* Dropdown Menu */}
+            {/* Mega Menu Dropdown */}
             <div className="relative group">
               <button className={`flex items-center gap-1.5 text-sm font-extrabold tracking-wide px-3 py-2 rounded-lg transition-all ${
                   showSolidHeader 
@@ -382,39 +448,53 @@ function App() {
                 }`}>
                 ВИДЫ РЕМОНТА <ChevronDown className="w-4 h-4 opacity-70" />
               </button>
-              {/* Dropdown Content */}
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0">
-                <div className="p-2">
-                   <a 
-                    onClick={() => navigate('premium')}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 cursor-pointer transition-colors"
-                   >
-                      <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                         <Star className="w-4 h-4" />
+              
+              {/* Invisible bridge to keep hover active */}
+              <div className="absolute top-full left-0 w-full h-4"></div>
+
+              {/* Mega Dropdown Content */}
+              <div className="absolute top-full left-0 mt-4 w-[900px] bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 p-8 grid grid-cols-3 gap-10 -translate-x-[20%] z-50">
+                  {REPAIR_MENU.map((category, idx) => (
+                    <div key={idx} className="flex flex-col">
+                        <div className="flex items-center gap-3 mb-6 pb-3 border-b border-gray-100">
+                           <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                              <category.icon className="w-5 h-5" />
+                           </div>
+                           <h4 className="font-heading font-bold text-slate-900 text-lg">{category.title}</h4>
+                        </div>
+                        <ul className="space-y-3">
+                           {category.items.map((item, i) => (
+                              <li key={i}>
+                                 <button 
+                                   onClick={() => navigate(item.action as any)} 
+                                   className="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
+                                 >
+                                    {item.label}
+                                 </button>
+                              </li>
+                           ))}
+                        </ul>
+                    </div>
+                  ))}
+                  
+                  {/* Banner in Menu */}
+                  <div className="col-span-3 mt-4 bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-4 flex items-center justify-between shadow-lg text-white">
+                      <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-600/40">%</div>
+                          <div>
+                              <div className="text-sm font-bold text-white">Скидка 10% на материалы</div>
+                              <div className="text-xs text-slate-400">При заказе комплексного ремонта под ключ</div>
+                          </div>
                       </div>
-                      <div>
-                        <div className="text-sm font-bold text-slate-900">Капитальный</div>
-                        <div className="text-[10px] text-gray-500">Дизайн и качество</div>
-                      </div>
-                   </a>
-                   <a 
-                    onClick={() => navigate('budget')}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 cursor-pointer transition-colors"
-                   >
-                      <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                         <Briefcase className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-bold text-slate-900">Эконом ремонт</div>
-                        <div className="text-[10px] text-gray-500">Быстро и недорого</div>
-                      </div>
-                   </a>
-                </div>
+                      <button onClick={() => navigate('landing')} className="text-sm font-bold bg-white text-slate-900 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors">
+                          Рассчитать стоимость
+                      </button>
+                  </div>
               </div>
             </div>
 
             <button onClick={() => scrollToSection('geography')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>РАЙОНЫ</button>
-            <button onClick={() => scrollToSection('reviews')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>ОТЗЫВЫ</button>
+            <button onClick={() => navigate('reviews')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'reviews' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>ОТЗЫВЫ</button>
             <button onClick={() => navigate('contacts')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'contacts' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>КОНТАКТЫ</button>
             <button onClick={() => navigate('about')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'about' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>О КОМПАНИИ</button>
             <button onClick={() => scrollToSection('packages')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>ЦЕНЫ</button>
@@ -557,7 +637,7 @@ function App() {
             </RevealOnScroll>
 
             <RevealOnScroll id="reviews" className="bg-white">
-              <ReviewsSection />
+              <ReviewsSection onShowAllReviews={() => navigate('reviews')} />
             </RevealOnScroll>
 
             <RevealOnScroll id="faq" className="bg-slate-100">
@@ -565,7 +645,7 @@ function App() {
             </RevealOnScroll>
 
             <RevealOnScroll id="geography" className="bg-white">
-              <GeographySection />
+              <GeographySection onAction={() => { setModalType('callback'); setIsModalOpen(true); }} />
             </RevealOnScroll>
           </>
         )}
@@ -573,7 +653,8 @@ function App() {
         {view === 'prices' && <PriceList onNavigate={navigate} />}
         {view === 'contacts' && <ContactsPage onSubmit={handleFormSubmit} onNavigate={navigate} onBack={() => navigate('landing')} />}
         {view === 'portfolio' && <PortfolioPage onNavigate={navigate} onCalculate={() => { navigate('landing'); setTimeout(() => document.getElementById('calculator-section')?.scrollIntoView(), 100); }} />}
-        {view === 'about' && <AboutPage onNavigate={navigate} onCalculate={() => { navigate('landing'); setTimeout(() => document.getElementById('calculator-section')?.scrollIntoView(), 100); }} />}
+        {view === 'about' && <AboutPage onNavigate={navigate} onCalculate={() => { setModalType('callback'); setIsModalOpen(true); }} />}
+        {view === 'reviews' && <ReviewsPage onNavigate={navigate} onCalculate={() => { setModalType('callback'); setIsModalOpen(true); }} />}
       </main>
 
       {/* --- FOOTER --- */}

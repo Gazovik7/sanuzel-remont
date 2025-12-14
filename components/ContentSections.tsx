@@ -1,13 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Check, X, Hammer, Clock, Shield, Trash2, 
   Ruler, Search, ShoppingBag, HardHat, FileText, 
-  Users, MapPin, Play, Star, BadgeCheck, CheckCircle2, ArrowRight, CheckCheck, MoreVertical, ShieldCheck, Microscope, Factory, PhoneCall
+  Users, MapPin, Play, Star, BadgeCheck, CheckCircle2, ArrowRight, CheckCheck, MoreVertical, ShieldCheck, Microscope, Factory, PhoneCall,
+  ChevronDown, ChevronUp, Map, Train, Video, FileSignature
 } from 'lucide-react';
 import { 
   PACKAGES, PORTFOLIO, 
-  STEPS, TEAM, FAQ, INCLUDED_WORKS, INCLUDED_DOCS, REVIEWS, CITIES_LIST, QUALITY_CHECKLIST, MATERIAL_BRANDS
+  STEPS, TEAM, FAQ, INCLUDED_WORKS, INCLUDED_DOCS, REVIEWS, VIDEO_REVIEWS, PAPER_REVIEWS, QUALITY_CHECKLIST, MATERIAL_BRANDS
 } from '../constants';
 import type { Package, PortfolioItem, FaqItem } from '../types';
 import { BeforeAfterSlider } from './BeforeAfterSlider';
@@ -601,65 +602,90 @@ export const GuaranteeSection = () => (
   </section>
 );
 
-export const ReviewsSection = () => (
-  <section className="py-24" id="reviews">
-     <div className="container mx-auto px-4 max-w-6xl">
-        <h2 className="text-3xl md:text-5xl font-heading font-extrabold text-center mb-6 text-slate-900">Реальные переписки</h2>
-        <p className="text-center text-gray-600 mb-16 max-w-2xl mx-auto">Мы не пишем фейковые отзывы на сайте. Вот скриншоты реальных чатов с нашими заказчиками.</p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-           {REVIEWS.map((review, idx) => (
-              <div key={idx} className="bg-[#E5DDD5] rounded-[2rem] overflow-hidden shadow-xl border border-gray-200 flex flex-col h-[600px] relative">
-                 {/* WhatsApp Header */}
-                 <div className="bg-[#075E54] p-4 flex items-center gap-3 text-white">
-                     <ArrowRight className="w-5 h-5 rotate-180 cursor-pointer" />
-                     <img src={review.avatar} alt={review.name} className="w-10 h-10 rounded-full object-cover" />
-                     <div className="flex-1">
-                         <div className="font-bold text-sm leading-tight">{review.name}</div>
-                         <div className="text-[10px] opacity-80">был(а) недавно</div>
-                     </div>
-                     <div className="flex gap-4">
-                         <MoreVertical className="w-5 h-5" />
-                     </div>
-                 </div>
+export const ReviewsSection = ({ onShowAllReviews }: { onShowAllReviews?: () => void }) => {
+    // We pick one of each type for the landing page teaser
+    const video = VIDEO_REVIEWS[0];
+    const paper = PAPER_REVIEWS[0];
+    const chat = REVIEWS[0];
 
-                 {/* Chat Area */}
-                 <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')] bg-repeat">
-                    <div className="text-center text-xs bg-[#E1F3FB] text-gray-600 py-1 px-2 rounded-lg shadow-sm w-max mx-auto mb-4">
-                         Ремонт: {review.location}
+    return (
+        <section className="py-24" id="reviews">
+            <div className="container mx-auto px-4 max-w-6xl">
+                <div className="text-center mb-16">
+                    <h2 className="text-3xl md:text-5xl font-heading font-extrabold mb-6 text-slate-900">Отзывы клиентов</h2>
+                    <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto text-lg">
+                        Мы собираем обратную связь во всех форматах: видео-отзывы, переписки в мессенджерах и официальные благодарственные письма.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                    
+                    {/* Video Card */}
+                    <div className="lg:col-span-2 relative group overflow-hidden rounded-[2rem] shadow-xl bg-slate-900 cursor-pointer h-[350px] lg:h-[450px]">
+                         <img src={video.preview} alt={video.author} className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
+                         <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-white/50">
+                                   <Play className="w-8 h-8 text-white fill-white ml-1" />
+                              </div>
+                         </div>
+                         <div className="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-slate-900 to-transparent">
+                             <div className="flex items-center gap-2 mb-2">
+                                <Video className="w-4 h-4 text-blue-400" />
+                                <span className="text-xs font-bold text-blue-400 uppercase tracking-widest">Видео-отзыв</span>
+                             </div>
+                             <h3 className="text-2xl font-bold text-white mb-1">{video.author}</h3>
+                             <p className="text-gray-300">{video.location}</p>
+                         </div>
                     </div>
 
-                    {review.chat.map((msg, mIdx) => (
-                        <div key={mIdx} className={`flex ${msg.isManager ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[85%] rounded-lg p-2 shadow-sm text-sm relative ${
-                                msg.isManager 
-                                ? 'bg-[#DCF8C6] rounded-tr-none' 
-                                : 'bg-white rounded-tl-none'
-                            }`}>
-                                {msg.image && (
-                                    <img src={msg.image} alt="Photo" className="rounded-lg mb-1 w-full h-32 object-cover" />
-                                )}
-                                {msg.text && <p className="text-gray-800 leading-snug">{msg.text}</p>}
-                                <div className="text-[10px] text-gray-400 text-right mt-1 flex items-center justify-end gap-1">
-                                    {msg.time}
-                                    {msg.isManager && <CheckCheck className="w-3 h-3 text-blue-500" />}
+                    {/* Stacked Side Column */}
+                    <div className="flex flex-col gap-8 h-[450px]">
+                        
+                        {/* Chat Card (Mini) */}
+                        <div className="flex-1 bg-[#E5DDD5] rounded-3xl overflow-hidden shadow-lg border border-gray-200 relative p-4 flex flex-col">
+                            <div className="flex items-center gap-3 mb-3 pb-3 border-b border-gray-300/50">
+                                <img src={chat.avatar} className="w-8 h-8 rounded-full" alt="avatar" />
+                                <div>
+                                    <div className="text-xs font-bold text-slate-800">{chat.name}</div>
+                                    <div className="text-[10px] text-slate-500">WhatsApp</div>
                                 </div>
                             </div>
+                            <div className="bg-white p-3 rounded-lg shadow-sm rounded-tl-none text-xs text-gray-800 line-clamp-3">
+                                {chat.chat[0].text}
+                            </div>
+                            <div className="mt-auto pt-2 text-right">
+                                <span className="text-[10px] text-gray-500 font-bold uppercase">Читать чат</span>
+                            </div>
                         </div>
-                    ))}
-                 </div>
 
-                 {/* Footer input */}
-                 <div className="bg-white p-3 flex items-center gap-2">
-                     <div className="w-8 h-8 rounded-full text-gray-400 flex items-center justify-center font-bold text-xl">+</div>
-                     <div className="flex-1 bg-white border-none text-gray-400 text-sm">Написать сообщение...</div>
-                 </div>
-              </div>
-           ))}
-        </div>
-     </div>
-  </section>
-);
+                        {/* Paper Card (Mini) */}
+                        <div className="flex-1 bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200 p-6 relative group cursor-pointer hover:bg-gray-50 transition-colors">
+                            <div className="absolute top-4 right-4 text-gray-300">
+                                <FileSignature className="w-8 h-8" />
+                            </div>
+                            <div className="h-full flex flex-col justify-end">
+                                <div className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2">Бланк отзыва</div>
+                                <div className="font-bold text-slate-900 mb-1">{paper.author}</div>
+                                <div className="text-xs text-gray-400">{paper.date}</div>
+                            </div>
+                            <img src={paper.image} className="absolute top-4 left-4 w-16 h-20 object-cover shadow-sm -rotate-6 border border-gray-100 bg-white p-1" alt="scan" />
+                        </div>
+
+                    </div>
+                </div>
+
+                <div className="text-center">
+                    <button 
+                      onClick={() => onShowAllReviews && onShowAllReviews()}
+                      className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/30 transform hover:-translate-y-1"
+                    >
+                        Смотреть все отзывы (Видео, Чаты, Фото) <ArrowRight className="w-5 h-5 ml-2" />
+                    </button>
+                </div>
+            </div>
+        </section>
+    );
+};
 
 export const FaqSection = ({ faqItems }: { faqItems?: FaqItem[] }) => {
   const [openIdx, setOpenIdx] = React.useState<number | null>(0);
@@ -716,34 +742,177 @@ export const FaqSection = ({ faqItems }: { faqItems?: FaqItem[] }) => {
   );
 };
 
-export const GeographySection = () => (
-   <section className="py-24 border-t border-gray-200" id="geography">
-      <div className="container mx-auto px-4 max-w-6xl">
-         <div className="flex flex-col md:flex-row gap-16 items-center">
-            <div className="flex-1">
-               <h2 className="text-3xl md:text-5xl font-heading font-extrabold mb-8 text-slate-900">География работ</h2>
-               <p className="text-gray-600 mb-10 text-lg leading-relaxed">
-                   Мы работаем по всей Москве и ближайшему Подмосковью. Выезд инженера-сметчика бесплатный, даже если вы решите не заказывать ремонт.
-               </p>
-               <div className="flex flex-wrap gap-3">
-                  {CITIES_LIST.map((city, idx) => (
-                     <span key={idx} className="bg-white border border-gray-200 px-5 py-2.5 rounded-full text-sm font-medium text-gray-700 flex items-center gap-2 hover:border-blue-300 hover:bg-white transition-colors cursor-default">
-                        <MapPin className="w-3.5 h-3.5 text-blue-500" />
-                        {city}
-                     </span>
-                  ))}
+export const GeographySection = ({ onAction }: { onAction: () => void }) => {
+   const [isExpandedCity, setIsExpandedCity] = useState(false);
+   const [openDistrictIdx, setOpenDistrictIdx] = useState<number | null>(null);
+
+   const MOSCOW_LOCATIONS = [
+      {
+        district: "Центральный (ЦАО)",
+        stations: ["Арбатская", "Бауманская", "Белорусская", "Библиотека им. Ленина", "Китай-город", "Комсомольская", "Краснопресненская", "Курская", "Лубянка", "Марксистская", "Маяковская", "Новокузнецкая", "Охотный Ряд", "Павелецкая", "Парк Культуры", "Полянка", "Пушкинская", "Серпуховская", "Смоленская", "Таганская", "Тверская", "Театральная", "Третьяковская", "Трубная", "Тургеневская", "Улица 1905 года", "Цветной бульвар", "Чеховская", "Чистые пруды"]
+      },
+      {
+        district: "Северный (САО)",
+        stations: ["Аэропорт", "Беговая", "Водный стадион", "Войковская", "Динамо", "Дмитровская", "Петровский парк", "Полежаевская", "Речной вокзал", "Сокол", "Тимирязевская", "Ховрино", "ЦСКА"]
+      },
+      {
+        district: "Северо-Восточный (СВАО)",
+        stations: ["Алексеевская", "Алтуфьево", "Бабушкинская", "Бибирево", "Ботанический сад", "Бутырская", "ВДНХ", "Владыкино", "Дмитровская", "Медведково", "Марьина Роща", "Отрадное", "Проспект Мира", "Рижская", "Ростокино", "Савеловская", "Свиблово"]
+      },
+      {
+        district: "Восточный (ВАО)",
+        stations: ["Авиамоторная", "Бульвар Рокоссовского", "Измайловская", "Новогиреево", "Новокосино", "Партизанская", "Первомайская", "Перово", "Преображенская площадь", "Семеновская", "Сокольники", "Черкизовская", "Щелковская", "Электрозаводская"]
+      },
+      {
+        district: "Юго-Восточный (ЮВАО)",
+        stations: ["Авиамоторная", "Братиславская", "Волжская", "Дубровка", "Кожуховская", "Кузьминки", "Лефортово", "Люблино", "Марьино", "Нижегородская", "Печатники", "Рязанский проспект", "Текстильщики"]
+      },
+      {
+        district: "Южный (ЮАО)",
+        stations: ["Автозаводская", "Алма-Атинская", "Аннино", "Варшавская", "Домодедовская", "Кантемировская", "Каширская", "Коломенская", "Красногвардейская", "Нагатинская", "Нагорная", "Орехово", "Пражская", "Технопарк", "Тульская", "Царицыно", "Чертановская", "Шаболовская", "Южная"]
+      },
+      {
+        district: "Юго-Западный (ЮЗАО)",
+        stations: ["Академическая", "Беляево", "Битцевский парк", "Бульвар Дмитрия Донского", "Калужская", "Коньково", "Ленинский проспект", "Нахимовский проспект", "Новоясеневская", "Профсоюзная", "Севастопольская", "Теплый Стан", "Университет", "Ясенево"]
+      },
+      {
+        district: "Западный (ЗАО)",
+        stations: ["Багратионовская", "Киевская", "Крылатское", "Кунцевская", "Мичуринский проспект", "Молодежная", "Парк Победы", "Пионерская", "Проспект Вернадского", "Раменки", "Славянский бульвар", "Солнцево", "Студенческая", "Тропарево", "Филевский парк", "Фили", "Юго-Западная"]
+      },
+      {
+        district: "Северо-Западный (СЗАО)",
+        stations: ["Волоколамская", "Митино", "Мякинино", "Октябрьское поле", "Планерная", "Пятницкое шоссе", "Спартак", "Строгино", "Сходненская", "Тушинская", "Щукинская"]
+      }
+   ];
+
+   const MO_CITIES = [
+      "Балашиха", "Подольск", "Химки", "Мытищи", "Королёв", "Люберцы",
+      "Красногорск", "Одинцово", "Домодедово", "Электросталь", "Щёлково",
+      "Серпухов", "Коломна", "Долгопрудный", "Раменское", "Реутов", "Пушкино",
+      "Жуковский", "Орехово-Зуево", "Видное", "Ногинск", "Сергиев Посад", "Лобня",
+      "Ивантеевка", "Лыткарино", "Дзержинский", "Котельники", "Троицк"
+   ];
+
+   // Limit initial view for cities
+   const visibleCities = isExpandedCity ? MO_CITIES : MO_CITIES.slice(0, 12);
+
+   return (
+      <section className="py-24 border-t border-gray-200 relative" id="geography">
+         <div className="container mx-auto px-4 max-w-7xl">
+            <div className="flex flex-col lg:flex-row gap-16">
+               
+               {/* Left Content Column */}
+               <div className="flex-1">
+                  <h2 className="text-3xl md:text-5xl font-heading font-extrabold mb-8 text-slate-900">География работ</h2>
+                  
+                  {/* SEO / LSI Text Block */}
+                  <div className="bg-gray-50 rounded-2xl p-6 mb-10 border border-gray-100">
+                      <p className="text-gray-600 leading-relaxed">
+                          Осуществляем профессиональный <strong>ремонт ванных комнат под ключ</strong> во всех районах Москвы и городах Московской области. 
+                          <span className="hidden sm:inline"> Наш инженер-сметчик бесплатно выезжает для замера и составления сметы как в пределах МКАД, так и до 50 км за его пределы. 
+                          Мы работаем без предоплаты, гарантируем соблюдение сроков и фиксированную стоимость работ по договору.</span>
+                      </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-8 items-start">
+                      {/* Moscow Districts List (Accordion) */}
+                      <div>
+                          <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
+                             <MapPin className="w-5 h-5 text-red-500" />
+                             Округа Москвы
+                          </h3>
+                          <div className="flex flex-col border-t border-gray-100">
+                              {MOSCOW_LOCATIONS.map((loc, idx) => (
+                                  <div key={idx} className="border-b border-gray-100">
+                                      <button 
+                                        onClick={() => setOpenDistrictIdx(openDistrictIdx === idx ? null : idx)}
+                                        className={`w-full py-3 flex items-center justify-between text-left transition-colors group ${openDistrictIdx === idx ? 'text-blue-600 font-bold' : 'text-gray-600 hover:text-blue-600'}`}
+                                      >
+                                          <span className="text-sm">{loc.district}</span>
+                                          {openDistrictIdx === idx ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 text-gray-300 group-hover:text-blue-400" />}
+                                      </button>
+                                      
+                                      {/* Hidden content for SEO, visible on user interaction */}
+                                      <div className={`grid transition-all duration-300 ${openDistrictIdx === idx ? 'grid-rows-[1fr] opacity-100 pb-4' : 'grid-rows-[0fr] opacity-0'}`}>
+                                          <div className="overflow-hidden">
+                                              <div className="flex flex-wrap gap-2 pt-2">
+                                                  {loc.stations.map((station, sIdx) => (
+                                                      <span key={sIdx} className="text-xs bg-gray-50 text-gray-500 px-2 py-1 rounded border border-gray-100">
+                                                          {station}
+                                                      </span>
+                                                  ))}
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              ))}
+                          </div>
+                      </div>
+
+                      {/* MO Cities List (Tag Cloud) */}
+                      <div>
+                          <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
+                             <Map className="w-5 h-5 text-blue-500" />
+                             Города МО
+                          </h3>
+                          <div className="flex flex-wrap gap-2 content-start relative">
+                              {visibleCities.map((city, i) => (
+                                  <span 
+                                    key={i} 
+                                    className="bg-white border border-gray-200 px-3 py-1.5 rounded-full text-sm text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-all shadow-sm cursor-default"
+                                  >
+                                      {city}
+                                  </span>
+                              ))}
+                          </div>
+                          
+                          <button 
+                            onClick={() => setIsExpandedCity(!isExpandedCity)}
+                            className="mt-6 flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors"
+                          >
+                             {isExpandedCity ? (
+                                <>Свернуть список <ChevronUp className="w-4 h-4" /></>
+                             ) : (
+                                <>Показать все города <ChevronDown className="w-4 h-4" /></>
+                             )}
+                          </button>
+                      </div>
+                  </div>
                </div>
-            </div>
-            <div className="flex-1 w-full aspect-video bg-gray-200 rounded-3xl overflow-hidden relative shadow-2xl">
-               <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800" alt="Map" className="w-full h-full object-cover grayscale opacity-80" />
-               <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-white px-8 py-4 rounded-2xl shadow-xl font-bold text-slate-900 flex items-center gap-3 animate-bounce-slow">
-                     <div className="w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
-                     Москва и МО
+
+               {/* Right Map Column */}
+               <div className="lg:w-[40%] w-full h-[400px] lg:h-auto min-h-[400px] bg-gray-200 rounded-[2.5rem] overflow-hidden relative shadow-2xl order-first lg:order-last">
+                  <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800" alt="Map" className="w-full h-full object-cover grayscale opacity-80 hover:opacity-100 transition-opacity duration-700" />
+                  
+                  {/* Floating Card on Map */}
+                  <div className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-gray-100">
+                     <div className="flex items-center gap-4 mb-4">
+                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center animate-pulse">
+                           <PhoneCall className="w-5 h-5 text-green-600" />
+                        </div>
+                        <div>
+                           <div className="font-bold text-slate-900">Бесплатный выезд</div>
+                           <div className="text-xs text-gray-500">Инженер будет у вас завтра</div>
+                        </div>
+                     </div>
+                     <button 
+                        onClick={onAction}
+                        className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors"
+                     >
+                        Вызвать замерщика
+                     </button>
+                  </div>
+
+                  {/* Pin Animation */}
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                      <div className="relative">
+                          <div className="w-4 h-4 bg-blue-600 rounded-full animate-ping absolute inset-0"></div>
+                          <div className="w-4 h-4 bg-blue-600 rounded-full relative border-2 border-white shadow-lg"></div>
+                      </div>
                   </div>
                </div>
             </div>
          </div>
-      </div>
-   </section>
-);
+      </section>
+   );
+};

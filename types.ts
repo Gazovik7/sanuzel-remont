@@ -1,3 +1,4 @@
+
 export interface TeamMember {
   name: string;
   role: string;
@@ -49,4 +50,19 @@ export interface Review {
   location: string;
   avatar: string;
   chat: ChatMessage[];
+}
+
+export interface VideoReview {
+  id: number;
+  author: string;
+  location: string;
+  preview: string;
+  duration: string;
+}
+
+export interface PaperReview {
+  id: number;
+  author: string;
+  date: string;
+  image: string;
 }
