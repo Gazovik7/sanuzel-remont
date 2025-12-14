@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Phone, MessageCircle, Menu, ArrowUp, Check, X, ChevronDown, MapPin, Users, Briefcase, FileText, Star, Paintbrush, Wrench, Home, Clock, CreditCard } from 'lucide-react';
+import { Phone, MessageCircle, Menu, ArrowUp, Check, X, ChevronDown, MapPin, Users, Briefcase, FileText, Star, Paintbrush, Wrench, Home, Clock, CreditCard, BookOpen } from 'lucide-react';
 import { Hero } from './components/Hero';
 import Calculator from './components/Calculator';
 import { PriceList } from './components/PriceList';
@@ -8,6 +8,8 @@ import { ContactsPage } from './components/ContactsPage';
 import { PortfolioPage } from './components/PortfolioPage';
 import { AboutPage } from './components/AboutPage';
 import { ReviewsPage } from './components/ReviewsPage';
+import { BlogPage } from './components/BlogPage';
+import { ArticlePage } from './components/ArticlePage';
 import { Breadcrumbs } from './components/Breadcrumbs';
 import { 
   ComparisonSection, PackagesSection, PortfolioSection, 
@@ -131,7 +133,8 @@ function App() {
   
   // -- ROUTING LOGIC (Query Params) --
   const [isBudgetPage, setIsBudgetPage] = useState(false);
-  const [view, setView] = useState<'landing' | 'prices' | 'contacts' | 'portfolio' | 'about' | 'reviews'>('landing');
+  const [view, setView] = useState<'landing' | 'prices' | 'contacts' | 'portfolio' | 'about' | 'reviews' | 'blog' | 'article'>('landing');
+  const [articleId, setArticleId] = useState<string | null>(null);
 
   // Categorized Menu Data
   const REPAIR_MENU = [
@@ -177,6 +180,7 @@ function App() {
     const checkPath = () => {
       const params = new URLSearchParams(window.location.search);
       const pageParam = params.get('page');
+      const idParam = params.get('id');
       
       if (pageParam === 'prices') {
         setView('prices');
@@ -192,6 +196,13 @@ function App() {
         setIsBudgetPage(false);
       } else if (pageParam === 'reviews') {
         setView('reviews');
+        setIsBudgetPage(false);
+      } else if (pageParam === 'blog') {
+        setView('blog');
+        setIsBudgetPage(false);
+      } else if (pageParam === 'article' && idParam) {
+        setView('article');
+        setArticleId(idParam);
         setIsBudgetPage(false);
       } else if (pageParam === 'budget') {
         setView('landing');
@@ -212,9 +223,11 @@ function App() {
   }, []);
 
   // Function to handle navigation without page reload
-  const navigate = (mode: 'premium' | 'budget' | 'prices' | 'contacts' | 'portfolio' | 'about' | 'reviews' | 'landing') => {
+  const navigate = (mode: 'premium' | 'budget' | 'prices' | 'contacts' | 'portfolio' | 'about' | 'reviews' | 'blog' | 'article' | 'landing', params?: any) => {
     try {
       const url = new URL(window.location.href);
+      url.searchParams.delete('id'); // Clean id param by default
+
       if (mode === 'prices') {
         url.searchParams.set('page', 'prices');
         setView('prices');
@@ -234,6 +247,18 @@ function App() {
       } else if (mode === 'reviews') {
         url.searchParams.set('page', 'reviews');
         setView('reviews');
+        setIsBudgetPage(false);
+      } else if (mode === 'blog') {
+        url.searchParams.set('page', 'blog');
+        setView('blog');
+        setIsBudgetPage(false);
+      } else if (mode === 'article') {
+        url.searchParams.set('page', 'article');
+        if (params?.id) {
+            url.searchParams.set('id', params.id);
+            setArticleId(params.id);
+        }
+        setView('article');
         setIsBudgetPage(false);
       } else if (mode === 'budget') {
         url.searchParams.set('page', 'budget');
@@ -257,12 +282,14 @@ function App() {
       window.history.pushState({}, '', url.toString());
     } catch (e) {
       console.warn('URL update suppressed due to environment restrictions.');
-      // Fallback state update if URL update fails
+      // Fallback state update
       if (mode === 'prices') setView('prices');
       else if (mode === 'contacts') setView('contacts');
       else if (mode === 'portfolio') setView('portfolio');
       else if (mode === 'about') setView('about');
       else if (mode === 'reviews') setView('reviews');
+      else if (mode === 'blog') setView('blog');
+      else if (mode === 'article') { setView('article'); if (params?.id) setArticleId(params.id); }
       else {
         setView('landing');
         setIsBudgetPage(mode === 'budget');
@@ -337,7 +364,7 @@ function App() {
         onSubmit={handleFormSubmit}
       />
       
-      {/* Mobile Menu Overlay - Changed lg:hidden to xl:hidden */}
+      {/* Mobile Menu Overlay */}
       <div className={`fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300 xl:hidden ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} onClick={() => setMobileMenuOpen(false)}>
         <div className={`absolute top-0 right-0 w-[85%] max-w-sm h-full bg-white shadow-2xl transition-transform duration-300 transform ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`} onClick={e => e.stopPropagation()}>
            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
@@ -347,7 +374,7 @@ function App() {
            <div className="flex flex-col p-6 space-y-4 overflow-y-auto max-h-[calc(100vh-100px)]">
               <nav className="flex flex-col space-y-4 font-heading">
                 
-                {/* Mobile Repair Types - Enhanced */}
+                {/* Mobile Repair Types */}
                 <div className="pb-4 border-b border-gray-100">
                    <button 
                       onClick={() => setMobileRepairsOpen(!mobileRepairsOpen)}
@@ -387,6 +414,9 @@ function App() {
                 <button onClick={() => navigate('reviews')} className={`text-left font-bold text-lg transition-colors flex items-center gap-3 ${view === 'reviews' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-800'}`}>
                    <MessageCircle className={`w-5 h-5 ${view === 'reviews' ? 'text-blue-600' : 'text-gray-400'}`} /> Отзывы
                 </button>
+                <button onClick={() => navigate('blog')} className={`text-left font-bold text-lg transition-colors flex items-center gap-3 ${view === 'blog' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-800'}`}>
+                   <BookOpen className={`w-5 h-5 ${view === 'blog' ? 'text-blue-600' : 'text-gray-400'}`} /> Блог экспертов
+                </button>
                 <button onClick={() => navigate('about')} className={`text-left font-bold text-lg transition-colors flex items-center gap-3 ${view === 'about' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-800'}`}>
                    <Users className={`w-5 h-5 ${view === 'about' ? 'text-blue-600' : 'text-gray-400'}`} /> О компании
                 </button>
@@ -395,9 +425,6 @@ function App() {
                 </button>
                 <button onClick={() => navigate('portfolio')} className={`text-left font-bold text-lg transition-colors flex items-center gap-3 ${view === 'portfolio' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-800'}`}>
                    <Briefcase className={`w-5 h-5 ${view === 'portfolio' ? 'text-blue-600' : 'text-gray-400'}`} /> Портфолио
-                </button>
-                <button onClick={() => navigate('prices')} className={`text-left font-bold text-lg transition-colors flex items-center gap-3 ${view === 'prices' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-800'}`}>
-                   <FileText className={`w-5 h-5 ${view === 'prices' ? 'text-blue-600' : 'text-gray-400'}`} /> Прайс-лист
                 </button>
                 <button onClick={() => navigate('contacts')} className={`text-left font-bold text-lg transition-colors flex items-center gap-3 ${view === 'contacts' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-800'}`}>
                    <Phone className={`w-5 h-5 ${view === 'contacts' ? 'text-blue-600' : 'text-gray-400'}`} /> Контакты
@@ -423,7 +450,7 @@ function App() {
       <header className={`fixed top-0 w-full z-40 transition-all duration-500 ${showSolidHeader ? 'bg-white/95 backdrop-blur-md shadow-sm py-3' : 'bg-gradient-to-b from-slate-900/90 to-transparent py-6'}`}>
         <div className="container mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-             {/* Logo Link to Root with interception */}
+             {/* Logo Link */}
              <a 
                href="?" 
                onClick={(e) => { e.preventDefault(); navigate('landing'); }}
@@ -499,10 +526,9 @@ function App() {
 
             <button onClick={() => scrollToSection('geography')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>РАЙОНЫ</button>
             <button onClick={() => navigate('reviews')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'reviews' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>ОТЗЫВЫ</button>
-            <button onClick={() => navigate('contacts')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'contacts' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>КОНТАКТЫ</button>
-            <button onClick={() => navigate('about')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'about' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>О КОМПАНИИ</button>
+            <button onClick={() => navigate('blog')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'blog' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>БЛОГ</button>
+            <button onClick={() => navigate('about')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'about' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>О НАС</button>
             <button onClick={() => scrollToSection('packages')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>ЦЕНЫ</button>
-            <button onClick={() => navigate('prices')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'prices' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>ПРАЙС</button>
             <button onClick={() => navigate('portfolio')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'portfolio' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>ПОРТФОЛИО</button>
           </nav>
 
@@ -663,6 +689,8 @@ function App() {
         {view === 'portfolio' && <PortfolioPage onNavigate={navigate} onCalculate={() => { navigate('landing'); setTimeout(() => document.getElementById('calculator-section')?.scrollIntoView(), 100); }} />}
         {view === 'about' && <AboutPage onNavigate={navigate} onCalculate={() => { setModalType('callback'); setIsModalOpen(true); }} />}
         {view === 'reviews' && <ReviewsPage onNavigate={navigate} onCalculate={() => { setModalType('callback'); setIsModalOpen(true); }} />}
+        {view === 'blog' && <BlogPage onNavigate={navigate} onCalculate={() => { setModalType('callback'); setIsModalOpen(true); }} />}
+        {view === 'article' && articleId && <ArticlePage id={articleId} onNavigate={navigate} onCalculate={() => { setModalType('callback'); setIsModalOpen(true); }} />}
       </main>
 
       {/* --- FOOTER --- */}
@@ -760,11 +788,19 @@ function App() {
 
             {/* Column 3: Districts */}
             <div>
-              <h3 className="font-heading font-bold text-2xl mb-6">Районы</h3>
+              <h3 className="font-heading font-bold text-2xl mb-6">Информация</h3>
               <ul className="space-y-3 text-sm text-gray-400">
-                 {['ЦАО', 'СВАО', 'ВАО', 'ЮВАО', 'ЮАО', 'ЮЗАО', 'ЗАО', 'СЗАО', 'Станции метро'].map(item => (
-                     <li key={item}><a href="#" className="hover:text-white hover:underline decoration-slate-700 underline-offset-4 transition-all">{item}</a></li>
-                 ))}
+                 <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('blog'); }} className="hover:text-white hover:underline decoration-slate-700 underline-offset-4 transition-all">Блог экспертов</a></li>
+                 <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('about'); }} className="hover:text-white hover:underline decoration-slate-700 underline-offset-4 transition-all">О компании</a></li>
+                 <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('reviews'); }} className="hover:text-white hover:underline decoration-slate-700 underline-offset-4 transition-all">Отзывы клиентов</a></li>
+                 <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('prices'); }} className="hover:text-white hover:underline decoration-slate-700 underline-offset-4 transition-all">Прайс-лист 2024</a></li>
+              </ul>
+              
+              <h3 className="font-heading font-bold text-xl mt-8 mb-4">Районы</h3>
+              <ul className="space-y-2 text-sm text-gray-400">
+                  {['ЦАО', 'СВАО', 'ВАО', 'ЮВАО', 'ЮАО'].map(item => (
+                      <li key={item}><a href="#" className="hover:text-white transition-all">{item}</a></li>
+                  ))}
               </ul>
             </div>
 

@@ -5,7 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
     <title>Ремонт ванных комнат и санузлов под ключ в Москве</title>
     <meta name="description" content="Ремонт ванных комнат и санузлов под ключ в Москве и Московской области. Без предоплаты, договор, гарантия." />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              heading: ['Manrope', 'sans-serif'],
+            },
+            typography: (theme) => ({
+              DEFAULT: {
+                css: {
+                  color: theme('colors.gray.600'),
+                  h1: { fontFamily: theme('fontFamily.heading') },
+                  h2: { fontFamily: theme('fontFamily.heading') },
+                  h3: { fontFamily: theme('fontFamily.heading') },
+                  h4: { fontFamily: theme('fontFamily.heading') },
+                },
+              },
+            }),
+          }
+        }
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
