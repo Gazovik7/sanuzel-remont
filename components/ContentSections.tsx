@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   Check, X, Hammer, Clock, Shield, Trash2, 
@@ -214,7 +215,11 @@ export const PortfolioSection = ({ onAction, portfolio }: { onAction: () => void
                 </div>
                 
                 <button 
-                  onClick={onAction}
+                  onClick={() => {
+                     // If we are in the portfolio section on landing, clicking usually triggers modal or nav
+                     // Reusing onAction for simplicity
+                     onAction();
+                  }}
                   className="mt-8 w-full py-3 rounded-lg border border-gray-200 text-gray-600 font-medium hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all"
                 >
                   Хочу так же

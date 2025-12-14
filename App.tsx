@@ -5,6 +5,8 @@ import { Hero } from './components/Hero';
 import Calculator from './components/Calculator';
 import { PriceList } from './components/PriceList';
 import { ContactsPage } from './components/ContactsPage';
+import { PortfolioPage } from './components/PortfolioPage';
+import { AboutPage } from './components/AboutPage';
 import { Breadcrumbs } from './components/Breadcrumbs';
 import { 
   ComparisonSection, PackagesSection, PortfolioSection, 
@@ -126,7 +128,7 @@ function App() {
   
   // -- ROUTING LOGIC (Query Params) --
   const [isBudgetPage, setIsBudgetPage] = useState(false);
-  const [view, setView] = useState<'landing' | 'prices' | 'contacts'>('landing');
+  const [view, setView] = useState<'landing' | 'prices' | 'contacts' | 'portfolio' | 'about'>('landing');
 
   useEffect(() => {
     // Check initial path
@@ -139,6 +141,12 @@ function App() {
         setIsBudgetPage(false);
       } else if (pageParam === 'contacts') {
         setView('contacts');
+        setIsBudgetPage(false);
+      } else if (pageParam === 'portfolio') {
+        setView('portfolio');
+        setIsBudgetPage(false);
+      } else if (pageParam === 'about') {
+        setView('about');
         setIsBudgetPage(false);
       } else if (pageParam === 'budget') {
         setView('landing');
@@ -159,7 +167,7 @@ function App() {
   }, []);
 
   // Function to handle navigation without page reload
-  const navigate = (mode: 'premium' | 'budget' | 'prices' | 'contacts' | 'landing') => {
+  const navigate = (mode: 'premium' | 'budget' | 'prices' | 'contacts' | 'portfolio' | 'about' | 'landing') => {
     try {
       const url = new URL(window.location.href);
       if (mode === 'prices') {
@@ -170,11 +178,23 @@ function App() {
         url.searchParams.set('page', 'contacts');
         setView('contacts');
         setIsBudgetPage(false);
+      } else if (mode === 'portfolio') {
+        url.searchParams.set('page', 'portfolio');
+        setView('portfolio');
+        setIsBudgetPage(false);
+      } else if (mode === 'about') {
+        url.searchParams.set('page', 'about');
+        setView('about');
+        setIsBudgetPage(false);
       } else if (mode === 'budget') {
         url.searchParams.set('page', 'budget');
         setView('landing');
         setIsBudgetPage(true);
       } else if (mode === 'landing') {
+        url.searchParams.delete('page');
+        setView('landing');
+        setIsBudgetPage(false);
+      } else if (mode === 'premium') {
         url.searchParams.delete('page');
         setView('landing');
         setIsBudgetPage(false);
@@ -191,6 +211,8 @@ function App() {
       // Fallback state update if URL update fails
       if (mode === 'prices') setView('prices');
       else if (mode === 'contacts') setView('contacts');
+      else if (mode === 'portfolio') setView('portfolio');
+      else if (mode === 'about') setView('about');
       else {
         setView('landing');
         setIsBudgetPage(mode === 'budget');
@@ -298,14 +320,14 @@ function App() {
                 <button onClick={() => scrollToSection('reviews')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-3">
                    <MessageCircle className="w-5 h-5 text-gray-400" /> Отзывы
                 </button>
-                <button onClick={() => scrollToSection('why-us')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-3">
-                   <Users className="w-5 h-5 text-gray-400" /> О компании
+                <button onClick={() => navigate('about')} className={`text-left font-bold text-lg transition-colors flex items-center gap-3 ${view === 'about' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-800'}`}>
+                   <Users className={`w-5 h-5 ${view === 'about' ? 'text-blue-600' : 'text-gray-400'}`} /> О компании
                 </button>
                 <button onClick={() => scrollToSection('packages')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-3">
                    <FileText className="w-5 h-5 text-gray-400" /> Цены
                 </button>
-                <button onClick={() => scrollToSection('portfolio')} className="text-left font-bold text-lg text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-3">
-                   <Briefcase className="w-5 h-5 text-gray-400" /> Портфолио
+                <button onClick={() => navigate('portfolio')} className={`text-left font-bold text-lg transition-colors flex items-center gap-3 ${view === 'portfolio' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-800'}`}>
+                   <Briefcase className={`w-5 h-5 ${view === 'portfolio' ? 'text-blue-600' : 'text-gray-400'}`} /> Портфолио
                 </button>
                 <button onClick={() => navigate('prices')} className={`text-left font-bold text-lg transition-colors flex items-center gap-3 ${view === 'prices' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-800'}`}>
                    <FileText className={`w-5 h-5 ${view === 'prices' ? 'text-blue-600' : 'text-gray-400'}`} /> Прайс-лист
@@ -394,10 +416,10 @@ function App() {
             <button onClick={() => scrollToSection('geography')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>РАЙОНЫ</button>
             <button onClick={() => scrollToSection('reviews')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>ОТЗЫВЫ</button>
             <button onClick={() => navigate('contacts')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'contacts' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>КОНТАКТЫ</button>
-            <button onClick={() => scrollToSection('why-us')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>О КОМПАНИИ</button>
+            <button onClick={() => navigate('about')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'about' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>О КОМПАНИИ</button>
             <button onClick={() => scrollToSection('packages')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>ЦЕНЫ</button>
             <button onClick={() => navigate('prices')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'prices' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>ПРАЙС</button>
-            <button onClick={() => scrollToSection('portfolio')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${showSolidHeader ? 'text-slate-800' : 'text-white'}`}>ПОРТФОЛИО</button>
+            <button onClick={() => navigate('portfolio')} className={`text-sm font-bold tracking-wide hover:text-blue-500 transition-all ${view === 'portfolio' ? 'text-blue-600' : (showSolidHeader ? 'text-slate-800' : 'text-white')}`}>ПОРТФОЛИО</button>
           </nav>
 
           {/* Actions */}
@@ -473,7 +495,7 @@ function App() {
 
             <RevealOnScroll id="portfolio" className="bg-slate-100">
               <PortfolioSection 
-                onAction={() => { setModalType('callback'); setIsModalOpen(true); }} 
+                onAction={() => navigate('portfolio')} 
                 portfolio={pageData.portfolio}
               />
             </RevealOnScroll>
@@ -550,6 +572,8 @@ function App() {
 
         {view === 'prices' && <PriceList onNavigate={navigate} />}
         {view === 'contacts' && <ContactsPage onSubmit={handleFormSubmit} onNavigate={navigate} onBack={() => navigate('landing')} />}
+        {view === 'portfolio' && <PortfolioPage onNavigate={navigate} onCalculate={() => { navigate('landing'); setTimeout(() => document.getElementById('calculator-section')?.scrollIntoView(), 100); }} />}
+        {view === 'about' && <AboutPage onNavigate={navigate} onCalculate={() => { navigate('landing'); setTimeout(() => document.getElementById('calculator-section')?.scrollIntoView(), 100); }} />}
       </main>
 
       {/* --- FOOTER --- */}
@@ -627,7 +651,10 @@ function App() {
       {/* --- MOBILE STICKY BOTTOM BAR --- */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur border-t border-gray-200 p-3 flex gap-3 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] pb-safe">
         <button 
-          onClick={() => { document.getElementById('calculator-section')?.scrollIntoView({ behavior: 'smooth' }) }}
+          onClick={() => { 
+             if (view !== 'landing') navigate('landing'); 
+             setTimeout(() => document.getElementById('calculator-section')?.scrollIntoView({ behavior: 'smooth' }), 100); 
+          }}
           className="flex-1 bg-slate-100 text-slate-700 py-3.5 rounded-xl font-bold text-sm active:scale-95 transition-transform"
         >
           Рассчитать цену
