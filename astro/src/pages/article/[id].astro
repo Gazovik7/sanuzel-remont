@@ -7,7 +7,7 @@ import LegacyMobileStickyBar from '../../components/blocks/LegacyMobileStickyBar
 import LegacyScrollTopButton from '../../components/blocks/LegacyScrollTopButton.astro';
 
 import { ArticlePage } from '../../legacy/components/ArticlePage';
-import { BLOG_POSTS } from '../../legacy/blogData';
+import { BLOG_POSTS } from '../../data/blog';
 
 export function getStaticPaths() {
   return BLOG_POSTS.map((post) => ({
@@ -35,4 +35,3 @@ const description =
     <LegacyScrollTopButton />
   </div>
 </BaseLayout>
-
