@@ -18,3 +18,7 @@ View your app in AI Studio: https://ai.studio/apps/drive/1EdS_9nT0V7H4rCWHSIPHdu
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+## Services pages (Astro)
+
+Documentation for editing/adding service pages: `astro/src/data/services/README.md`.

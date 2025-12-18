@@ -1,0 +1,374 @@
+---
+import '../styles/global.css';
+import LeadModalHost from '../components/islands/LeadModalHost';
+const SITE = {
+  logo: '/img/logo.png',
+} as const;
+
+type Props = {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+};
+
+const { title, description, canonicalPath } = Astro.props;
+const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const ogImageUrl = new URL(SITE.logo, Astro.site ?? Astro.url.origin);
+---
+
+<!doctype html>
+<html lang="ru" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <link rel="icon" type="image/png" href={SITE.logo} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl.toString()} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl.toString()} />
+    <meta property="og:image" content={ogImageUrl.toString()} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+
+    <script is:inline>
+      (() => {
+        try {
+          if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+          const isHome = window.location.pathname === '/' || window.location.pathname === '/index.html';
+          if (isHome && !window.location.hash) window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+        } catch {
+          // ignore
+        }
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-white text-slate-900">
+    <slot />
+    <div
+      id="mobile-menu"
+      class="hidden fixed inset-0 z-[60]"
+      aria-hidden="true"
+    >
+      <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm" data-mobile-menu-backdrop></div>
+      <div class="absolute top-0 right-0 h-full w-[88%] max-w-sm bg-white shadow-2xl border-l border-gray-100 flex flex-col">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <a href="/" class="flex items-center gap-3" data-mobile-menu-link>
+            <img src="/img/logo.png" alt="Логотип" class="h-10 w-auto object-contain" />
+            <span class="text-sm font-heading font-extrabold text-slate-900">Меню</span>
+          </a>
+          <button
+            type="button"
+            class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-900 flex items-center justify-center"
+            data-mobile-menu-close
+            aria-label="Закрыть меню"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x w-5 h-5">
+              <path d="M18 6 6 18"></path>
+              <path d="m6 6 12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <nav class="px-5 py-4 overflow-y-auto">
+          <ul class="space-y-2 font-heading">
+            <li>
+              <a href="/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
+                Виды ремонта
+              </a>
+            </li>
+            <li>
+              <a href="/portfolio/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
+                Портфолио
+              </a>
+            </li>
+            <li>
+              <a href="/otzyvy-klientov/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
+                Отзывы
+              </a>
+            </li>
+            <li>
+              <a href="/blog/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
+                Блог
+              </a>
+            </li>
+            <li>
+              <a href="/about-us/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
+                О нас
+              </a>
+            </li>
+            <li>
+              <a href="/contacts/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
+                Контакты
+              </a>
+            </li>
+            <li>
+              <a href="/prajs-list-na-remont-sanuzlov/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
+                Цены (прайс-лист)
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="mt-auto px-5 py-4 border-t border-gray-100">
+          <a
+            href="#contacts"
+            class="w-full inline-flex items-center justify-center gap-2 bg-blue-600 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-blue-600/20 active:scale-95 transition-transform"
+            data-lead-open="callback"
+            data-mobile-menu-link
+          >
+            Рассчитать стоимость
+          </a>
+          <p class="text-[11px] text-gray-400 text-center mt-3 leading-tight">
+            Бесплатно и ни к чему не обязывает
+          </p>
+        </div>
+      </div>
+    </div>
+    <LeadModalHost client:load />
+
+    <script is:inline>
+      (() => {
+        const menu = document.getElementById('mobile-menu');
+        if (!menu) return;
+
+        const openButtons = () => Array.from(document.querySelectorAll('[data-mobile-menu-open]'));
+        const setExpanded = (value) => {
+          for (const el of openButtons()) el.setAttribute('aria-expanded', value ? 'true' : 'false');
+        };
+
+        const openMenu = () => {
+          menu.classList.remove('hidden');
+          menu.setAttribute('aria-hidden', 'false');
+          document.body.classList.add('overflow-hidden');
+          setExpanded(true);
+        };
+
+        const closeMenu = () => {
+          menu.classList.add('hidden');
+          menu.setAttribute('aria-hidden', 'true');
+          document.body.classList.remove('overflow-hidden');
+          setExpanded(false);
+        };
+
+        document.addEventListener('click', (e) => {
+          const target = e.target;
+          if (!(target instanceof Element)) return;
+
+          const openTrigger = target.closest('[data-mobile-menu-open]');
+          if (openTrigger) {
+            e.preventDefault();
+            openMenu();
+            return;
+          }
+
+          const closeTrigger = target.closest('[data-mobile-menu-close]');
+          if (closeTrigger) {
+            e.preventDefault();
+            closeMenu();
+            return;
+          }
+
+          const linkTrigger = target.closest('[data-mobile-menu-link]');
+          if (linkTrigger) closeMenu();
+
+          const backdrop = target.closest('[data-mobile-menu-backdrop]');
+          if (backdrop) closeMenu();
+        });
+
+        window.addEventListener('keydown', (e) => {
+          if (e.key !== 'Escape') return;
+          closeMenu();
+        });
+
+        window.addEventListener('mobile-menu:close', closeMenu);
+      })();
+    </script>
+
+    <script is:inline>
+      (() => {
+        const selector = 'input[data-phone-mask="ru"]';
+        const pattern = '^\\+7 \\(\\d{3}\\) \\d{3}-\\d{2}-\\d{2}$';
+        const placeholder = '+7 (999) 000-00-00';
+
+        const formatRuPhone = (value) => {
+          const input = String(value || '').replace(/\D/g, '');
+          if (!input) return '';
+
+          let nums = input;
+          if (nums[0] === '9') nums = '7' + nums;
+          if (nums[0] === '8') nums = '7' + nums.slice(1);
+
+          if (nums[0] !== '7') {
+            return '+' + nums.slice(0, 15);
+          }
+
+          nums = nums.slice(0, 11);
+
+          let res = '+7';
+          if (nums.length > 1) res += ` (${nums.slice(1, 4)}`;
+          if (nums.length >= 5) res += `) ${nums.slice(4, 7)}`;
+          if (nums.length >= 8) res += `-${nums.slice(7, 9)}`;
+          if (nums.length >= 10) res += `-${nums.slice(9, 11)}`;
+          return res;
+        };
+
+        const ensureAttrs = (el) => {
+          if (!(el instanceof HTMLInputElement)) return;
+          if (el.getAttribute('type') !== 'tel') return;
+          if (!el.hasAttribute('inputmode')) el.setAttribute('inputmode', 'tel');
+          if (!el.hasAttribute('autocomplete')) el.setAttribute('autocomplete', 'tel');
+          if (!el.hasAttribute('maxlength')) el.setAttribute('maxlength', '18');
+          if (!el.hasAttribute('pattern')) el.setAttribute('pattern', pattern);
+          if (!el.hasAttribute('placeholder')) el.setAttribute('placeholder', placeholder);
+        };
+
+        const applyMask = (el) => {
+          ensureAttrs(el);
+          const next = formatRuPhone(el.value);
+          if (next === el.value) return;
+          const wasFocused = document.activeElement === el;
+          el.value = next;
+          if (wasFocused) {
+            try {
+              el.setSelectionRange(next.length, next.length);
+            } catch {
+              // ignore
+            }
+          }
+        };
+
+        const onInput = (event) => {
+          const target = event.target;
+          if (!(target instanceof HTMLInputElement)) return;
+          if (!target.matches(selector)) return;
+          applyMask(target);
+        };
+
+        window.addEventListener('load', () => {
+          document.querySelectorAll(selector).forEach((el) => applyMask(el));
+        });
+
+        document.addEventListener('input', onInput, true);
+        document.addEventListener(
+          'paste',
+          (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLInputElement)) return;
+            if (!target.matches(selector)) return;
+            setTimeout(() => applyMask(target), 0);
+          },
+          true
+        );
+      })();
+    </script>
+
+    <script is:inline>
+      (() => {
+        const elements = document.querySelectorAll('.reveal');
+        if (!elements.length) return;
+
+        if (!('IntersectionObserver' in window)) {
+          elements.forEach((el) => el.classList.add('active'));
+          return;
+        }
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add('active');
+              observer.unobserve(entry.target);
+            });
+          },
+          { threshold: 0.1 }
+        );
+
+        elements.forEach((el) => observer.observe(el));
+      })();
+    </script>
+
+    <script is:inline>
+      (() => {
+        try {
+          if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+          const elements = Array.from(document.querySelectorAll('[data-parallax]'));
+          if (!elements.length) return;
+
+          const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+          elements.forEach((el) => {
+            if (el.dataset.parallaxInit === '1') return;
+            el.dataset.parallaxInit = '1';
+            el.style.willChange = 'transform';
+            el.style.transform =
+              'translate3d(0, var(--parallax-y, 0px), 0) perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) scale(1.02)';
+          });
+
+          let raf = 0;
+          const updateParallax = () => {
+            raf = 0;
+            const viewportHeight = window.innerHeight || 1;
+
+            for (const el of elements) {
+              const rect = el.getBoundingClientRect();
+              if (rect.bottom < 0 || rect.top > viewportHeight) continue;
+
+              const max = Number(el.getAttribute('data-parallax-max') || '18') || 18;
+              const progress = (rect.top + rect.height / 2 - viewportHeight / 2) / viewportHeight;
+              const y = clamp(-progress * max, -max, max);
+              el.style.setProperty('--parallax-y', `${y.toFixed(2)}px`);
+            }
+          };
+
+          const requestParallax = () => {
+            if (raf) return;
+            raf = window.requestAnimationFrame(updateParallax);
+          };
+
+          updateParallax();
+          window.addEventListener('scroll', requestParallax, { passive: true });
+          window.addEventListener('resize', requestParallax);
+
+          const tiltMax = 4;
+          for (const el of elements) {
+            el.addEventListener('pointermove', (e) => {
+              if (e.pointerType && e.pointerType !== 'mouse') return;
+              const rect = el.getBoundingClientRect();
+              const px = (e.clientX - rect.left) / rect.width;
+              const py = (e.clientY - rect.top) / rect.height;
+              const dx = clamp((px - 0.5) * 2, -1, 1);
+              const dy = clamp((py - 0.5) * 2, -1, 1);
+              el.style.transition = 'transform 0ms';
+              el.style.setProperty('--tilt-y', `${(dx * tiltMax).toFixed(2)}deg`);
+              el.style.setProperty('--tilt-x', `${(-dy * tiltMax).toFixed(2)}deg`);
+            });
+
+            el.addEventListener('pointerleave', () => {
+              el.style.transition = 'transform 200ms ease';
+              el.style.setProperty('--tilt-x', '0deg');
+              el.style.setProperty('--tilt-y', '0deg');
+            });
+          }
+        } catch {
+          // ignore
+        }
+      })();
+    </script>
+  </body>
+</html>

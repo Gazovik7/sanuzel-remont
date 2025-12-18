@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LegacyHeaderSolid from '../../components/blocks/LegacyHeaderSolid.astro';
+import LegacyContactsSection from '../../components/blocks/LegacyContactsSection.astro';
+import LegacyFooter from '../../components/blocks/LegacyFooter.astro';
+import LegacyMobileStickyBar from '../../components/blocks/LegacyMobileStickyBar.astro';
+import LegacyScrollTopButton from '../../components/blocks/LegacyScrollTopButton.astro';
+
+import { AboutPage } from '../../legacy/components/AboutPage';
+
+const title = 'Ремонт санузлов под ключ в Москве';
+const description =
+  'Ремонт санузлов под ключ: ванная, туалет, совмещённый санузел. Работаем без авансов, с договором и гарантией.';
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/about-us/">
+  <div id="top" class="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col">
+    <LegacyHeaderSolid />
+    <main class="flex-1 pt-20 lg:pt-24">
+      <AboutPage onNavigate={() => {}} onCalculate={() => {}} />
+    </main>
+    <LegacyContactsSection />
+    <LegacyFooter />
+    <LegacyMobileStickyBar />
+    <LegacyScrollTopButton />
+  </div>
+</BaseLayout>
+

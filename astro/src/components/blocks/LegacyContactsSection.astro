@@ -1,0 +1,24 @@
+---
+import LegacyContactsCtaForm from '../islands/legacy/LegacyContactsCtaForm';
+---
+
+<div id="contacts" class="reveal">
+  <section class="py-24 bg-slate-900 text-white relative overflow-hidden">
+    <div
+      class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600 rounded-full blur-[150px] opacity-20 pointer-events-none"
+    ></div>
+    <div
+      class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-purple-600 rounded-full blur-[100px] opacity-10 pointer-events-none"
+    ></div>
+    <div class="container mx-auto px-4 max-w-5xl text-center relative z-10">
+      <h2 class="text-3xl md:text-5xl font-bold mb-6 font-heading">
+        Давайте сделаем ванную<br />вашей мечты
+      </h2>
+      <p class="mb-12 text-blue-100 text-lg leading-relaxed max-w-2xl mx-auto">
+        Оставьте заявку сейчас, и мы закрепим за вами скидку 10% на материалы и
+        бесплатный дизайн-проект.
+      </p>
+      <LegacyContactsCtaForm client:load />
+    </div>
+  </section>
+</div>

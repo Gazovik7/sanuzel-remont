@@ -1,0 +1,21 @@
+.before-after-slider {
+  height: 100%;
+}
+
+.before-after-slider__first-photo-container,
+.before-after-slider__second-photo-container {
+  height: 100%;
+}
+
+.before-after-slider__first-photo-container img,
+.before-after-slider__second-photo-container img {
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Center the delimiter (and icon) on the actual cut line. */
+.before-after-slider__delimiter {
+  transform: translateX(-50%) !important;
+}
+
+/* delimiter icon is styled via inline styles */

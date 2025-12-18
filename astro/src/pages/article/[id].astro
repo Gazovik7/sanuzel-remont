@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LegacyHeaderSolid from '../../components/blocks/LegacyHeaderSolid.astro';
+import LegacyContactsSection from '../../components/blocks/LegacyContactsSection.astro';
+import LegacyFooter from '../../components/blocks/LegacyFooter.astro';
+import LegacyMobileStickyBar from '../../components/blocks/LegacyMobileStickyBar.astro';
+import LegacyScrollTopButton from '../../components/blocks/LegacyScrollTopButton.astro';
+
+import { ArticlePage } from '../../legacy/components/ArticlePage';
+import { BLOG_POSTS } from '../../legacy/blogData';
+
+export function getStaticPaths() {
+  return BLOG_POSTS.map((post) => ({
+    params: { id: post.id },
+  }));
+}
+
+const { id } = Astro.params;
+const post = BLOG_POSTS.find((p) => p.id === id);
+
+const title = post ? `${post.title} | Блог Ремонт Санузлов` : 'Блог Ремонт Санузлов';
+const description =
+  'Ремонт санузлов под ключ: ванная, туалет, совмещённый санузел. Работаем без авансов, с договором и гарантией.';
+---
+
+<BaseLayout title={title} description={description} canonicalPath={`/article/${id}/`}>
+  <div id="top" class="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col">
+    <LegacyHeaderSolid />
+    <main class="flex-1 pt-20 lg:pt-24">
+      {post ? <ArticlePage id={post.id} onNavigate={() => {}} onCalculate={() => {}} /> : <div class="container mx-auto px-4 py-16 max-w-4xl"><h1 class="text-3xl font-heading font-extrabold">Статья не найдена</h1></div>}
+    </main>
+    <LegacyContactsSection />
+    <LegacyFooter />
+    <LegacyMobileStickyBar />
+    <LegacyScrollTopButton />
+  </div>
+</BaseLayout>
+

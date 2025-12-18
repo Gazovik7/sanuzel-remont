@@ -1,0 +1,198 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+  font-family: Manrope, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.scroll-offset {
+  scroll-margin-top: 100px;
+}
+
+/* Animation helpers (legacy) */
+.reveal {
+  opacity: 1;
+  transform: none;
+}
+
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html.js .reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Hide spin buttons for number inputs */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Header state (landing -> solid) */
+.site-header.is-solid {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+}
+
+.site-header.is-solid .site-logo {
+  filter: none !important;
+}
+
+.site-header.is-solid .site-tagline {
+  color: rgb(107 114 128) !important; /* gray-500 */
+}
+
+.site-header.is-solid .site-nav-link {
+  color: rgb(30 41 59) !important; /* slate-800 */
+}
+
+.site-header.is-solid .site-nav-link:hover {
+  color: rgb(59 130 246) !important; /* blue-500 */
+}
+
+.site-header.is-solid .site-nav-dropdown-btn {
+  color: rgb(30 41 59) !important; /* slate-800 */
+}
+
+.site-header.is-solid .site-nav-dropdown-btn:hover {
+  background: rgb(248 250 252) !important; /* slate-50 */
+}
+
+.site-header.is-solid .site-phone {
+  color: rgb(15 23 42) !important; /* slate-900 */
+}
+
+.site-header.is-solid .site-cta {
+  background: rgb(37 99 235) !important; /* blue-600 */
+  color: white !important;
+  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.25), 0 4px 6px -4px rgba(37, 99, 235, 0.25) !important;
+}
+
+.site-header.is-solid .site-cta:hover {
+  background: rgb(29 78 216) !important; /* blue-700 */
+}
+
+.site-header.is-solid .site-mobile-btn--phone {
+  background: rgb(37 99 235) !important; /* blue-600 */
+  border-color: rgb(37 99 235) !important;
+  color: white !important;
+}
+
+.site-header.is-solid .site-mobile-btn--menu {
+  background: rgb(15 23 42) !important; /* slate-900 */
+  color: white !important;
+}
+
+/* Contacts map tabs (no hydration) */
+.map-tabs .map-tab {
+  text-align: center;
+  cursor: pointer;
+  background: #ffffff;
+  color: #6b7280; /* gray-500 */
+}
+
+.map-tabs .map-tab:hover {
+  background: #f9fafb; /* gray-50 */
+}
+
+.map-tabs #map-yandex:checked + .map-tab {
+  background: #facc15; /* yellow-400 */
+  color: #0f172a; /* slate-900 */
+}
+
+.map-tabs #map-google:checked + .map-tab {
+  background: #2563eb; /* blue-600 */
+  color: #ffffff;
+}
+
+.map-tabs .map-panel {
+  display: none;
+}
+
+.map-tabs #map-yandex:checked ~ .map-panels .map-panel-yandex {
+  display: block;
+}
+
+.map-tabs #map-google:checked ~ .map-panels .map-panel-google {
+  display: block;
+}
+
+/* Spoilers (details/summary) */
+.price-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.price-details > summary {
+  list-style: none;
+}
+
+.price-details[open] .price-chevron {
+  transform: rotate(180deg);
+}
+
+.seo-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.seo-details > summary {
+  list-style: none;
+}
+
+.seo-details[open] .seo-chevron {
+  transform: rotate(180deg);
+}
