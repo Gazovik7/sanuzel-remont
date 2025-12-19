@@ -184,8 +184,8 @@ export type GeographyBlockConfig = {
   mapCardTitle: string;
   mapCardSubtitle: string;
   mapCtaText: string;
-  moscowLocations: Array<{ district: string; stations: string[] }>;
-  moCities: string[];
+  moscowLocations: Array<{ district: string; stations: Array<string | { name: string; url: string }> }>;
+  moCities: Array<string | { name: string; url: string }>;
 };
 
 export type MaterialBrand = { category: string; desc: string; brands: string[] };

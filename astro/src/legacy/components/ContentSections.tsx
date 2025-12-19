@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import {
   Check, X, Hammer, Clock, Shield, Trash2,
   Ruler, Search, ShoppingBag, HardHat, FileText,
-  Users, MapPin, Play, Star, BadgeCheck, CheckCircle2, ArrowRight, CheckCheck, MoreVertical, ShieldCheck, Microscope, Factory, PhoneCall,
+  Users, MapPin, Play, Star, BadgeCheck, CheckCircle2, ArrowRight, CheckCheck, MoreVertical, ShieldCheck, Microscope, Factory, PhoneCall, Phone,
   ChevronDown, ChevronUp, Map, Train, Video, FileSignature, MessageCircle
 } from 'lucide-react';
 import type { Package, PortfolioItem, FaqItem, TeamMember, Review, VideoReview, PaperReview } from '../types';
@@ -553,12 +553,12 @@ export const MaterialsSection = ({
     </section>
 );
 
-export const TeamSection = ({ content, members }: { content: TeamBlockConfig; members: TeamMember[] }) => (
+export const TeamSection = ({ content, members, onAction }: { content: TeamBlockConfig; members: TeamMember[]; onAction?: () => void }) => (
     <section className="py-24">
         <div className="container mx-auto px-4 max-w-6xl">
             <h2 className="text-3xl md:text-5xl font-heading font-extrabold text-center mb-6 text-slate-900">{content.title}</h2>
             <p className="text-center text-gray-600 mb-16 max-w-2xl mx-auto">{content.description}</p>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {members.map((member, idx) => (
                     <div key={idx} className="bg-white p-2 pb-6 rounded-2xl shadow-sm hover:shadow-xl transition-all group overflow-hidden text-center border border-gray-100">
@@ -570,6 +570,22 @@ export const TeamSection = ({ content, members }: { content: TeamBlockConfig; me
                         <p className="text-gray-500 text-sm px-4">{member.description}</p>
                     </div>
                 ))}
+
+                {/* CTA Cards to fill empty spaces */}
+                <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all text-center border border-blue-500 flex flex-col justify-center items-center sm:col-span-2 lg:col-span-2">
+                    <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4">
+                        <Phone className="w-8 h-8 text-white" />
+                    </div>
+                    <h4 className="font-bold text-xl text-white mb-2">Нужна консультация?</h4>
+                    <p className="text-blue-100 text-sm mb-6">Оставьте заявку, и наш инженер свяжется с вами в течение 15 минут</p>
+                    <button
+                        onClick={onAction}
+                        className="w-full py-3 bg-white text-blue-600 rounded-xl font-bold hover:bg-blue-50 transition-colors shadow-lg"
+                    >
+                        Получить консультацию
+                    </button>
+                    <p className="text-blue-200 text-xs mt-3">Бесплатно • Без обязательств</p>
+                </div>
             </div>
         </div>
     </section>
@@ -922,11 +938,25 @@ export const GeographySection = ({ onAction, content }: { onAction: () => void; 
                                       <div className={`grid transition-all duration-300 ${openDistrictIdx === idx ? 'grid-rows-[1fr] opacity-100 pb-4' : 'grid-rows-[0fr] opacity-0'}`}>
                                           <div className="overflow-hidden">
                                               <div className="flex flex-wrap gap-2 pt-2">
-                                                  {loc.stations.map((station, sIdx) => (
-                                                      <span key={sIdx} className="text-xs bg-gray-50 text-gray-500 px-2 py-1 rounded border border-gray-100">
-                                                          {station}
-                                                      </span>
-                                                  ))}
+                                                  {loc.stations.map((station, sIdx) => {
+                                                      const isLink = typeof station === 'object' && 'url' in station;
+                                                      const name = isLink ? station.name : station;
+                                                      const url = isLink ? station.url : null;
+
+                                                      return url ? (
+                                                          <a
+                                                              key={sIdx}
+                                                              href={url}
+                                                              className="text-xs bg-gray-50 text-gray-500 px-2 py-1 rounded border border-gray-100 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-colors"
+                                                          >
+                                                              {name}
+                                                          </a>
+                                                      ) : (
+                                                          <span key={sIdx} className="text-xs bg-gray-50 text-gray-500 px-2 py-1 rounded border border-gray-100">
+                                                              {name}
+                                                          </span>
+                                                      );
+                                                  })}
                                               </div>
                                           </div>
                                       </div>
@@ -942,14 +972,28 @@ export const GeographySection = ({ onAction, content }: { onAction: () => void; 
                              {content.moCitiesTitle}
                           </h3>
                           <div className="flex flex-wrap gap-2 content-start relative">
-                              {visibleCities.map((city, i) => (
-                                  <span 
-                                    key={i} 
-                                    className="bg-white border border-gray-200 px-3 py-1.5 rounded-full text-sm text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-all shadow-sm cursor-default"
-                                  >
-                                      {city}
-                                  </span>
-                              ))}
+                              {visibleCities.map((city, i) => {
+                                  const isLink = typeof city === 'object' && 'url' in city;
+                                  const name = isLink ? city.name : city;
+                                  const url = isLink ? city.url : null;
+
+                                  return url ? (
+                                      <a
+                                          key={i}
+                                          href={url}
+                                          className="bg-white border border-gray-200 px-3 py-1.5 rounded-full text-sm text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-all shadow-sm"
+                                      >
+                                          {name}
+                                      </a>
+                                  ) : (
+                                      <span
+                                        key={i}
+                                        className="bg-white border border-gray-200 px-3 py-1.5 rounded-full text-sm text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-all shadow-sm cursor-default"
+                                      >
+                                          {name}
+                                      </span>
+                                  );
+                              })}
                           </div>
                           
                           <button 

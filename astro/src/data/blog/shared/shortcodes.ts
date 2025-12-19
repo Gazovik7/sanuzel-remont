@@ -1,5 +1,4 @@
-import { ARTICLE_INSERTS, renderCalculatorCta, renderCallout, type CalloutVariant, escapeHtml } from './inserts';
-import { TEMPLATE_RENDERERS } from '../templates';
+import { ARTICLE_INSERTS, renderCalculatorCta, renderCallout, type CalloutVariant } from './inserts';
 
 function parseAttributes(raw: string): Record<string, string> {
   const attrs: Record<string, string> = {};
@@ -20,63 +19,17 @@ export function renderArticleHtmlWithInserts(contentHtml: string): string {
   let rendered = contentHtml;
   let hasCta = false;
 
- // Обработка шаблонов с содержимым: [!TEMPLATE key="..." attr="..."]content[/!TEMPLATE]
-  rendered = rendered.replace(/\[!TEMPLATE([^\]]*)\]([\s\S]*?)\[\/!TEMPLATE\]/g, (_full, rawAttrs: string, body: string) => {
-    const attrs = parseAttributes(rawAttrs);
-    const key = attrs.key;
-    if (!key) return '';
-    
-    const renderer = TEMPLATE_RENDERERS[key];
-    if (renderer) {
-      // Удаление атрибута key из attrs для передачи в рендерер
-      const { key: _, ...config } = attrs;
-      return renderer(config, body.trim());
-    }
-    
-    return '';
-  });
-
-  // Обработка шаблонов без содержимого: [!TEMPLATE key="..." attr="..."]
-  rendered = rendered.replace(/\[!TEMPLATE([^\]]*)\]/g, (_full, rawAttrs: string) => {
-    const attrs = parseAttributes(rawAttrs);
-    const key = attrs.key;
-    if (!key) return '';
-    
-    const renderer = TEMPLATE_RENDERERS[key];
-    if (renderer) {
-      // Удаление атрибута key из attrs для передачи в рендерер
-      const { key: _, ...config } = attrs;
-      return renderer(config);
-    }
-    
-    return '';
-  });
-
-  // Дополнительная обработка короткого алиаса [!CHECKLIST ...]...[/!CHECKLIST]
-  rendered = rendered.replace(/\[!CHECKLIST([^\]]*)\]([\s\S]*?)\[\/!CHECKLIST\]/g, (_full, rawAttrs: string, body: string) => {
-    const attrs = parseAttributes(rawAttrs);
-    const config = {
-      title: attrs.title || ''
-    };
-    const renderer = TEMPLATE_RENDERERS['checklist'];
-    if (renderer) {
-      return renderer(config, body.trim());
-    }
-    return '';
-  });
-
-  // Поддержка варианта без закрывающего тега: [!CHECKLIST title="..."]
-  rendered = rendered.replace(/\[!CHECKLIST([^\]]*)\]/g, (_full, rawAttrs: string) => {
-    const attrs = parseAttributes(rawAttrs);
-    const config = { title: attrs.title || '' };
-    const renderer = TEMPLATE_RENDERERS['checklist'];
-    if (renderer) return renderer(config);
-    return '';
-  });
-
   rendered = rendered.replace(/\[!INSERT([^\]]*)\]/g, (_full, rawAttrs: string) => {
     const attrs = parseAttributes(rawAttrs);
     const key = attrs.key;
+    
+    // Обработка специфической вставки warningBitumenMastic с возможностью передачи параметров
+    if (key === 'warningBitumenMastic') {
+      const title = attrs.title || 'Осторожно!';
+      const bodyHtml = attrs.body || attrs.bodyHtml || 'Никогда не используйте битумную мастику в жилых помещениях. Она токсична и имеет стойкий специфический запах, который невозможно вывести годами.';
+      return renderCallout({ variant: 'warning', title, bodyHtml });
+    }
+    
     if (!key || !(key in ARTICLE_INSERTS)) return '';
     if (key === 'calculatorCtaDefault') hasCta = true;
     return ARTICLE_INSERTS[key as keyof typeof ARTICLE_INSERTS];
@@ -92,14 +45,14 @@ export function renderArticleHtmlWithInserts(contentHtml: string): string {
     });
   });
 
- rendered = rendered.replace(/\[!CALLOUT([^\]]*)\]([\s\S]*?)\[\/!CALLOUT\]/g, (_full, rawAttrs: string, body: string) => {
+  rendered = rendered.replace(/\[!CALLOUT([^\]]*)\]([\s\S]*?)\[\/!CALLOUT\]/g, (_full, rawAttrs: string, body: string) => {
     const attrs = parseAttributes(rawAttrs);
     const variant = (attrs.variant || 'tip') as CalloutVariant;
     const title = attrs.title || '';
     return renderCallout({ variant, title, bodyHtml: body.trim() });
   });
 
- if (rendered.includes('[!CTA_OFF]')) {
+  if (rendered.includes('[!CTA_OFF]')) {
     rendered = rendered.replaceAll('[!CTA_OFF]', '');
     return rendered;
   }

@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import LeadModalHost from '../components/islands/LeadModalHost';
+import ExitIntentModal from '../components/islands/ExitIntentModal';
 const SITE = {
   logo: '/img/logo.png',
 } as const;
@@ -140,6 +141,7 @@ const ogImageUrl = new URL(SITE.logo, Astro.site ?? Astro.url.origin);
       </div>
     </div>
     <LeadModalHost client:load />
+    <ExitIntentModal client:load />
 
     <script is:inline>
       (() => {

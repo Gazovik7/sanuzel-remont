@@ -3,6 +3,7 @@ import React, { useEffect, useMemo } from 'react';
 import { Breadcrumbs } from './Breadcrumbs';
 import { Calendar, Clock, UserCheck, Shield, AlertCircle, ArrowRight, CheckCircle2, ShieldCheck, Calculator, MessageSquare } from 'lucide-react';
 import { BLOG_POSTS } from '../blogData';
+import { renderArticleHtmlWithInserts } from '../../data/blog/shared/shortcodes';
 
 interface ArticlePageProps {
   id: string;
@@ -72,9 +73,9 @@ export const ArticlePage: React.FC<ArticlePageProps> = ({ id, onNavigate, onCalc
     const paragraphs = post.content.split('</p>');
     if (paragraphs.length > 2) {
         paragraphs.splice(2, 0, ctaBlock); 
-        return paragraphs.join('</p>');
+        return renderArticleHtmlWithInserts(post.content);
     }
-    return post.content + ctaBlock; // Fallback if content is short
+    return renderArticleHtmlWithInserts(post.content);
   }, [post]);
 
   if (!post) return <div className="p-20 text-center font-bold text-xl font-heading">Статья не найдена</div>;
@@ -109,13 +110,13 @@ export const ArticlePage: React.FC<ArticlePageProps> = ({ id, onNavigate, onCalc
       />
 
       <div className="container mx-auto px-4 pt-6 max-w-5xl">
-        <Breadcrumbs 
+        <Breadcrumbs
             items={[
                 { label: 'Главная', href: '/' },
-                { label: 'Блог', href: '/blog' },
+                { label: 'Блог', href: '/blog/' },
                 { label: post.title, isActive: true }
-            ]} 
-            onNavigate={onNavigate} 
+            ]}
+            onNavigate={onNavigate}
         />
 
         {/* Title Section */}
@@ -206,7 +207,7 @@ export const ArticlePage: React.FC<ArticlePageProps> = ({ id, onNavigate, onCalc
                     <div dangerouslySetInnerHTML={{ __html: processedContent }} />
 
                     {/* Styled Widgets */}
-                    {id === '1' && (
+                    {false && (
                         <>
                             <div className="not-prose bg-blue-50 rounded-3xl p-6 md:p-8 my-10 border border-blue-100 shadow-sm relative overflow-hidden group">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-200/40 rounded-full blur-3xl -mr-8 -mt-8 transition-transform group-hover:scale-150 duration-700"></div>

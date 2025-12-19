@@ -12,6 +12,7 @@ import LegacyCalculator from '../../components/islands/legacy/LegacyCalculator';
 import LegacyReviewsSection from '../../components/islands/legacy/LegacyReviewsSection';
 import LegacyFaqSection from '../../components/islands/legacy/LegacyFaqSection';
 import LegacyGeographySection from '../../components/islands/legacy/LegacyGeographySection';
+import LegacyTeamSection from '../../components/islands/legacy/LegacyTeamSection';
 
 import {
   ComparisonSection,
@@ -22,7 +23,6 @@ import {
   WorkflowSection,
   IncludedSection,
   VisualizationSection,
-  TeamSection,
   GuaranteeSection,
   SeoTextSection,
 } from '../../legacy/components/ContentSections';
@@ -143,7 +143,7 @@ const description = service.seo.description;
 
       {teamBlock && (
         <div class="reveal bg-white">
-          <TeamSection content={teamBlock.config} members={teamBlock.members} />
+          <LegacyTeamSection client:load content={teamBlock.config} members={teamBlock.members} />
         </div>
       )}
 
