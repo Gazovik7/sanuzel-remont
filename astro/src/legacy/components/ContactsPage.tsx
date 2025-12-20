@@ -3,7 +3,7 @@ import { Phone, MapPin, Clock, Mail, ArrowRight } from 'lucide-react';
 import { Breadcrumbs } from './Breadcrumbs';
 import { COMPANY_PHONE, COMPANY_PHONE_TEL, COMPANY_ADDRESS, COMPANY_EMAIL } from '../constants';
 
-const REPAIR_OPTIONS = ['Ремонт ванной комнаты', 'Ремонт + дизайн', 'Евроремонт', 'Черновой ремонт'] as const;
+const REPAIR_OPTIONS = ['Ванная комната', 'Ванная + туалет', 'Совмещённый санузел', 'Туалет'] as const;
 
 export const ContactsPage: React.FC = () => {
   return (
@@ -106,7 +106,6 @@ export const ContactsPage: React.FC = () => {
                       inputMode="tel"
                       autoComplete="tel"
                       maxLength={18}
-                      pattern="\\+7 \\(\\d{3}\\) \\d{3}-\\d{2}-\\d{2}"
                       data-phone-mask="ru"
                       required
                       placeholder="+7 (999) 000-00-00"

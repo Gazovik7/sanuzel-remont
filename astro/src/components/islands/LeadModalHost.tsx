@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Check, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
-type LeadModalType = 'callback' | 'success';
+type LeadModalType = 'callback';
 
 type LeadCapturePayload = {
   source: string;
@@ -16,13 +16,134 @@ declare global {
       open: (type?: LeadModalType) => void;
       close: () => void;
       success: () => void;
-      capture: (payload: Omit<LeadCapturePayload, 'pageUrl' | 'timestamp'>) => void;
+      capture: (payload: Omit<LeadCapturePayload, 'pageUrl' | 'timestamp'>) => Promise<boolean>;
     };
   }
 }
 
 function nowIso() {
   return new Date().toISOString();
+}
+
+const METRIKA_COUNTER_ID = 87695701;
+
+function getCookieValue(name: string) {
+  if (typeof document === 'undefined') return '';
+  const match = document.cookie.match(new RegExp(`(?:^|; )${name.replace(/[$()*+.?[\\\]^{|}]/g, '\\$&')}=([^;]*)`));
+  return match ? decodeURIComponent(match[1]) : '';
+}
+
+function getLocalStorageValue(key: string) {
+  try {
+    return window.localStorage.getItem(key) || '';
+  } catch {
+    return '';
+  }
+}
+
+function waitForCookieValue(name: string, timeoutMs = 1500, intervalMs = 100) {
+  if (typeof window === 'undefined') return Promise.resolve('');
+  return new Promise<string>((resolve) => {
+    const start = Date.now();
+    const tick = () => {
+      const value = getCookieValue(name) || getLocalStorageValue(name);
+      if (value) {
+        resolve(value);
+        return;
+      }
+      if (Date.now() - start >= timeoutMs) {
+        resolve('');
+        return;
+      }
+      window.setTimeout(tick, intervalMs);
+    };
+    tick();
+  });
+}
+
+function firstNonEmpty(promises: Promise<string>[], timeoutMs = 1500) {
+  if (typeof window === 'undefined') return Promise.resolve('');
+  return new Promise<string>((resolve) => {
+    let settled = false;
+    const timer = window.setTimeout(() => {
+      if (!settled) resolve('');
+      settled = true;
+    }, timeoutMs);
+
+    const onValue = (value: string) => {
+      if (settled || !value) return;
+      settled = true;
+      window.clearTimeout(timer);
+      resolve(value);
+    };
+
+    promises.forEach((promise) => {
+      promise.then(onValue).catch(() => {
+        // ignore
+      });
+    });
+  });
+}
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, fallback: T) {
+  let timeoutId: number | undefined;
+  const timeoutPromise = new Promise<T>((resolve) => {
+    timeoutId = window.setTimeout(() => resolve(fallback), timeoutMs);
+  });
+  return Promise.race([promise, timeoutPromise]).finally(() => {
+    if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+  });
+}
+
+async function getYandexIds() {
+  const cookieClientId = getCookieValue('_ym_uid');
+  const storageClientId = typeof window === 'undefined' ? '' : getLocalStorageValue('_ym_uid');
+  const cachedClientId = cookieClientId || storageClientId || '';
+  const fallback = { clientId: cachedClientId, userId: '' };
+
+  if (typeof window === 'undefined') return fallback;
+
+  const counter = (window as Record<string, unknown>)[`yaCounter${METRIKA_COUNTER_ID}`] as
+    | { getClientID?: () => string }
+    | undefined;
+  const counterClientId = counter?.getClientID ? counter.getClientID() : '';
+
+  if (cachedClientId || counterClientId) {
+    const userIdPromise = new Promise<string>((resolve) => {
+      if (typeof window.ym !== 'function') return resolve('');
+      try {
+        window.ym(METRIKA_COUNTER_ID, 'getUserID', (id: string) => resolve(id || ''));
+      } catch {
+        resolve('');
+      }
+    });
+    const userId = await withTimeout(userIdPromise, 200, '');
+    return { clientId: cachedClientId || counterClientId || '', userId };
+  }
+
+  const clientIdPromise = new Promise<string>((resolve) => {
+    if (typeof window.ym !== 'function') return resolve('');
+    try {
+      window.ym(METRIKA_COUNTER_ID, 'getClientID', (id: string) => resolve(id || ''));
+    } catch {
+      resolve('');
+    }
+  });
+
+  const userIdPromise = new Promise<string>((resolve) => {
+    if (typeof window.ym !== 'function') return resolve('');
+    try {
+      window.ym(METRIKA_COUNTER_ID, 'getUserID', (id: string) => resolve(id || ''));
+    } catch {
+      resolve('');
+    }
+  });
+
+  const cookiePromise = waitForCookieValue('_ym_uid', 2000, 100);
+  const clientId = await firstNonEmpty([cookiePromise, withTimeout(clientIdPromise, 2000, '')], 2000);
+  const userId = await withTimeout(userIdPromise, 800, '');
+
+  return { clientId: clientId || counterClientId || cachedClientId || '', userId };
 }
 
 function getPageUrl() {
@@ -43,10 +164,92 @@ function normalizeFormData(form: HTMLFormElement) {
   return data;
 }
 
+function normalizePhone(raw: unknown) {
+  const digits = String(raw ?? '').replace(/\D+/g, '');
+  if (!digits) return '';
+  if (digits.startsWith('8')) return `7${digits.slice(1)}`;
+  if (digits.startsWith('7')) return digits;
+  if (digits.length === 10) return `7${digits}`;
+  return digits;
+}
+
+function buildMessage(payload: LeadCapturePayload) {
+  const lines: string[] = [];
+  const data = payload.data || {};
+
+  const name = data.name ? String(data.name) : '';
+  const repairType = data.repairType ? String(data.repairType) : '';
+  const type = data.type ? String(data.type) : '';
+  const replyToRaw = data.replyTo ? String(data.replyTo) : '';
+  const methodRaw = data.method ? String(data.method) : '';
+  const message = data.message ? String(data.message) : '';
+  const ymClientId = data.ymClientId ? String(data.ymClientId) : '';
+  const ymUserId = data.ymUserId ? String(data.ymUserId) : '';
+
+  // Преобразование значений способа связи в читаемый вид
+  const formatReplyTo = (value: string) => {
+    const map: Record<string, string> = {
+      call: 'Звонок',
+      whatsapp: 'WhatsApp',
+      telegram: 'Telegram',
+      max: 'MAX',
+    };
+    return map[value.toLowerCase()] || value;
+  };
+
+  const replyTo = replyToRaw ? formatReplyTo(replyToRaw) : '';
+  const method = methodRaw ? formatReplyTo(methodRaw) : '';
+
+  lines.push(`Источник: ${payload.source}`);
+  if (name) lines.push(`Имя: ${name}`);
+  if (repairType) lines.push(`Тип ремонта: ${repairType}`);
+  if (type && type !== repairType) lines.push(`Тип ремонта (форма): ${type}`);
+  if (replyTo) lines.push(`Способ связи: ${replyTo}`);
+  if (method && method !== replyTo) lines.push(`Способ связи (форма): ${method}`);
+  if (message) lines.push(`Сообщение: ${message}`);
+  if (ymClientId) lines.push(`YM ClientID: ${ymClientId}`);
+  if (ymUserId) lines.push(`YM UserID: ${ymUserId}`);
+  if (payload.pageUrl) lines.push(`Страница: ${payload.pageUrl}`);
+  if (payload.timestamp) lines.push(`Время: ${payload.timestamp}`);
+
+  return lines.join('\n');
+}
+
+async function sendLead(payload: LeadCapturePayload) {
+  const phone = normalizePhone(payload.data.phone);
+  if (!phone) throw new Error('Телефон не указан');
+
+  const body = new URLSearchParams();
+  body.set('phone', phone);
+  const message = buildMessage(payload);
+  if (message) body.set('message', message);
+
+  const response = await fetch('/lead.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    },
+    body: body.toString(),
+  });
+
+  const text = await response.text();
+  if (response.ok) return;
+
+  let details = text;
+  try {
+    const json = JSON.parse(text);
+    details = json?.phone?.[0] || json?.non_field_errors?.[0] || json?.error || text;
+  } catch {
+    // ignore parse errors
+  }
+
+  throw new Error(details || 'Ошибка отправки заявки');
+}
+
 export default function LeadModalHost() {
   const [isOpen, setIsOpen] = useState(false);
   const [type, setType] = useState<LeadModalType>('callback');
-  const repairTypeOptions = ['Ремонт ванной комнаты', 'Ремонт + дизайн', 'Евроремонт', 'Черновой ремонт'];
+  const repairTypeOptions = ['Ванная комната', 'Ванная + туалет', 'Совмещённый санузел', 'Туалет'];
 
   const api = useMemo(
     () => ({
@@ -56,14 +259,21 @@ export default function LeadModalHost() {
       },
       close: () => setIsOpen(false),
       success: () => {
-        setType('success');
-        setIsOpen(true);
+        // Redirect to thank you page instead of showing modal
+        window.location.href = '/spasibo/';
       },
-      capture: (payload: Omit<LeadCapturePayload, 'pageUrl' | 'timestamp'>) => {
+      capture: async (payload: Omit<LeadCapturePayload, 'pageUrl' | 'timestamp'>) => {
+        const yandexIds = await getYandexIds();
+        const enrichedData = {
+          ...payload.data,
+          ymClientId: yandexIds.clientId || undefined,
+          ymUserId: yandexIds.userId || undefined,
+        };
         const full: LeadCapturePayload = {
           ...payload,
           pageUrl: getPageUrl(),
           timestamp: nowIso(),
+          data: enrichedData,
         };
 
         try {
@@ -74,6 +284,17 @@ export default function LeadModalHost() {
 
         // eslint-disable-next-line no-console
         console.info('[lead] captured', full);
+
+        try {
+          await sendLead(full);
+          api.success();
+          return true;
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error('[lead] send failed', error);
+          window.alert('Не удалось отправить заявку. Попробуйте еще раз.');
+          return false;
+        }
       },
     }),
     []
@@ -103,7 +324,7 @@ export default function LeadModalHost() {
       api.open(openType);
     };
 
-    const onSubmit = (e: Event) => {
+    const onSubmit = async (e: Event) => {
       const form = e.target as HTMLFormElement | null;
       if (!form || form.tagName !== 'FORM') return;
       if (!form.hasAttribute('data-lead-form')) return;
@@ -111,11 +332,10 @@ export default function LeadModalHost() {
       e.preventDefault();
 
       const source = form.getAttribute('data-lead-form') || 'form';
-      api.capture({ source, data: normalizeFormData(form) });
-      api.success();
+      const ok = await api.capture({ source, data: normalizeFormData(form) });
 
       try {
-        form.reset();
+        if (ok) form.reset();
       } catch {
         // ignore
       }
@@ -150,28 +370,10 @@ export default function LeadModalHost() {
           <X className="w-6 h-6" />
         </button>
 
-        {type === 'success' ? (
-          <div className="text-center py-6">
-            <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6 ring-8 ring-green-50/50">
-              <Check className="w-10 h-10 text-green-600" />
-            </div>
-            <h3 className="text-2xl font-bold font-heading mb-3 text-slate-900">Заявка принята!</h3>
-            <p className="text-gray-600 mb-8 leading-relaxed">
-              Наш менеджер свяжется с вами выбранным способом в течение 15 минут.
-            </p>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors"
-              type="button"
-            >
-              Отлично
-            </button>
-          </div>
-        ) : (
-          <form
-            className="space-y-6"
-            data-lead-form="modal"
-          >
+        <form
+          className="space-y-6"
+          data-lead-form="modal"
+        >
             <div className="text-center">
               <h3 className="text-2xl font-bold font-heading text-slate-900 mb-2">Обсудить проект</h3>
               <p className="text-sm text-gray-500">Оставьте контакты для связи с инженером.</p>
@@ -197,7 +399,6 @@ export default function LeadModalHost() {
                   inputMode="tel"
                   autoComplete="tel"
                   maxLength={18}
-                  pattern="\\+7 \\(\\d{3}\\) \\d{3}-\\d{2}-\\d{2}"
                   data-phone-mask="ru"
                   required
                   className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all font-medium text-slate-900"
@@ -258,7 +459,6 @@ export default function LeadModalHost() {
               Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
             </p>
           </form>
-        )}
       </div>
     </div>
   );

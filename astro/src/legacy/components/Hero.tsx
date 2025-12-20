@@ -16,10 +16,10 @@ export const Hero: React.FC<HeroProps> = ({
   title = "Ремонт ванной комнаты", 
   subtitle = <><span className="text-blue-400">Без авансов и скрытых доплат.</span> <br/><span className="text-white">Платите только за результат.</span></>,
   badgeText = "Гарантия 2 года на все работы",
-  backgroundImage = "/img/remont-vannoy-v-moskve.png"
+  backgroundImage = "/img/remont-vannoy-v-moskve.webp"
 }) => {
   const repairOptions = ['Ванная комната', 'Ванная + туалет', 'Совмещённый санузел', 'Туалет'];
-  const [form, setForm] = useState({ name: '', phone: '', type: repairOptions[0], method: 'call' });
+  const [form, setForm] = useState({ name: '', phone: '', type: repairOptions[0], replyTo: 'call' });
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -31,14 +31,22 @@ export const Hero: React.FC<HeroProps> = ({
     onFormSubmit(form);
   };
 
+  const heroSrcSet =
+    backgroundImage === "/img/remont-vannoy-v-moskve.webp"
+      ? "/img/remont-vannoy-v-moskve-900.webp 900w, /img/remont-vannoy-v-moskve.webp 1800w"
+      : undefined;
+
   return (
     <div className="relative bg-slate-900 text-white min-h-screen flex items-center relative overflow-hidden">
       {/* Background Image with Cinematic Overlay */}
       <div className="absolute inset-0 z-0">
         <img
           src={backgroundImage}
+          srcSet={heroSrcSet}
+          sizes="(max-width: 768px) 100vw, 1800px"
           alt="Luxury Bathroom"
           className="w-full h-full object-cover"
+          fetchPriority="high"
           loading="eager"
           style={{ visibility: 'visible' }}
         />
@@ -115,7 +123,7 @@ export const Hero: React.FC<HeroProps> = ({
                         placeholder="Алексей"
                         className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-slate-900 placeholder-gray-400 font-sans"
                         value={form.name}
-                        onChange={e => setForm({...form, name: e.target.value})}
+                        onChange={e => setForm((prev) => ({ ...prev, name: e.target.value }))}
                     />
                 </div>
                 
@@ -129,33 +137,38 @@ export const Hero: React.FC<HeroProps> = ({
                         inputMode="tel"
                         autoComplete="tel"
                         maxLength={18}
-                        pattern="\\+7 \\(\\d{3}\\) \\d{3}-\\d{2}-\\d{2}"
                         data-phone-mask="ru"
                         className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-slate-900 placeholder-gray-400 font-sans"
                         value={form.phone}
-                        onChange={e => setForm({...form, phone: formatPhone(e.target.value)})}
+                        onChange={e => setForm((prev) => ({ ...prev, phone: formatPhone(e.target.value) }))}
                     />
                 </div>
 
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">Куда прислать расчет?</label>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        {['call', 'whatsapp', 'telegram', 'max'].map((m) => (
-                             <button 
-                                key={m}
-                                type="button"
-                                onClick={() => setForm({...form, method: m})}
-                                className={`py-2 rounded-lg text-xs font-bold transition-all border ${
-                                    form.method === m 
-                                    ? 'bg-blue-600 text-white border-blue-600' 
-                                    : 'bg-gray-50 text-gray-500 border-gray-200 hover:border-blue-300 hover:text-blue-600'
-                                }`}
+                        {[
+                          { id: 'call', label: 'Звонок' },
+                          { id: 'whatsapp', label: 'WhatsApp' },
+                          { id: 'telegram', label: 'Telegram' },
+                          { id: 'max', label: 'MAX' },
+                        ].map((m) => (
+                             <label
+                                key={m.id}
+                                className="cursor-pointer select-none"
                              >
-                                 {m === 'call' && 'Звонок'}
-                                 {m === 'whatsapp' && 'WhatsApp'}
-                                 {m === 'telegram' && 'Telegram'}
-                                 {m === 'max' && 'MAX'}
-                             </button>
+                                 <input
+                                   type="radio"
+                                   name="replyTo"
+                                   value={m.id}
+                                   checked={form.replyTo === m.id}
+                                   onChange={(e) => setForm((prev) => ({ ...prev, replyTo: e.target.value }))}
+                                   className="sr-only peer"
+                                 />
+                                 <div className="py-2 rounded-lg text-xs font-bold transition-all border text-center border-gray-200 bg-gray-50 text-gray-500 hover:border-blue-300 hover:text-blue-600 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600">
+                                   {m.label}
+                                 </div>
+                             </label>
                         ))}
                     </div>
                 </div>
@@ -166,7 +179,7 @@ export const Hero: React.FC<HeroProps> = ({
                         <select
                         className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none cursor-pointer text-slate-900 font-sans"
                         value={form.type}
-                        onChange={e => setForm({...form, type: e.target.value})}
+                        onChange={e => setForm((prev) => ({ ...prev, type: e.target.value }))}
                         >
                         <option className="text-slate-900">Ванная комната</option>
                         <option className="text-slate-900">Ванная + туалет</option>
