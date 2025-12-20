@@ -50,9 +50,9 @@ export const page: ServicePage = {
   path: '/remont-sanuzla-nekrasovka/',
   canonicalPath: '/remont-sanuzla-nekrasovka/',
   seo: {
-    title: 'Ремонт санузлов под ключ в Москве',
+    title: 'Ремонт санузла под ключ у станции метро Некрасовка | Вызов мастера цена | Ремонт ванной комнаты',
     description:
-      'Ремонт санузлов под ключ: ванная, туалет, совмещённый санузел. Работаем без авансов, с договором и гарантией.',
+      'Ремонт санузла у станции метро Некрасовка | Бесплатный выезд сантехника | Гарантия до 2 лет | Быстрый ремонт от 21 дня! Лучшие цены на ремонт санузлов в Москве ☎ 8 (495) 137-52-39',
   },
   blocks: buildBlocks([
     unique({
@@ -60,9 +60,9 @@ export const page: ServicePage = {
       variant: 'default',
       config: {
         leadSource: 'hero-remont-sanuzla-nekrasovka',
-        title: 'Ремонт санузлов под ключ',
+        title: 'Ремонт санузла у станции метро Некрасовка',
         badgeText: 'Гарантия 2 года на все работы',
-        backgroundImage: '/img/remont-vannoy-v-moskve.png',
+        backgroundImage: '/img/remont-vannoy-v-moskve.webp',
         subtitleLines: [
           { className: 'text-blue-400', text: 'Без авансов и скрытых доплат.' },
           { className: 'text-white', text: 'Платите только за результат.' },
@@ -71,7 +71,7 @@ export const page: ServicePage = {
         offers: HERO_OFFERS_DEFAULT,
       },
     }),
-    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт санузлов', isActive: true }] }),
+    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт санузлов', href: '/remont-sanuzla-nekrasovka/', isActive: true }] }),
     use('comparison'),
     use('portfolioDefault'),
     unique({ ...QUALITY, checklist: PAGE_QUALITY_CHECKLIST }),

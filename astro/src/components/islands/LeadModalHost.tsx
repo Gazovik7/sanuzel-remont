@@ -99,7 +99,7 @@ async function getYandexIds() {
   const cookieClientId = getCookieValue('_ym_uid');
   const storageClientId = typeof window === 'undefined' ? '' : getLocalStorageValue('_ym_uid');
   const cachedClientId = cookieClientId || storageClientId || '';
-  const fallback = { clientId: cachedClientId, userId: '' };
+  const fallback = { clientId: cachedClientId, userId: '', cookieClientId, storageClientId };
 
   if (typeof window === 'undefined') return fallback;
 
@@ -118,7 +118,7 @@ async function getYandexIds() {
       }
     });
     const userId = await withTimeout(userIdPromise, 200, '');
-    return { clientId: cachedClientId || counterClientId || '', userId };
+    return { clientId: cachedClientId || counterClientId || '', userId, cookieClientId, storageClientId };
   }
 
   const clientIdPromise = new Promise<string>((resolve) => {
@@ -143,7 +143,7 @@ async function getYandexIds() {
   const clientId = await firstNonEmpty([cookiePromise, withTimeout(clientIdPromise, 2000, '')], 2000);
   const userId = await withTimeout(userIdPromise, 800, '');
 
-  return { clientId: clientId || counterClientId || cachedClientId || '', userId };
+  return { clientId: clientId || counterClientId || cachedClientId || '', userId, cookieClientId, storageClientId };
 }
 
 function getPageUrl() {

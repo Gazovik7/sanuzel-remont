@@ -12,7 +12,7 @@ import type { FaqItem } from '../../../legacy/types';
 import type { IncludedBlockConfig, PriceTableCategory, PriceTableConfig, SeoTextBlockConfig, ServicePage } from '../types';
 
 const PAGE_SEO_TEXT_BLOCK_CONTENT: SeoTextBlockConfig = {
-  summaryTitle: 'Ремонт санузлов под ключ',
+  summaryTitle: 'Ремонт ванной в панельном доме в Москве',
   paragraphsHtml: [],
   listIntroHtml: '',
   listItemsHtml: [],
@@ -50,9 +50,8 @@ export const page: ServicePage = {
   path: '/remont-vannoy-v-panelnom-dome/',
   canonicalPath: '/remont-vannoy-v-panelnom-dome/',
   seo: {
-    title: 'Ремонт санузлов под ключ в Москве',
-    description:
-      'Ремонт санузлов под ключ: ванная, туалет, совмещённый санузел. Работаем без авансов, с договором и гарантией.',
+    title: 'Ремонт ванной в панельном доме в Москве | Ремонт санузла в панельке цена под ключ',
+    description:    'Ремонт ванной в панельном доме | Бесплатный выезд сантехника | Гарантия до 3 лет | Быстрый ремонт от 1 дня! Лучшие цены на ремонт санузлов в Москве ☎ +7(499)348-97-42',
   },
   blocks: buildBlocks([
     unique({
@@ -60,9 +59,9 @@ export const page: ServicePage = {
       variant: 'default',
       config: {
         leadSource: 'hero-remont-vannoy-v-panelnom-dome',
-        title: 'Ремонт санузлов под ключ',
+        title: 'Ремонт ванной в панельном доме под ключ',
         badgeText: 'Гарантия 2 года на все работы',
-        backgroundImage: '/img/remont-vannoy-v-moskve.png',
+        backgroundImage: '/img/remont-vannoy-v-moskve.webp',
         subtitleLines: [
           { className: 'text-blue-400', text: 'Без авансов и скрытых доплат.' },
           { className: 'text-white', text: 'Платите только за результат.' },
@@ -71,7 +70,7 @@ export const page: ServicePage = {
         offers: HERO_OFFERS_DEFAULT,
       },
     }),
-    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт санузлов', isActive: true }] }),
+    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт санузлов', href: '/remont-vannoy-v-panelnom-dome/', isActive: true }] }),
     use('comparison'),
     use('portfolioDefault'),
     unique({ ...QUALITY, checklist: PAGE_QUALITY_CHECKLIST }),

@@ -6,8 +6,7 @@ export default function LegacyCalculatorBudget({ config }: { config: CalculatorB
   return (
     <Calculator
       onComplete={(data) => {
-        window.lead?.capture({ source: config.leadSource, data });
-        window.lead?.success();
+        void window.lead?.capture({ source: config.leadSource, data });
       }}
       defaultFinish={config.defaultFinish}
     />

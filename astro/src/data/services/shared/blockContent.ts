@@ -281,8 +281,8 @@ export const VISUALIZATION_BLOCK_CONTENT: VisualizationBlockConfig = {
     'Увидите будущий интерьер до покупки первой плитки. Рассчитаем раскладку так, чтобы не было "обрезков" на видных местах.',
   bullets: ['Точный расчет плитки (экономия до 15%)', 'Проверка эргономики помещения'],
   ctaText: 'Хочу 3D-проект в подарок',
-  imageSrc: 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=800',
-  imageAlt: '3D Visualization',
+  imageSrc: '/img/project-vannoy-3d.webp',
+  imageAlt: '3D проект ванной',
 };
 
 export const MATERIALS_BLOCK_CONTENT: MaterialsBlockConfig = {
@@ -293,7 +293,7 @@ export const MATERIALS_BLOCK_CONTENT: MaterialsBlockConfig = {
     { title: 'Экономия до 20%', desc: 'Дешевле, чем в розничных магазинах.' },
     { title: 'Подбор под бюджет', desc: 'Только оригинальная продукция с сертификатами.' },
   ],
-  imageSrc: '/img/materials.jpg',
+  imageSrc: '/img/materials.webp',
   imageAlt: 'Материалы',
 };
 
@@ -316,6 +316,7 @@ export const GUARANTEE_BLOCK_CONTENT: GuaranteeBlockConfig = {
   ],
   directorTitle: 'Генеральный директор',
   directorName: '',
+  directorPhoto: '/img/direktor.png',
 };
 
 export const REVIEWS_BLOCK_CONTENT: ReviewsBlockConfig = {

@@ -151,6 +151,7 @@ export type GuaranteeBlockConfig = {
   excerptParagraphs: string[];
   directorTitle: string;
   directorName: string;
+  directorPhoto?: string;
 };
 
 export type ReviewsBlockConfig = {

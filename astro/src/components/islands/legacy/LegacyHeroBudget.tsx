@@ -5,10 +5,7 @@ import type { ServiceHeroConfig } from '../../../data/services';
 export default function LegacyHeroBudget({ config }: { config: ServiceHeroConfig }) {
   return (
     <Hero
-      onFormSubmit={(data) => {
-        window.lead?.capture({ source: config.leadSource, data });
-        window.lead?.success();
-      }}
+      leadSource={config.leadSource}
       title={config.title}
       subtitle={
         <>

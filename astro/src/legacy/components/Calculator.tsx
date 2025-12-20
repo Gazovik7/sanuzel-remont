@@ -236,7 +236,6 @@ const Calculator: React.FC<CalculatorProps> = ({ onComplete, defaultFinish = 'С
                 inputMode="tel"
                 autoComplete="tel"
                 maxLength={18}
-                pattern="\\+7 \\(\\d{3}\\) \\d{3}-\\d{2}-\\d{2}"
                 data-phone-mask="ru"
                 value={formData.phone}
                 onChange={(e) => updateField('phone', formatPhone(e.target.value))}

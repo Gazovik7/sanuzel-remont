@@ -10,6 +10,7 @@ export interface BlogPost {
   slug: string;
   title: string;
   excerpt: string;
+  description: string;
   category: string;
   image: string;
   date: string;

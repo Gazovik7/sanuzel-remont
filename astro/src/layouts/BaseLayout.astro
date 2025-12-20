@@ -15,6 +15,91 @@ type Props = {
 const { title, description, canonicalPath } = Astro.props;
 const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, Astro.site ?? Astro.url.origin);
 const ogImageUrl = new URL(SITE.logo, Astro.site ?? Astro.url.origin);
+
+const siteUrl = Astro.site ?? new URL(Astro.url.origin);
+const homeUrl = new URL('/', siteUrl).toString();
+const logoUrl = new URL(SITE.logo, siteUrl).toString();
+const organizationId = `${homeUrl}#organization`;
+const localBusinessId = `${homeUrl}#localbusiness`;
+const websiteId = `${homeUrl}#website`;
+
+const breadcrumbName = title.includes('|') ? title.split('|')[0].trim() : title;
+const isHome = canonicalUrl.pathname === '/' || canonicalUrl.pathname === '/index.html';
+
+const schemaGraph: any[] = [
+  {
+    '@type': 'Organization',
+    '@id': organizationId,
+    name: 'Ремонт Санузлов',
+    url: homeUrl,
+    logo: {
+      '@type': 'ImageObject',
+      url: logoUrl,
+    },
+    telephone: '+74951375239',
+    email: 'info@remont-sanuzlov.ru',
+  },
+  {
+    '@type': ['LocalBusiness', 'HomeAndConstructionBusiness'],
+    '@id': localBusinessId,
+    name: 'Ремонт Санузлов',
+    url: homeUrl,
+    image: logoUrl,
+    logo: logoUrl,
+    telephone: '+74951375239',
+    email: 'info@remont-sanuzlov.ru',
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'RU',
+      addressLocality: 'Москва',
+      streetAddress: 'Большой Саввинский пер., 9С1',
+    },
+    areaServed: [
+      { '@type': 'City', name: 'Москва' },
+      { '@type': 'AdministrativeArea', name: 'Московская область' },
+    ],
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        opens: '09:00',
+        closes: '20:00',
+      },
+    ],
+    parentOrganization: { '@id': organizationId },
+  },
+  {
+    '@type': 'WebSite',
+    '@id': websiteId,
+    url: homeUrl,
+    name: 'Ремонт Санузлов',
+    inLanguage: 'ru-RU',
+    publisher: { '@id': organizationId },
+  },
+  {
+    '@type': 'WebPage',
+    '@id': `${canonicalUrl.toString()}#webpage`,
+    url: canonicalUrl.toString(),
+    name: breadcrumbName,
+    description,
+    inLanguage: 'ru-RU',
+    isPartOf: { '@id': websiteId },
+    about: { '@id': localBusinessId },
+  },
+];
+
+if (!isHome) {
+  schemaGraph.push({
+    '@type': 'BreadcrumbList',
+    '@id': `${canonicalUrl.toString()}#breadcrumb`,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: homeUrl },
+      { '@type': 'ListItem', position: 2, name: breadcrumbName, item: canonicalUrl.toString() },
+    ],
+  });
+}
+
+const baseSchema = { '@context': 'https://schema.org', '@graph': schemaGraph };
 ---
 
 <!doctype html>
@@ -26,6 +111,9 @@ const ogImageUrl = new URL(SITE.logo, Astro.site ?? Astro.url.origin);
 
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="telephone" content="+74951375239" />
+    <meta name="yandex-verification" content="6ec9410bc9530ede" />
+    <meta name="google-site-verification" content="pembRaERYI5PqeRje5zJfy7wXq9kr5UQo98kMw5f_8E" />
     <link rel="canonical" href={canonicalUrl.toString()} />
 
     <meta property="og:type" content="website" />
@@ -34,6 +122,8 @@ const ogImageUrl = new URL(SITE.logo, Astro.site ?? Astro.url.origin);
     <meta property="og:url" content={canonicalUrl.toString()} />
     <meta property="og:image" content={ogImageUrl.toString()} />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(baseSchema)} />
 
     <script is:inline>
       document.documentElement.classList.add('js');
@@ -51,12 +141,47 @@ const ogImageUrl = new URL(SITE.logo, Astro.site ?? Astro.url.origin);
       })();
     </script>
 
+    <link
+      rel="preload"
+      as="image"
+      href="/img/remont-vannoy-v-moskve-900.webp"
+      imagesrcset="/img/remont-vannoy-v-moskve-900.webp 900w, /img/remont-vannoy-v-moskve.webp 1800w"
+      imagesizes="(max-width: 768px) 100vw, 1800px"
+      fetchpriority="high"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+    />
+    <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    <!-- Yandex.Metrika counter -->
+    <script is:inline type="text/javascript">
+      (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+      })(window, document,'script','https://mc.yandex.ru/metrika/tag.js', 'ym');
+
+      ym(87695701, 'init', {webvisor:true, clickmap:true, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/87695701" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
   </head>
   <body class="bg-white text-slate-900">
     <slot />
@@ -88,9 +213,82 @@ const ogImageUrl = new URL(SITE.logo, Astro.site ?? Astro.url.origin);
         <nav class="px-5 py-4 overflow-y-auto">
           <ul class="space-y-2 font-heading">
             <li>
-              <a href="/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
-                Виды ремонта
-              </a>
+              <details class="group rounded-xl">
+                <summary class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900 cursor-pointer list-none">
+                  <span>Виды ремонта</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-chevron-down transition-transform duration-200 group-open:rotate-180"
+                    aria-hidden="true"
+                  >
+                    <path d="m6 9 6 6 6-6"></path>
+                  </svg>
+                </summary>
+                <div class="mt-2 space-y-4 px-3 pb-2">
+                  <div class="space-y-2">
+                    <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">По типу ремонта</div>
+                    <a href="/byudzhetnyy-remont-v-vannoy-komnate/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      Бюджетный
+                    </a>
+                    <a href="/kapitalnyj-remont-v-vannoj/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      Капитальный
+                    </a>
+                    <a href="/kosmeticheskij-remont-vannoj/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      Косметический
+                    </a>
+                    <a href="/evroremont-vannoj-komnaty/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      Евро
+                    </a>
+                    <a href="/remont-malenkoy-vannoy-komnaty/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      Маленькая ванная
+                    </a>
+                  </div>
+                  <div class="space-y-2">
+                    <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">По помещениям</div>
+                    <a href="/remont-sovmeschennogo-sanuzla/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      Совмещённый санузел
+                    </a>
+                    <a href="/remont-razdelnogo-sanuzla/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      Раздельный санузел
+                    </a>
+                    <a href="/remont-vannoy-v-novostroyke/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      В новостройке
+                    </a>
+                    <a href="/remont-vannoy-v-panelnom-dome/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      В панельном доме
+                    </a>
+                  </div>
+                  <div class="space-y-2">
+                    <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Работы и сервис</div>
+                    <a href="/remont-vannoy-komnaty-v-rassrochku/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      В рассрочку
+                    </a>
+                    <a href="/santekhnicheskie-raboty/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      Сантехника
+                    </a>
+                    <a href="/ukladka-plitki-v-vannoy-komnate/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      Плитка
+                    </a>
+                    <a href="/demontazhnye-raboty/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      Демонтаж
+                    </a>
+                    <a href="/pereplanirovka-sanuzla/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      Перепланировка
+                    </a>
+                    <a href="/remont-tualeta-panelyami/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                      Панели ПВХ
+                    </a>
+                  </div>
+                </div>
+              </details>
             </li>
             <li>
               <a href="/portfolio/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
@@ -141,7 +339,7 @@ const ogImageUrl = new URL(SITE.logo, Astro.site ?? Astro.url.origin);
       </div>
     </div>
     <LeadModalHost client:load />
-    <ExitIntentModal client:load />
+    <ExitIntentModal client:idle />
 
     <script is:inline>
       (() => {
@@ -204,7 +402,7 @@ const ogImageUrl = new URL(SITE.logo, Astro.site ?? Astro.url.origin);
     <script is:inline>
       (() => {
         const selector = 'input[data-phone-mask="ru"]';
-        const pattern = '^\\+7 \\(\\d{3}\\) \\d{3}-\\d{2}-\\d{2}$';
+        const pattern = String.raw`\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}`;
         const placeholder = '+7 (999) 000-00-00';
 
         const formatRuPhone = (value) => {

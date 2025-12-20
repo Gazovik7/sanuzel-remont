@@ -130,7 +130,6 @@ export default function ExitIntentModal() {
                 inputMode="tel"
                 autoComplete="tel"
                 maxLength={18}
-                pattern="\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}"
                 data-phone-mask="ru"
                 required
                 className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all font-medium text-slate-900"

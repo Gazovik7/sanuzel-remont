@@ -6,7 +6,7 @@ export default function LegacyContactsCtaForm() {
   return (
     <form
       className="glass rounded-3xl p-8 md:p-12 max-w-4xl mx-auto shadow-2xl flex flex-col gap-6 text-left border border-white/10"
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
         const form = e.currentTarget;
         const data: Record<string, unknown> = {};
@@ -15,9 +15,10 @@ export default function LegacyContactsCtaForm() {
           if (key in data) continue;
           data[key] = typeof value === 'string' ? value : value.name;
         }
-        window.lead?.capture({ source: 'contacts-cta', data });
-        window.lead?.success();
-        form.reset();
+        const ok = (await window.lead?.capture({ source: 'contacts-cta', data })) ?? false;
+        if (ok) {
+          form.reset();
+        }
       }}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -44,7 +45,6 @@ export default function LegacyContactsCtaForm() {
             inputMode="tel"
             autoComplete="tel"
             maxLength={18}
-            pattern="\\+7 \\(\\d{3}\\) \\d{3}-\\d{2}-\\d{2}"
             data-phone-mask="ru"
             className="w-full p-4 rounded-xl border-0 bg-white/80 text-slate-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 transition-all shadow-inner"
             required

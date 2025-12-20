@@ -7,7 +7,51 @@ function escapeHtml(value: string): string {
     .replaceAll("'", '&#039;');
 }
 
-export type ArticleInsertKey = 'calculatorCtaDefault' | 'engineerTipDefault';
+export type ArticleInsertKey = 'calculatorCtaDefault' | 'engineerTipDefault' | 'sourcesAndStandardsDefault';
+
+export type SourcesAndStandardsConfig = {
+  title: string;
+  items: string[];
+};
+
+export const DEFAULT_SOURCES_AND_STANDARDS: SourcesAndStandardsConfig = {
+  title: 'Источники и стандарты',
+  items: [
+    'СП 29.13330.2011 "Полы. Актуализированная редакция СНиП 2.03.13-88"',
+    'Техническая карта Knauf: "Гидроизоляция во влажных помещениях"',
+  ],
+};
+
+export function renderSourcesAndStandards(config: Partial<SourcesAndStandardsConfig> = {}): string {
+  const merged: SourcesAndStandardsConfig = { ...DEFAULT_SOURCES_AND_STANDARDS, ...config };
+  const title = escapeHtml(merged.title);
+  const items = merged.items
+    .map((item) => escapeHtml(item))
+    .map(
+      (item) => `
+<li class="flex items-start gap-3 text-slate-600 group hover:text-blue-600 transition-colors cursor-default">
+  <div class="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 shrink-0"></div>
+  <span class="border-b border-gray-200 pb-0.5 group-hover:border-blue-300">${item}</span>
+</li>`.trim(),
+    )
+    .join('\n');
+
+  return `
+<div class="not-prose mt-12 p-8 bg-gray-50 rounded-3xl border border-gray-100 font-sans">
+  <h4 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-6 flex items-center gap-2">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle-2 w-4 h-4">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+      <path d="m9 11 3 3L22 4"></path>
+    </svg>
+    ${title}
+  </h4>
+  <ul class="space-y-4">
+    ${items}
+  </ul>
+</div>
+<p></p>
+`.trim();
+}
 
 export type CalculatorCtaConfig = {
   title: string;
@@ -112,5 +156,6 @@ export const ARTICLE_INSERTS: Record<ArticleInsertKey, string> = {
     bodyHtml:
       'Мы всегда используем ленту <span class="font-semibold text-blue-900 bg-blue-100/50 px-1 rounded">Кнауф Флэхендихтбанд</span> для углов. Без неё даже самая дорогая мастика со временем треснет в стыке &quot;пол-стена&quot; из-за усадки дома.',
   }),
+  sourcesAndStandardsDefault: renderSourcesAndStandards(),
 };
 

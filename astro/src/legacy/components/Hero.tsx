@@ -4,7 +4,7 @@ import { CheckCircle, Clock, FileText, Shield, ArrowRight, Star, Zap } from 'luc
 import { formatPhone } from '../constants';
 
 interface HeroProps {
-  onFormSubmit: (data: any) => void;
+  leadSource?: string;
   title?: string;
   subtitle?: React.ReactNode;
   badgeText?: string;
@@ -12,7 +12,7 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ 
-  onFormSubmit, 
+  leadSource = 'hero',
   title = "Ремонт ванной комнаты", 
   subtitle = <><span className="text-blue-400">Без авансов и скрытых доплат.</span> <br/><span className="text-white">Платите только за результат.</span></>,
   badgeText = "Гарантия 2 года на все работы",
@@ -25,11 +25,6 @@ export const Hero: React.FC<HeroProps> = ({
   useEffect(() => {
     // Убираем изменение состояния, чтобы избежать скачков при загрузке
   }, []);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onFormSubmit(form);
-  };
 
   const heroSrcSet =
     backgroundImage === "/img/remont-vannoy-v-moskve.webp"
@@ -114,11 +109,12 @@ export const Hero: React.FC<HeroProps> = ({
                 <h3 className="text-2xl font-heading font-bold mb-2 text-slate-900">Рассчитать стоимость</h3>
                 <p className="text-sm text-gray-500 mb-6">Получите 3 варианта сметы (Эконом, Стандарт, Премиум) и скидку 10% на материалы.</p>
                 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form data-lead-form={leadSource} className="space-y-4">
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">Имя</label>
                     <input
                         type="text"
+                        name="name"
                         required
                         placeholder="Алексей"
                         className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-slate-900 placeholder-gray-400 font-sans"
@@ -177,6 +173,7 @@ export const Hero: React.FC<HeroProps> = ({
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">Тип ремонта</label>
                     <div className="relative">
                         <select
+                        name="repairType"
                         className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none cursor-pointer text-slate-900 font-sans"
                         value={form.type}
                         onChange={e => setForm((prev) => ({ ...prev, type: e.target.value }))}

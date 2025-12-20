@@ -1,9 +1,36 @@
 
 import React, { useEffect, useMemo } from 'react';
 import { Breadcrumbs } from './Breadcrumbs';
-import { Calendar, Clock, UserCheck, Shield, AlertCircle, ArrowRight, CheckCircle2, ShieldCheck, Calculator, MessageSquare } from 'lucide-react';
+import { Calendar, Clock, UserCheck, Shield, AlertCircle, ArrowRight, CheckCircle2, ShieldCheck, Calculator, MessageSquare, List } from 'lucide-react';
 import { BLOG_POSTS } from '../blogData';
 import { renderArticleHtmlWithInserts } from '../../data/blog/shared/shortcodes';
+import { processArticleContent, calculateReadTime } from '../../data/blog/shared/articleUtils';
+
+const RU_MONTHS: Record<string, string> = {
+  января: '01',
+  февраля: '02',
+  марта: '03',
+  апреля: '04',
+  мая: '05',
+  июня: '06',
+  июля: '07',
+  августа: '08',
+  сентября: '09',
+  октября: '10',
+  ноября: '11',
+  декабря: '12',
+};
+
+function toIsoDateFromRu(input: string): string | undefined {
+  const match = input.trim().match(/^(\d{1,2})\s+([а-яё]+)\s+(\d{4})/i);
+  if (!match) return undefined;
+  const day = match[1].padStart(2, '0');
+  const monthKey = match[2].toLowerCase();
+  const month = RU_MONTHS[monthKey];
+  if (!month) return undefined;
+  const year = match[3];
+  return `${year}-${month}-${day}`;
+}
 
 interface ArticlePageProps {
   id: string;
@@ -43,63 +70,46 @@ export const ArticlePage: React.FC<ArticlePageProps> = ({ id, onNavigate, onCalc
     };
   }, [onCalculate]);
 
-  const processedContent = useMemo(() => {
-    if (!post) return '';
+  const { processedContent, toc, readTime } = useMemo(() => {
+    if (!post) return { processedContent: '', toc: [], readTime: '1 мин' };
 
-    // HTML string for the In-Article CTA
-    const ctaBlock = `
-      </p>
-      <div data-lead-open="callback" class="not-prose my-10 relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 p-8 shadow-lg group cursor-pointer js-article-calculator-btn">
-          <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-700"></div>
-          <div class="relative z-10 flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
-              <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-blue-600 shadow-md shrink-0 group-hover:scale-110 transition-transform duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calculator"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
-              </div>
-              <div class="flex-1">
-                  <h4 class="text-xl font-heading font-bold text-slate-900 mb-2">Хотите узнать стоимость ремонта?</h4>
-                  <p class="text-slate-600 font-sans text-sm">
-                      Ответьте на 5 вопросов и получите 3 варианта сметы (Эконом, Стандарт, Премиум) специально под ваши размеры.
-                  </p>
-              </div>
-              <button data-lead-open="callback" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-blue-600/30 hover:bg-blue-700 transition-all transform group-hover:-translate-y-1">
-                  Рассчитать смету
-              </button>
-          </div>
-      </div>
-      <p>
-    `;
+    // Сначала применяем shortcodes (вставки)
+    const contentWithInserts = renderArticleHtmlWithInserts(post.content);
 
-    // Inject CTA after the 2nd paragraph
-    const paragraphs = post.content.split('</p>');
-    if (paragraphs.length > 2) {
-        paragraphs.splice(2, 0, ctaBlock); 
-        return renderArticleHtmlWithInserts(post.content);
-    }
-    return renderArticleHtmlWithInserts(post.content);
+    // Затем обрабатываем заголовки и извлекаем TOC
+    const { processedHtml, toc } = processArticleContent(contentWithInserts);
+
+    // Рассчитываем время чтения
+    const readTime = calculateReadTime(post.content);
+
+    return { processedContent: processedHtml, toc, readTime };
   }, [post]);
 
   if (!post) return <div className="p-20 text-center font-bold text-xl font-heading">Статья не найдена</div>;
 
+  const siteUrl = (import.meta as any).env?.SITE ?? 'https://remont-sanuzlov.ru';
+  const siteHomeUrl = siteUrl.endsWith('/') ? siteUrl : `${siteUrl}/`;
+  const canonicalUrl = new URL(`/blog/${post.slug}/`, siteHomeUrl).toString();
+  const publishedIso = toIsoDateFromRu(post.date);
+  const imageUrl = new URL(post.image, siteHomeUrl).toString();
+
   const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": post.title,
-    "image": [post.image],
-    "datePublished": "2024-01-10T08:00:00+08:00",
-    "dateModified": "2024-03-15T09:20:00+08:00",
-    "author": [{
-        "@type": "Person",
-        "name": post.author.name,
-        "jobTitle": post.author.role
-    }],
-    "publisher": {
-        "@type": "Organization",
-        "name": "Ремонт Санузлов",
-        "logo": {
-            "@type": "ImageObject",
-            "url": "/img/logo.png"
-        }
-    }
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': `${canonicalUrl}#blogposting`,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${canonicalUrl}#webpage` },
+    headline: post.title,
+    description: post.description || post.excerpt,
+    image: [imageUrl],
+    datePublished: publishedIso,
+    dateModified: publishedIso,
+    inLanguage: 'ru-RU',
+    author: {
+      '@type': 'Person',
+      name: post.author.name,
+      jobTitle: post.author.role,
+    },
+    publisher: { '@id': `${siteHomeUrl}#organization` },
   };
 
   return (
@@ -109,18 +119,18 @@ export const ArticlePage: React.FC<ArticlePageProps> = ({ id, onNavigate, onCalc
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
 
-      <div className="container mx-auto px-4 pt-6 max-w-5xl">
+      <div className="container mx-auto px-4 pt-6 max-w-7xl">
         <Breadcrumbs
             items={[
                 { label: 'Главная', href: '/' },
                 { label: 'Блог', href: '/blog/' },
-                { label: post.title, isActive: true }
+                { label: post.title, href: `/blog/${post.slug}/`, isActive: true }
             ]}
             onNavigate={onNavigate}
         />
 
         {/* Title Section */}
-        <div className="max-w-4xl mx-auto mb-8">
+        <div className="max-w-6xl mx-auto mb-8">
             <h1 className="text-3xl md:text-5xl font-extrabold font-heading text-slate-900 mb-8 leading-tight">
                 {post.title}
             </h1>
@@ -172,20 +182,60 @@ export const ArticlePage: React.FC<ArticlePageProps> = ({ id, onNavigate, onCalc
                     </div>
                     <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-full text-xs font-bold text-gray-600 border border-gray-100">
                         <Clock className="w-4 h-4 text-gray-400" />
-                        {post.readTime}
+                        {readTime}
                     </div>
                 </div>
             </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-7xl mx-auto">
             
             {/* Left: Article Content */}
-            <div className="lg:col-span-8" id="article-content-container">
+            <div className="lg:col-span-9" id="article-content-container">
                 {/* Fixed height container for main image to prevent vertical stretch */}
                 <div className="rounded-3xl overflow-hidden mb-10 shadow-lg ring-1 ring-gray-900/5 h-[300px] md:h-[400px] lg:h-[480px] relative">
                     <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
                 </div>
+
+                {/* Table of Contents */}
+                {toc.length > 0 && (
+                    <div className="not-prose bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-6 md:p-8 mb-10 border border-blue-100 shadow-sm relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-40 h-40 bg-blue-200/30 rounded-full blur-3xl -mr-10 -mt-10"></div>
+                        <div className="relative z-10">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
+                                    <List className="w-5 h-5" />
+                                </div>
+                                <h2 className="text-xl font-bold font-heading text-slate-900 m-0">Содержание статьи</h2>
+                            </div>
+                            <nav className="space-y-2">
+                                {toc.map((item, index) => (
+                                    <a
+                                        key={index}
+                                        href={`#${item.id}`}
+                                        className={`block py-2 px-4 rounded-xl hover:bg-white/60 transition-colors text-slate-700 hover:text-blue-600 font-medium ${
+                                            item.level === 3 ? 'pl-8 text-sm' : 'text-base'
+                                        }`}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            const element = document.getElementById(item.id);
+                                            if (element) {
+                                                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                                // Обновляем URL без перезагрузки страницы
+                                                window.history.pushState(null, '', `#${item.id}`);
+                                            }
+                                        }}
+                                    >
+                                        <span className="mr-2 text-blue-600 font-bold">
+                                            {item.level === 2 ? '●' : '○'}
+                                        </span>
+                                        {item.text}
+                                    </a>
+                                ))}
+                            </nav>
+                        </div>
+                    </div>
+                )}
 
                 {/* Typography Enforcement */}
                 <article className="prose prose-lg prose-slate max-w-none 
@@ -242,28 +292,11 @@ export const ArticlePage: React.FC<ArticlePageProps> = ({ id, onNavigate, onCalc
                     )}
                 </article>
 
-                <div className="mt-12 p-8 bg-gray-50 rounded-3xl border border-gray-100 font-sans">
-                    <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-6 flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4" />
-                        Источники и стандарты
-                    </h4>
-                    <ul className="space-y-4">
-                        <li className="flex items-start gap-3 text-slate-600 group hover:text-blue-600 transition-colors cursor-default">
-                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 shrink-0"></div>
-                            <span className="border-b border-gray-200 pb-0.5 group-hover:border-blue-300">СП 29.13330.2011 "Полы. Актуализированная редакция СНиП 2.03.13-88"</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-slate-600 group hover:text-blue-600 transition-colors cursor-default">
-                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 shrink-0"></div>
-                            <span className="border-b border-gray-200 pb-0.5 group-hover:border-blue-300">Техническая карта Knauf: "Гидроизоляция во влажных помещениях"</span>
-                        </li>
-                    </ul>
-                </div>
-
                 <div className="mt-8 flex gap-4 font-sans"></div>
             </div>
 
             {/* Right: Sticky Sidebar */}
-            <div className="lg:col-span-4 space-y-8 font-sans h-full">
+            <div className="lg:col-span-3 space-y-8 font-sans h-full">
                 
                 {/* Enhanced Author Bio / CTA Sidebar */}
                 <div className="sticky top-24 space-y-6">

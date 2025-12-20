@@ -84,7 +84,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, onCalculate }) =
                 {filteredPosts.map((post) => (
                     <a 
                         key={post.id}
-                        href={`/article/${post.id}/`}
+                        href={`/blog/${post.slug}/`}
                         className="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl hover:border-blue-100 transition-all duration-300 cursor-pointer flex flex-col h-full"
                     >
                         {/* Image */}

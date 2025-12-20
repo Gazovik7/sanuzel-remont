@@ -46,6 +46,8 @@ h6,
 .reveal {
   opacity: 1;
   transform: none;
+  content-visibility: auto;
+  contain-intrinsic-size: 1000px 1200px;
 }
 
 html.js .reveal {

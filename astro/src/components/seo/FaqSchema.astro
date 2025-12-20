@@ -1,0 +1,28 @@
+---
+import type { FaqItem } from '../../legacy/types';
+
+type Props = {
+  items: FaqItem[];
+};
+
+const { items } = Astro.props;
+
+const schema =
+  items?.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: items.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer,
+          },
+        })),
+      }
+    : null;
+---
+
+{schema ? <script type="application/ld+json" set:html={JSON.stringify(schema)} /> : null}
+

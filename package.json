@@ -8,6 +8,16 @@
     "build": "npm --prefix astro run build",
     "preview": "npm --prefix astro run preview",
     "check": "npm --prefix astro run check",
-    "postinstall": "npm --prefix astro install"
+    "postinstall": "npm --prefix astro install",
+    "deploy": "npm run build && node scripts/deploy-ftp.mjs",
+    "optimize:images": "node scripts/optimize-images.mjs",
+    "images:webp": "node scripts/generate-webp.mjs"
+  },
+  "devDependencies": {
+    "basic-ftp": "^5.0.5",
+    "imagemin": "^9.0.0",
+    "imagemin-mozjpeg": "^10.0.0",
+    "imagemin-pngquant": "^10.0.0",
+    "sharp": "^0.33.5"
   }
 }

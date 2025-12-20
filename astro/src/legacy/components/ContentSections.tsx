@@ -189,14 +189,12 @@ export const PortfolioSection = ({
         {portfolio.map((item, idx) => (
           <div key={idx} className="bg-white rounded-[2rem] overflow-hidden shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-500 group">
             <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="relative h-[400px] lg:h-auto">
-                <div className="absolute inset-0">
-                    <BeforeAfterSlider 
-                        beforeImage={item.before} 
-                        afterImage={item.after} 
-                        alt={item.title}
-                    />
-                </div>
+              <div className="relative">
+                <BeforeAfterSlider 
+                    beforeImage={item.before} 
+                    afterImage={item.after} 
+                    alt={item.title}
+                />
               </div>
               
               <div className="p-8 lg:p-12 flex flex-col justify-center bg-white relative">
@@ -622,7 +620,15 @@ export const GuaranteeSection = ({ content }: { content: GuaranteeBlockConfig })
                     ))}
                 </div>
                 <div className="mt-6 flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                    {content.directorPhoto ? (
+                      <img
+                        src={content.directorPhoto}
+                        alt={content.directorTitle}
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                    )}
                     <div>
                         <div className="text-xs font-bold text-gray-900">{content.directorTitle}</div>
                         <div className="text-[10px] text-gray-500">{content.directorName}</div>
@@ -796,27 +802,8 @@ export const FaqSection = ({ faqItems, content }: { faqItems: FaqItem[]; content
   
   const items = faqItems;
 
-  // Generate Schema.org JSON-LD
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": items.map(item => ({
-      "@type": "Question",
-      "name": item.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": item.answer
-      }
-    }))
-  };
-
   return (
     <section className="py-24" id="faq">
-      {/* Inject Microdata */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
       <div className="container mx-auto px-4 max-w-3xl">
         <h2 className="text-3xl md:text-5xl font-heading font-extrabold text-center mb-12 text-slate-900">{content.title}</h2>
         <div className="space-y-4">

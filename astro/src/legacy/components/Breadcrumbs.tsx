@@ -14,7 +14,7 @@ interface BreadcrumbsProps {
 }
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, onNavigate }) => {
-  const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const currentUrl = typeof window !== 'undefined' ? window.location.href : undefined;
   const canNavigate = typeof onNavigate === 'function' && typeof window !== 'undefined';
   const normalizedItems = items.filter((item) => item.href !== '/' && item.href !== '/index.html');
   return (
@@ -64,7 +64,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, onNavigate }) =
             ) : (
                 <span className="font-semibold text-slate-900" itemProp="name" aria-current="page">{item.label}</span>
             )}
-            <meta itemProp="item" content={item.href ? item.href : currentUrl} />
+            {(item.href || currentUrl) ? <meta itemProp="item" content={item.href ? item.href : currentUrl} /> : null}
             <meta itemProp="position" content={(index + 2).toString()} />
           </li>
         ))}

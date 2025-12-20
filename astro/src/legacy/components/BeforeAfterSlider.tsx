@@ -10,15 +10,13 @@ interface BeforeAfterSliderProps {
 }
 
 export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afterImage, alt }) => {
-  const [isLoaded, setIsLoaded] = useState(() => (typeof document !== 'undefined' ? document.readyState === 'complete' : false));
+  const [isLoaded, setIsLoaded] = useState(false);
   const [percent, setPercent] = useState(50);
 
   useEffect(() => {
-    if (isLoaded) return;
-    const onLoad = () => setIsLoaded(true);
-    window.addEventListener('load', onLoad, { once: true });
-    return () => window.removeEventListener('load', onLoad);
-  }, [isLoaded]);
+    const id = window.requestAnimationFrame(() => setIsLoaded(true));
+    return () => window.cancelAnimationFrame(id);
+  }, []);
 
   const HIDE_LABEL_THRESHOLD = 20;
   const shouldHideBeforeLabel = percent <= HIDE_LABEL_THRESHOLD;

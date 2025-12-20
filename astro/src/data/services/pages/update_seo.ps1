@@ -1,0 +1,41 @@
+# Station names mapping
+$stations = @{
+    "lyublino" = "Люблино"
+    "marina-roscha" = "Марьина Роща"
+    "marino" = "Марьино"
+    "medvedkovo" = "Медведково"
+    "mitino" = "Митино"
+    "nahabino" = "Нахабино"
+    "nekrasovka" = "Некрасовка"
+    "novogireevo" = "Новогиреево"
+    "novokosino" = "Новокосино"
+    "novoperedelkino" = "Новопеределкино"
+    "novye-cheryomushki" = "Новые Черёмушки"
+    "okskaya" = "Окская"
+    "oktyabrskoe-pole" = "Октябрьское Поле"
+    "perovo" = "Перово"
+    "planernaya" = "Планерная"
+    "polezhaevskaya" = "Полежаевская"
+    "prazhskaya" = "Пражская"
+    "rechnoy-vokzal" = "Речной Вокзал"
+    "rumyantsevo" = "Румянцево"
+    "ryazanskiy-prospekt" = "Рязанский Проспект"
+    "seligerskaya" = "Селигерская"
+    "semenovskaya" = "Семёновская"
+    "shipilovskaya" = "Шипиловская"
+    "sokolniki" = "Сокольники"
+    "solntsevo" = "Солнцево"
+    "strogino" = "Строгино"
+    "teplyy-stan" = "Тёплый Стан"
+    "timiryazevskaya" = "Тимирязевская"
+    "universitet" = "Университет"
+    "volgogradskiy-prospekt" = "Волгоградский Проспект"
+    "voykovskaya" = "Войковская"
+    "vyhino" = "Выхино"
+    "yugo-zapadnaya" = "Юго-Западная"
+}
+
+foreach ($slug in $stations.Keys) {
+    $stationName = $stations[$slug]
+    Write-Host "Processing: $slug -> $stationName"
+}

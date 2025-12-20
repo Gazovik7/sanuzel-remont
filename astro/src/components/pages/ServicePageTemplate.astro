@@ -34,6 +34,7 @@ import {
   SeoTextSection,
 } from '../../legacy/components/ContentSections';
 import { Breadcrumbs } from '../../legacy/components/Breadcrumbs';
+import FaqSchema from '../seo/FaqSchema.astro';
 
 import { getServiceBySlug, type ServiceBlock } from '../../data/services';
 
@@ -76,6 +77,7 @@ const isCalculatorBudget = calculatorBlock?.variant === 'budget';
 ---
 
 <BaseLayout title={title} description={description} canonicalPath={service.canonicalPath}>
+  {faqBlock && <FaqSchema items={faqBlock.items} />}
   <div id="top" class="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col">
     <LegacyHeaderLanding />
 
@@ -99,12 +101,12 @@ const isCalculatorBudget = calculatorBlock?.variant === 'budget';
 
       {portfolioBlock && isPortfolioBudget && (
         <div id="portfolio" class="reveal bg-slate-100">
-          <LegacyPortfolioSectionBudget client:load content={portfolioBlock.config} items={portfolioBlock.items} />
+          <LegacyPortfolioSectionBudget client:visible content={portfolioBlock.config} items={portfolioBlock.items} />
         </div>
       )}
       {portfolioBlock && !isPortfolioBudget && (
         <div id="portfolio" class="reveal bg-slate-100">
-          <LegacyPortfolioSection client:load content={portfolioBlock.config} items={portfolioBlock.items} />
+          <LegacyPortfolioSection client:visible content={portfolioBlock.config} items={portfolioBlock.items} />
         </div>
       )}
 
@@ -135,8 +137,8 @@ const isCalculatorBudget = calculatorBlock?.variant === 'budget';
               <p class="text-gray-500 max-w-2xl mx-auto text-lg">{calculatorBlock.config.sectionDescription}</p>
             </div>
             <div class="container mx-auto px-4">
-              {isCalculatorBudget && <LegacyCalculatorBudget client:load config={calculatorBlock.config} />}
-              {!isCalculatorBudget && <LegacyCalculator client:load config={calculatorBlock.config} />}
+              {isCalculatorBudget && <LegacyCalculatorBudget client:visible config={calculatorBlock.config} />}
+              {!isCalculatorBudget && <LegacyCalculator client:visible config={calculatorBlock.config} />}
             </div>
           </section>
         </div>
@@ -168,7 +170,7 @@ const isCalculatorBudget = calculatorBlock?.variant === 'budget';
 
       {teamBlock && (
         <div class="reveal bg-white">
-          <LegacyTeamSection client:load content={teamBlock.config} members={teamBlock.members} />
+          <LegacyTeamSection client:visible content={teamBlock.config} members={teamBlock.members} />
         </div>
       )}
 
@@ -181,7 +183,7 @@ const isCalculatorBudget = calculatorBlock?.variant === 'budget';
       {reviewsBlock && (
         <div id="reviews" class="reveal bg-white">
           <LegacyReviewsSection
-            client:load
+            client:visible
             content={reviewsBlock.config}
             videoReviews={reviewsBlock.videoReviews}
             whatsappReviews={reviewsBlock.whatsappReviews}
@@ -198,18 +200,18 @@ const isCalculatorBudget = calculatorBlock?.variant === 'budget';
 
       {faqBlock && isFaqBudget && (
         <div id="faq" class="reveal bg-slate-100">
-          <LegacyFaqBudgetSection client:load content={faqBlock.config} items={faqBlock.items} />
+          <LegacyFaqBudgetSection client:visible content={faqBlock.config} items={faqBlock.items} />
         </div>
       )}
       {faqBlock && !isFaqBudget && (
         <div id="faq" class="reveal bg-slate-100">
-          <LegacyFaqSection client:load content={faqBlock.config} items={faqBlock.items} />
+          <LegacyFaqSection client:visible content={faqBlock.config} items={faqBlock.items} />
         </div>
       )}
 
       {geographyBlock && (
         <div id="geography" class="reveal bg-white">
-          <LegacyGeographySection client:load content={geographyBlock.config} />
+          <LegacyGeographySection client:visible content={geographyBlock.config} />
         </div>
       )}
     </main>
