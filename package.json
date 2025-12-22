@@ -9,7 +9,8 @@
     "preview": "npm --prefix astro run preview",
     "check": "npm --prefix astro run check",
     "postinstall": "npm --prefix astro install",
-    "deploy": "npm run build && node scripts/deploy-ftp.mjs",
+    "deploy": "npm run build && node scripts/strip-nulls.mjs && node scripts/deploy-ftp.mjs",
+    "deploy:watch": "node scripts/deploy-watch.mjs",
     "optimize:images": "node scripts/optimize-images.mjs",
     "images:webp": "node scripts/generate-webp.mjs"
   },

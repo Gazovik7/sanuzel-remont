@@ -244,54 +244,20 @@ export const WHATSAPP_REVIEWS: Review[] = [
   { name: 'Сергей', location: 'WhatsApp', avatar: '/img/logo.png', screenshot: '/img/review-5.jpg' },
 ];
 
-export const VIDEO_REVIEWS: VideoReview[] = [
-  {
-    id: 1,
-    author: 'Михаил и Елена',
-    location: "ЖК 'Зиларт'",
-    preview:
-      'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800',
-    duration: '1:45',
-  },
-  {
-    id: 2,
-    author: 'Константин',
-    location: 'м. Раменки',
-    preview:
-      'https://images.unsplash.com/photo-1552321988-30f0ef923029?auto=format&fit=crop&q=80&w=800',
-    duration: '2:10',
-  },
-  {
-    id: 3,
-    author: 'Светлана',
-    location: 'г. Одинцово',
-    preview:
-      'https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=800',
-    duration: '0:58',
-  },
-];
+export const VIDEO_REVIEWS: VideoReview[] = [];
 
 export const PAPER_REVIEWS: PaperReview[] = [
   {
     id: 1,
-    author: 'Григорьев В.П.',
-    date: '12.04.2023',
-    image:
-      'https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&q=80&w=600',
+    author: '\u0418\u0432\u0430\u043d \u041f\u0435\u0442\u0440\u043e\u0432',
+    date: '15.05.2024',
+    image: '/img/otzyv-1.jpg',
   },
   {
     id: 2,
-    author: 'Семья Никитиных',
-    date: '20.09.2023',
-    image:
-      'https://images.unsplash.com/photo-1628155930542-4d71b059f33b?auto=format&fit=crop&q=80&w=600',
-  },
-  {
-    id: 3,
-    author: "ООО 'Вектор'",
-    date: '15.01.2024',
-    image:
-      'https://images.unsplash.com/photo-1635352723756-7494a50e4178?auto=format&fit=crop&q=80&w=600',
+    author: '\u0410\u043d\u043d\u0430 \u0421\u0435\u0440\u0433\u0435\u0435\u0432\u0430',
+    date: '20.06.2024',
+    image: '/img/otzyv-2.png',
   },
 ];
 

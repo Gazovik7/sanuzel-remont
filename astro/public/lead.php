@@ -16,6 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $phoneRaw = $_POST['phone'] ?? '';
 $phone = preg_replace('/\D+/', '', (string)$phoneRaw);
 $message = trim((string)($_POST['message'] ?? ''));
+$ymClientId = trim((string)($_POST['ym_client_id'] ?? ''));
+$ymUserId = trim((string)($_POST['ym_user_id'] ?? ''));
 
 if ($phone === '') {
   http_response_code(400);
@@ -38,6 +40,12 @@ $lines = [
   "Телефон: {$phone}",
 ];
 
+if ($ymClientId !== '') {
+  $lines[] = "YM ClientID: {$ymClientId}";
+}
+if ($ymUserId !== '') {
+  $lines[] = "YM UserID: {$ymUserId}";
+}
 if ($message !== '') {
   $lines[] = "Сообщение: {$message}";
 }

@@ -74,6 +74,8 @@ async function connectWithRetries() {
   for (let attempt = 1; attempt <= connectRetries; attempt += 1) {
     const client = new Client();
     client.ftp.verbose = verbose;
+    // Явно устанавливаем кодировку UTF-8 для правильной передачи кириллицы
+    client.ftp.encoding = 'utf-8';
     try {
       console.log(`Connecting to FTP... (attempt ${attempt}/${connectRetries})`);
       await client.access({
@@ -83,6 +85,8 @@ async function connectWithRetries() {
         port,
         secure,
       });
+      // Устанавливаем binary mode для корректной передачи файлов
+      await client.sendIgnoringError('TYPE I');
       await client.ensureDir(remoteDir);
       await client.cd(remoteDir);
       return client;

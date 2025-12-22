@@ -9,6 +9,7 @@ interface ReviewsPageProps {
 }
 
 export const ReviewsPage: React.FC<ReviewsPageProps> = ({ onNavigate, onCalculate }) => {
+  const hasVideo = VIDEO_REVIEWS.length > 0;
   return (
     <div className="min-h-screen bg-slate-50 animate-in fade-in duration-500 pb-12">
       <div className="container mx-auto px-4 pt-6 max-w-6xl">
@@ -29,29 +30,43 @@ export const ReviewsPage: React.FC<ReviewsPageProps> = ({ onNavigate, onCalculat
             <h2 className="text-2xl font-bold font-heading text-slate-900">Видео-отзывы</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {VIDEO_REVIEWS.map((video) => (
-              <div
-                key={video.id}
-                className="group relative rounded-2xl overflow-hidden bg-slate-900 aspect-video shadow-lg hover:-translate-y-1 transition-transform duration-300"
-              >
-                <img
-                  src={video.preview}
-                  alt={video.author}
-                  className="w-full h-full object-cover opacity-70 group-hover:opacity-50 transition-opacity"
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-white/50">
-                    <Play className="w-7 h-7 text-white fill-white ml-1" />
+            {hasVideo ? (
+              VIDEO_REVIEWS.map((video) => (
+                <div
+                  key={video.id}
+                  className="group relative rounded-2xl overflow-hidden bg-slate-900 aspect-video shadow-lg hover:-translate-y-1 transition-transform duration-300"
+                >
+                  <img
+                    src={video.preview}
+                    alt={video.author}
+                    className="w-full h-full object-cover opacity-70 group-hover:opacity-50 transition-opacity"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-white/50">
+                      <Play className="w-7 h-7 text-white fill-white ml-1" />
+                    </div>
+                  </div>
+                  <div className="absolute bottom-0 left-0 p-6 w-full bg-gradient-to-t from-black/90 to-transparent">
+                    <div className="text-white font-bold">{video.author}</div>
+                    <div className="text-xs text-white/80">
+                      {video.location} ??? {video.duration}
+                    </div>
                   </div>
                 </div>
-                <div className="absolute bottom-0 left-0 p-6 w-full bg-gradient-to-t from-black/90 to-transparent">
-                  <div className="text-white font-bold">{video.author}</div>
-                  <div className="text-xs text-white/80">
-                    {video.location} • {video.duration}
-                  </div>
+              ))
+            ) : (
+              <div className="col-span-full rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                  <Video className="w-6 h-6" />
+                </div>
+                <div className="text-lg font-bold text-slate-900 mb-2">
+                  {'\u0412\u0438\u0434\u0435\u043e-\u043e\u0442\u0437\u044b\u0432\u043e\u0432 \u043f\u043e\u043a\u0430 \u043d\u0435\u0442'}
+                </div>
+                <div className="text-sm text-gray-500">
+                  {'\u041c\u044b \u0441\u043e\u0431\u0438\u0440\u0430\u0435\u043c \u0432\u0438\u0434\u0435\u043e \u0438 \u0434\u043e\u0431\u0430\u0432\u0438\u043c \u0438\u0445 \u0432 \u0431\u043b\u0438\u0436\u0430\u0439\u0448\u0435\u0435 \u0432\u0440\u0435\u043c\u044f.'}
                 </div>
               </div>
-            ))}
+            )}
           </div>
         </div>
 

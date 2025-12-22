@@ -107,7 +107,7 @@ export const page: ServicePage = {
         offers: HERO_OFFERS_DEFAULT,
       },
     }),
-    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт санузлов', href: '/remont-razdelnogo-sanuzla/', isActive: true }] }),
+    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт раздельного санузла', href: '/remont-razdelnogo-sanuzla/', isActive: true }] }),
     use('comparison'),
     use('portfolioDefault'),
     unique({ ...QUALITY, checklist: PAGE_QUALITY_CHECKLIST }),

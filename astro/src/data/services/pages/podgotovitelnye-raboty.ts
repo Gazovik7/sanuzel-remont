@@ -71,7 +71,7 @@ export const page: ServicePage = {
         offers: HERO_OFFERS_DEFAULT,
       },
     }),
-    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт санузлов', href: '/podgotovitelnye-raboty/', isActive: true }] }),
+    unique({ type: 'breadcrumb', items: [{ label: 'Подготовительные работы по ремонту ванной', href: '/podgotovitelnye-raboty/', isActive: true }] }),
     use('comparison'),
     use('portfolioDefault'),
     unique({ ...QUALITY, checklist: PAGE_QUALITY_CHECKLIST }),

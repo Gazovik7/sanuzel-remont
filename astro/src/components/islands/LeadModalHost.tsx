@@ -41,49 +41,9 @@ function getLocalStorageValue(key: string) {
   }
 }
 
-function waitForCookieValue(name: string, timeoutMs = 1500, intervalMs = 100) {
-  if (typeof window === 'undefined') return Promise.resolve('');
-  return new Promise<string>((resolve) => {
-    const start = Date.now();
-    const tick = () => {
-      const value = getCookieValue(name) || getLocalStorageValue(name);
-      if (value) {
-        resolve(value);
-        return;
-      }
-      if (Date.now() - start >= timeoutMs) {
-        resolve('');
-        return;
-      }
-      window.setTimeout(tick, intervalMs);
-    };
-    tick();
-  });
-}
 
-function firstNonEmpty(promises: Promise<string>[], timeoutMs = 1500) {
-  if (typeof window === 'undefined') return Promise.resolve('');
-  return new Promise<string>((resolve) => {
-    let settled = false;
-    const timer = window.setTimeout(() => {
-      if (!settled) resolve('');
-      settled = true;
-    }, timeoutMs);
 
-    const onValue = (value: string) => {
-      if (settled || !value) return;
-      settled = true;
-      window.clearTimeout(timer);
-      resolve(value);
-    };
 
-    promises.forEach((promise) => {
-      promise.then(onValue).catch(() => {
-        // ignore
-      });
-    });
-  });
-}
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number, fallback: T) {
   let timeoutId: number | undefined;
@@ -139,11 +99,44 @@ async function getYandexIds() {
     }
   });
 
-  const cookiePromise = waitForCookieValue('_ym_uid', 2000, 100);
-  const clientId = await firstNonEmpty([cookiePromise, withTimeout(clientIdPromise, 2000, '')], 2000);
-  const userId = await withTimeout(userIdPromise, 800, '');
+  const clientId = await withTimeout(clientIdPromise, 300, '');
+  const userId = await withTimeout(userIdPromise, 200, '');
 
   return { clientId: clientId || counterClientId || cachedClientId || '', userId, cookieClientId, storageClientId };
+}
+
+function getUtmParams() {
+  if (typeof window === 'undefined') return {};
+  const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid', 'gclid'];
+  const params = new URLSearchParams(window.location.search);
+  const current: Record<string, string> = {};
+  let hasAny = false;
+
+  keys.forEach((key) => {
+    const value = params.get(key);
+    if (value) {
+      current[key] = value;
+      hasAny = true;
+    }
+  });
+
+  if (hasAny) {
+    try {
+      localStorage.setItem('lead:utm', JSON.stringify(current));
+    } catch {
+      // ignore
+    }
+    return current;
+  }
+
+  try {
+    const stored = localStorage.getItem('lead:utm');
+    if (!stored) return {};
+    const parsed = JSON.parse(stored);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
 }
 
 function getPageUrl() {
@@ -185,6 +178,13 @@ function buildMessage(payload: LeadCapturePayload) {
   const message = data.message ? String(data.message) : '';
   const ymClientId = data.ymClientId ? String(data.ymClientId) : '';
   const ymUserId = data.ymUserId ? String(data.ymUserId) : '';
+  const utmSource = data.utm_source ? String(data.utm_source) : '';
+  const utmMedium = data.utm_medium ? String(data.utm_medium) : '';
+  const utmCampaign = data.utm_campaign ? String(data.utm_campaign) : '';
+  const utmContent = data.utm_content ? String(data.utm_content) : '';
+  const utmTerm = data.utm_term ? String(data.utm_term) : '';
+  const yclid = data.yclid ? String(data.yclid) : '';
+  const gclid = data.gclid ? String(data.gclid) : '';
 
   // Преобразование значений способа связи в читаемый вид
   const formatReplyTo = (value: string) => {
@@ -209,6 +209,13 @@ function buildMessage(payload: LeadCapturePayload) {
   if (message) lines.push(`Сообщение: ${message}`);
   if (ymClientId) lines.push(`YM ClientID: ${ymClientId}`);
   if (ymUserId) lines.push(`YM UserID: ${ymUserId}`);
+  if (utmSource) lines.push(`UTM Source: ${utmSource}`);
+  if (utmMedium) lines.push(`UTM Medium: ${utmMedium}`);
+  if (utmCampaign) lines.push(`UTM Campaign: ${utmCampaign}`);
+  if (utmContent) lines.push(`UTM Content: ${utmContent}`);
+  if (utmTerm) lines.push(`UTM Term: ${utmTerm}`);
+  if (yclid) lines.push(`YCLID: ${yclid}`);
+  if (gclid) lines.push(`GCLID: ${gclid}`);
   if (payload.pageUrl) lines.push(`Страница: ${payload.pageUrl}`);
   if (payload.timestamp) lines.push(`Время: ${payload.timestamp}`);
 
@@ -221,6 +228,10 @@ async function sendLead(payload: LeadCapturePayload) {
 
   const body = new URLSearchParams();
   body.set('phone', phone);
+  const ymClientId = payload.data.ymClientId ? String(payload.data.ymClientId) : '';
+  const ymUserId = payload.data.ymUserId ? String(payload.data.ymUserId) : '';
+  if (ymClientId) body.set('ym_client_id', ymClientId);
+  if (ymUserId) body.set('ym_user_id', ymUserId);
   const message = buildMessage(payload);
   if (message) body.set('message', message);
 
@@ -259,13 +270,20 @@ export default function LeadModalHost() {
       },
       close: () => setIsOpen(false),
       success: () => {
+        try {
+          localStorage.setItem('lead:submitted', nowIso());
+        } catch {
+          // ignore
+        }
         // Redirect to thank you page instead of showing modal
         window.location.href = '/spasibo/';
       },
       capture: async (payload: Omit<LeadCapturePayload, 'pageUrl' | 'timestamp'>) => {
         const yandexIds = await getYandexIds();
+        const utm = getUtmParams();
         const enrichedData = {
           ...payload.data,
+          ...utm,
           ymClientId: yandexIds.clientId || undefined,
           ymUserId: yandexIds.userId || undefined,
         };

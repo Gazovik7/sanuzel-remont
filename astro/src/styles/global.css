@@ -46,14 +46,14 @@ h6,
 .reveal {
   opacity: 1;
   transform: none;
-  content-visibility: auto;
-  contain-intrinsic-size: 1000px 1200px;
+  content-visibility: visible;
+  contain-intrinsic-size: auto;
 }
 
 html.js .reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 html.js .reveal.active {
   opacity: 1;
@@ -138,6 +138,30 @@ input[type='number'] {
 .site-header.is-solid .site-mobile-btn--menu {
   background: rgb(15 23 42) !important; /* slate-900 */
   color: white !important;
+}
+
+/* Header layout: keep nav/phone on one line for desktop */
+.site-nav {
+  flex-wrap: nowrap;
+  gap: clamp(0.5rem, 1.5vw, 1.5rem);
+}
+
+.site-nav-link,
+.site-nav-dropdown-btn,
+.site-phone {
+  white-space: nowrap;
+}
+
+.site-nav-link,
+.site-nav-dropdown-btn {
+  letter-spacing: clamp(0.01em, 0.08vw, 0.04em);
+}
+
+@media (max-width: 1400px) {
+  .site-nav-link,
+  .site-nav-dropdown-btn {
+    font-size: 0.75rem;
+  }
 }
 
 /* Contacts map tabs (no hydration) */

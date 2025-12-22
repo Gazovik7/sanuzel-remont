@@ -106,7 +106,7 @@ export const page: ServicePage = {
         offers: HERO_OFFERS_DEFAULT,
       },
     }),
-    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт санузлов', href: '/remont-vannoy-komnaty-v-rassrochku/', isActive: true }] }),
+    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт санузлов и ванных в рассрочку', href: '/remont-vannoy-komnaty-v-rassrochku/', isActive: true }] }),
     use('comparison'),
     use('portfolioDefault'),
     unique({ ...QUALITY, checklist: PAGE_QUALITY_CHECKLIST }),

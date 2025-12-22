@@ -70,7 +70,7 @@ export const page: ServicePage = {
         offers: HERO_OFFERS_DEFAULT,
       },
     }),
-    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт санузлов', href: '/ukladka-plitki-v-vannoy-komnate/', isActive: true }] }),
+    unique({ type: 'breadcrumb', items: [{ label: 'Укладка плитки в ванной', href: '/ukladka-plitki-v-vannoy-komnate/', isActive: true }] }),
     use('comparison'),
     use('portfolioDefault'),
     unique({ ...QUALITY, checklist: PAGE_QUALITY_CHECKLIST }),

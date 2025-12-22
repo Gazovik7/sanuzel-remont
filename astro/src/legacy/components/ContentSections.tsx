@@ -654,7 +654,8 @@ export const ReviewsSection = ({
     whatsappReviews: Review[];
     paperReviews: PaperReview[];
 }) => {
-    const video = videoReviews[0];
+    const hasVideo = videoReviews.length > 0;
+    const video = hasVideo ? videoReviews[0] : null;
 
     return (
         <section className="py-24" id="reviews">
@@ -669,22 +670,36 @@ export const ReviewsSection = ({
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
                     
                     {/* Video Card - Left Column */}
-                    <div className="relative group overflow-hidden rounded-[2rem] shadow-xl bg-slate-900 cursor-pointer h-[400px] lg:h-auto min-h-[400px]">
-                         <img src={video.preview} alt={video.author} className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
-                         <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-white/50">
-                                   <Play className="w-8 h-8 text-white fill-white ml-1" />
-                              </div>
-                         </div>
-                         <div className="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-slate-900 to-transparent">
-                             <div className="flex items-center gap-2 mb-2">
-                                <Video className="w-4 h-4 text-blue-400" />
-                                <span className="text-xs font-bold text-blue-400 uppercase tracking-widest">{content.videoKicker}</span>
+                    {hasVideo && video ? (
+                        <div className="relative group overflow-hidden rounded-[2rem] shadow-xl bg-slate-900 cursor-pointer h-[400px] lg:h-auto min-h-[400px]">
+                             <img src={video.preview} alt={video.author} className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
+                             <div className="absolute inset-0 flex items-center justify-center">
+                                  <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-white/50">
+                                       <Play className="w-8 h-8 text-white fill-white ml-1" />
+                                  </div>
                              </div>
-                             <h3 className="text-2xl font-bold text-white mb-1">{video.author}</h3>
-                             <p className="text-gray-300">{video.location}</p>
-                         </div>
-                    </div>
+                             <div className="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-slate-900 to-transparent">
+                                 <div className="flex items-center gap-2 mb-2">
+                                    <Video className="w-4 h-4 text-blue-400" />
+                                    <span className="text-xs font-bold text-blue-400 uppercase tracking-widest">{content.videoKicker}</span>
+                                 </div>
+                                 <h3 className="text-2xl font-bold text-white mb-1">{video.author}</h3>
+                                 <p className="text-gray-300">{video.location}</p>
+                             </div>
+                        </div>
+                    ) : (
+                        <div className="relative overflow-hidden rounded-[2rem] shadow-xl border border-gray-200 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 h-[400px] lg:h-auto min-h-[400px] flex items-center justify-center text-center px-10">
+                            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.4),_transparent_60%)]"></div>
+                            <div className="relative z-10">
+                                <div className="mx-auto mb-6 w-16 h-16 rounded-full border border-white/40 bg-white/10 flex items-center justify-center">
+                                    <Video className="w-7 h-7 text-white" />
+                                </div>
+                                <div className="text-xs font-bold text-blue-300 uppercase tracking-widest mb-3">{content.videoKicker}</div>
+                                <h3 className="text-2xl font-bold text-white mb-2">Видео-отзывов пока нет</h3>
+                                <p className="text-gray-300 text-sm">Скоро добавим свежие видео от клиентов.</p>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Stacked Side Column - Right Column */}
                     <div className="flex flex-col gap-6 h-full min-h-[450px]">

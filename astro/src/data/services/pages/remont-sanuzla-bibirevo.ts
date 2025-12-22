@@ -71,7 +71,7 @@ export const page: ServicePage = {
         offers: HERO_OFFERS_DEFAULT,
       },
     }),
-    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт санузлов', href: '/remont-sanuzla-bibirevo/', isActive: true }] }),
+    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт санузлов в Бибирево', href: '/remont-sanuzla-bibirevo/', isActive: true }] }),
     use('comparison'),
     use('portfolioDefault'),
     unique({ ...QUALITY, checklist: PAGE_QUALITY_CHECKLIST }),

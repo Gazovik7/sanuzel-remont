@@ -71,7 +71,7 @@ export const page: ServicePage = {
         offers: HERO_OFFERS_DEFAULT,
       },
     }),
-    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт санузлов', href: '/remont-sanuzla-vozle-vashey-stantsii-metro/', isActive: true }] }),
+    unique({ type: 'breadcrumb', items: [{ label: 'Ремонт санузлов рядом', href: '/remont-sanuzla-vozle-vashey-stantsii-metro/', isActive: true }] }),
     use('comparison'),
     use('portfolioDefault'),
     unique({ ...QUALITY, checklist: PAGE_QUALITY_CHECKLIST }),

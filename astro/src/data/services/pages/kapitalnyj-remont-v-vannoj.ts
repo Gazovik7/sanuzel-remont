@@ -142,7 +142,7 @@ export const page: ServicePage = {
         offers: HERO_OFFERS_DEFAULT,
       },
     }),
-    unique({ type: 'breadcrumb', items: [{ label: '', href: '/kapitalnyj-remont-v-vannoj/', isActive: true }] }),
+    unique({ type: 'breadcrumb', items: [{ label: 'Капитальный ремонт ванной комнаты', href: '/kapitalnyj-remont-v-vannoj/', isActive: true }] }),
     use('comparison'),
     use('portfolioDefault'),
     unique({ ...KAPITALNYJ_QUALITY, checklist: KAPITALNYJ_QUALITY_CHECKLIST }),

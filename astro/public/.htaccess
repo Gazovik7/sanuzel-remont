@@ -1,3 +1,18 @@
+# ==========================================
+# UTF-8 Encoding
+# ==========================================
+# Указываем кодировку UTF-8 по умолчанию для всех текстовых файлов
+# Это гарантирует корректное отображение кириллицы и других unicode символов
+AddDefaultCharset UTF-8
+
+# Явное указание charset для HTML файлов
+<FilesMatch "\.(html|htm)$">
+  AddType "text/html; charset=UTF-8" .html .htm
+</FilesMatch>
+
+# ==========================================
+# Browser Caching
+# ==========================================
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresByType text/css "access plus 1 year"
