@@ -17,3 +17,13 @@ Auto deploy on save (watch mode)
 - Watches `astro/src`, `astro/public`, `.env.deploy`, and key Astro config files
 - On any change, it waits ~1.5s (debounce) then runs full deploy
 - Stop with `Ctrl+C`
+
+Git commit and push
+- Check what changed: `git status -sb`
+- Stage tracked changes: `git add -u`
+- Stage new files as needed: `git add path/to/file`
+- Commit with a clear message: `git commit -m "Describe change"`
+- Push the current branch: `git push`
+
+Recommended flow
+- Commit and push first, then run `npm run deploy`
