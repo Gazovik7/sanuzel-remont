@@ -1,5 +1,8 @@
-export const servicePage = {
+import type { ServicePageData } from '../../../types';
+
+export const servicePage: ServicePageData = {
   slug: 'geo-ai',
+  template: 'geo',
   heroType: 'ai',
   seo: {
     title: 'Продвижение в ChatGPT, Gemini и AI-поиске | Smirnov Marketing',
@@ -15,6 +18,32 @@ export const servicePage = {
     titleAccent: 'и нейросетях',
     description: 'Мир меняется: люди всё чаще ищут ответы в ChatGPT и Perplexity. Мы сделаем так, чтобы нейросеть рекомендовала именно ваш бренд.',
     buttonText: 'Стать лидером в AI',
+  },
+  factors: [
+    { label: 'Цитируемость ИИ', value: 85, color: '#A855F7' },
+    { label: 'E-E-A-T сигналы', value: 70, color: '#8B5CF6' },
+    { label: 'Техническая доступность', value: 90, color: '#6366F1' },
+    { label: 'Текстовая релевантность', value: 75, color: '#D946EF' },
+  ],
+  timeline: [
+    { title: 'AI Аудит', desc: 'Анализируем текущие ответы ChatGPT и Gemini о вашем бренде.' },
+    { title: 'Оптимизация данных', desc: 'Структурируем информацию для лучшего понимания нейросетями.' },
+    { title: 'Посев упоминаний', desc: 'Создаем экспертный контент на авторитетных ресурсах.' },
+    { title: 'Мониторинг', desc: 'Отслеживаем изменения в рекомендациях AI-ассистентов.' }
+  ],
+  comparison: {
+    bad: [
+      'Игнорирование AI-трафика',
+      'Устаревшие данные в базе ИИ',
+      'Нет микроразметки Schema.org',
+      'Отсутствие в AI-ответах'
+    ],
+    good: [
+      'Системная работа с AEO',
+      'Актуализация данных в реальном времени',
+      'Полное покрытие AI-ассистентов',
+      'Доминирование в рекомендациях'
+    ]
   },
   symptoms: {
     title: 'Вашего бренда',

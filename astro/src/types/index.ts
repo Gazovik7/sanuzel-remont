@@ -130,7 +130,7 @@ export interface SeoTextData {
   fullText: string;
 }
 
-export type PageTemplate = 'seo' | 'ads' | 'geo' | 'dev';
+export type PageTemplate = 'seo' | 'ads' | 'geo' | 'dev' | 'seo-audit' | 'avito';
 
 export interface ServicePageData {
   slug: string;

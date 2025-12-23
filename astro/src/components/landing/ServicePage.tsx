@@ -36,6 +36,8 @@ import CasesResults from './CasesResults';
 import type { ServicePageData } from '../../types';
 import { FAQS } from './constants';
 
+import ServiceModernPage from './ServiceModernPage';
+
 interface Props {
   data: ServicePageData;
   pathname: string;
@@ -44,77 +46,80 @@ interface Props {
 const ServicePage: React.FC<Props> = ({ data, pathname }) => {
   if (!data) return null;
 
-  // Determine Hero Visual Type
-  const heroType = data.methodology?.factors ? 'wheel' : 'slider';
+  // Если это современный шаблон (GEO, ADS, DEV, AVITO)
+  if (['geo', 'ads', 'dev', 'avito'].includes(data.template)) {
+    return <ServiceModernPage data={data} pathname={pathname} />;
+  }
+
+  const renderContent = () => {
+    // 1. ШАБЛОН SEO-АУДИТА (SEO-AUDIT)
+    if (data.template === 'seo-audit') {
+      return (
+        <>
+           <Hero 
+              data={data.hero} 
+              heroType="wheel" 
+              factors={data.methodology?.factors}
+              breadcrumbs={data.breadcrumbs}
+           />
+           <DetailedStages data={data.process} />
+           <WhyUs data={data.whyUs} />
+           <MethodologyComparison data={data.comparison} />
+           <ReviewsBlock />
+           <LeadMagnetBlock data={data.leadMagnet} />
+           <Pricing data={data.pricing} />
+           <FAQ items={data.faq || []} />
+           <DiscussProject />
+           <SeoSpoiler data={data.seoText} />
+        </>
+      );
+    }
+
+    // 4. ШАБЛОН SEO-ПРОДВИЖЕНИЯ (DEFAULT)
+    return (
+      <>
+         <Hero 
+            data={data.hero} 
+            heroType={data.methodology?.factors ? 'wheel' : 'slider'} 
+            factors={data.methodology?.factors}
+            breadcrumbs={data.breadcrumbs}
+            caseIds={data.caseIds}
+         />
+         <CasesResults caseIds={data.caseIds} />
+         <WhyUs data={data.whyUs} />
+         <ExperienceBlock />
+         <ComparisonBlock />
+         <WheelOfBalance data={data.methodology} />
+         <MethodologyComparison data={data.comparison} />
+         <FullFunnelBlock data={data.funnel} />
+         {data.showQuiz && <Quiz />}
+         <ServicesIncluded data={data.servicesIncluded} />
+         <GrowthBlock />
+         {data.showUrgency && <UrgencyBlock />}
+         {data.showCalculator && <SeoCalculator />}
+         <Pricing data={data.pricing} />
+         <DetailedStages data={data.process} />
+         <LeadMagnetBlock data={data.leadMagnet} />
+         <SeoBenefits data={data.seoBenefits} />
+         <AwardsBlock />
+         <MediaBlock />
+         <Team />
+         <YoutubeBlock />
+         <FAQ items={data.faq || []} />
+         <DiscussProject />
+         <AdditionalServices />
+         <GeoLinks />
+         <CmsLinks />
+         <SeoSpoiler data={data.seoText} />
+      </>
+    );
+  };
 
   return (
     <ModalProvider>
       <div className="font-sans text-[#09090b] bg-white selection:bg-[#D4AF37] selection:text-white">
         <Header pathname={pathname} />
-        
-        <main>
-           {/* 1. Блок захвата */}
-           <Hero 
-              data={data.hero} 
-              heroType={heroType as any} 
-              factors={data.methodology?.factors}
-              breadcrumbs={data.breadcrumbs}
-              caseIds={data.caseIds}
-           />
-
-           {/* 2. Социальное доказательство №1 */}
-           <CasesResults caseIds={data.caseIds} />
-
-           {/* 3. Смысловой блок: Почему мы и опыт */}
-           <WhyUs data={data.whyUs} />
-           <ExperienceBlock />
-           <ComparisonBlock />
-
-           {/* 4. Экспертиза и Методология */}
-           <WheelOfBalance data={data.methodology} />
-           <MethodologyComparison data={data.comparison} />
-           <FullFunnelBlock data={data.funnel} />
-           
-           {/* NEW: Мягкая вовлеченность через Квиз */}
-           {data.showQuiz && <Quiz />}
-           
-           <ServicesIncluded data={data.servicesIncluded} />
-
-           {/* 5. Твердый оффер (Аудит) */}
-           <GrowthBlock />
-
-           {/* 6. Социальное доказательство №2 */}
-           <ReviewsBlock />
-
-           {/* NEW: Создаем Urgency перед расчетами */}
-           {data.showUrgency && <UrgencyBlock />}
-
-           {/* 7. Коммерческий блок */}
-           {data.showCalculator && <SeoCalculator />}
-           <Pricing data={data.pricing} />
-           <DetailedStages data={data.process} />
-
-           {/* 8. Мягкая конверсия (Plan B) */}
-           <LeadMagnetBlock data={data.leadMagnet} />
-
-           {/* 9. Дожим и Авторитет */}
-           <SeoBenefits data={data.seoBenefits} />
-           <AwardsBlock />
-           <MediaBlock />
-           <Team />
-           <YoutubeBlock />
-
-           {/* 10. Закрытие */}
-           <FAQ items={data.faq || []} />
-           <DiscussProject />
-
-           {/* 11. SEO-слой (В самый низ) */}
-           <AdditionalServices />
-           <GeoLinks />
-           <CmsLinks />
-           <SeoSpoiler data={data.seoText} />
-        </main>
-
+        <main>{renderContent()}</main>
         <Footer />
         <RequestModal />
       </div>

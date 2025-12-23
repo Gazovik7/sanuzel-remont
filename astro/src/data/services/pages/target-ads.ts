@@ -1,6 +1,9 @@
 
-export const servicePage = {
+import type { ServicePageData } from '../../../types';
+
+export const servicePage: ServicePageData = {
   slug: 'target-ads',
+  template: 'ads',
   heroType: 'ads',
   seo: {
     title: 'Таргетированная реклама ВКонтакте и Telegram | Smirnov Marketing',

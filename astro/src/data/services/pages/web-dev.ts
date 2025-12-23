@@ -1,6 +1,9 @@
 
-export const servicePage = {
+import type { ServicePageData } from '../../../types';
+
+export const servicePage: ServicePageData = {
   slug: 'web-dev',
+  template: 'dev',
   heroType: 'web-dev',
   hideWheel: true, // Скрываем колесо SEO
   hideCalculator: true, // Скрываем SEO калькулятор

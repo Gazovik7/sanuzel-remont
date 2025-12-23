@@ -1,5 +1,8 @@
-export const servicePage = {
+import type { ServicePageData } from '../../../types';
+
+export const servicePage: ServicePageData = {
   slug: 'context-ads',
+  template: 'ads',
   heroType: 'ads',
   hideWheel: true,
   hideCalculator: true,
@@ -32,6 +35,12 @@ export const servicePage = {
       'Живой дашборд в реальном времени'
     ]
   },
+  timeline: [
+    { title: 'Аудит и стратегия', desc: 'Анализируем нишу, конкурентов и проектируем воронку продаж.' },
+    { title: 'Техническая часть', desc: 'Настраиваем аналитику, цели и связку с CRM системой.' },
+    { title: 'Запуск кампаний', desc: 'Создаем объявления, подбираем семантику и запускаем трафик.' },
+    { title: 'Оптимизация', desc: 'Ежедневно работаем над снижением стоимости лида и ростом окупаемости.' }
+  ],
   pricing: [
     { title: 'Старт', price: 'от 40 000 ₽', features: ['Настройка 1 кабинета', 'До 500 ключей', 'Аналитика целей', 'Срок: 7 дней'] },
     { title: 'Оптимум', price: 'от 70 000 ₽', features: ['Поиск + РСЯ', 'Ретаргетинг', 'Еженедельные отчеты', 'Ведение 1 мес.'], isPopular: true },

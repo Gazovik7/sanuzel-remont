@@ -1,5 +1,8 @@
-export const servicePage = {
+import type { ServicePageData } from '../../../types';
+
+export const servicePage: ServicePageData = {
   slug: 'avito-promo',
+  template: 'avito',
   heroType: 'avito',
   seo: {
     title: 'Продвижение на Авито под ключ | Smirnov Marketing',

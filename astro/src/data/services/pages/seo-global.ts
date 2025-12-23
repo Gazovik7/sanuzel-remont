@@ -9,7 +9,6 @@ export const SEO_GLOBAL_DATA: ServicePageData = {
     description: "Профессиональное SEO продвижение на английском языке. Линкбилдинг, Outreach, Native контент и вывод в ТОП-1 Google США, Великобритании, ОАЭ.",
   },
   breadcrumbs: [
-    { label: 'Главная', href: '/' },
     { label: 'SEO Global', href: '/seo-prodvizhenie-angloyazychnyh-saytov/' },
   ],
   hero: {
