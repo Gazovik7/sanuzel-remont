@@ -1,12 +1,24 @@
+'use client';
 
 import React from 'react';
 import { PRICING_PLANS } from './constants';
 import { Check, Zap, Rocket, Trophy, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useModal } from './Modal';
+import type { PricingData } from '../../types';
 
-const Pricing: React.FC = () => {
+interface PricingProps {
+  data?: PricingData;
+}
+
+const Pricing: React.FC<PricingProps> = ({ data }) => {
   const { openModal } = useModal();
+
+  // Приоритет данным из пропсов, иначе используем константы (для главной)
+  const title = data?.title || "Инвестиции в";
+  const subtitle = data?.subtitle || "рост";
+  const description = data?.description || "Прозрачное ценообразование без скрытых платежей. Выберите подходящий тариф для масштабирования вашего бизнеса.";
+  const plans = data?.plans || PRICING_PLANS;
 
   return (
     <section id="pricing" className="py-24 bg-[#09090b] text-white relative overflow-hidden">
@@ -17,15 +29,15 @@ const Pricing: React.FC = () => {
         <div className="text-center mb-20">
             <span className="text-[#D4AF37] text-xs font-bold uppercase tracking-[0.3em] mb-4 block">Стоимость услуг</span>
             <h2 className="text-4xl md:text-6xl font-serif font-medium text-white mb-6">
-                Инвестиции в <span className="italic text-gradient-gold">рост</span>
+                {title} <span className="italic text-gradient-gold">{subtitle}</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto font-light leading-relaxed">
-                Прозрачное ценообразование без скрытых платежей. Выберите подходящий тариф для масштабирования вашего бизнеса.
+                {description}
             </p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-            {PRICING_PLANS.map((plan, idx) => (
+            {plans.map((plan, idx) => (
                 <motion.div
                     key={idx}
                     initial={{ opacity: 0, y: 20 }}
@@ -78,7 +90,7 @@ const Pricing: React.FC = () => {
                             : 'bg-white text-black hover:bg-[#D4AF37]'
                         }`}
                     >
-                        {plan.buttonText}
+                        {plan.buttonText || 'Выбрать тариф'}
                         <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
                     </button>
                 </motion.div>

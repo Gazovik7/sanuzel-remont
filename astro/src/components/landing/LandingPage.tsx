@@ -1,3 +1,6 @@
+
+'use client';
+
 import React from 'react';
 import Header from './Header';
 import Hero from './Hero';
@@ -32,8 +35,9 @@ import ComparisonBlock from './ComparisonBlock';
 import UrgencyBlock from './UrgencyBlock';
 import Quiz from './Quiz';
 import { SEO_CONTENT, FAQS } from './constants';
+import type { ServicePageData } from '../../types';
 
-function LandingPage({ pathname }: { pathname?: string }) {
+function LandingPage({ pathname, data }: { pathname?: string, data?: ServicePageData }) {
   return (
     <ModalProvider>
       <div className="font-sans text-[#09090b] bg-white selection:bg-[#D4AF37] selection:text-white">
@@ -41,25 +45,30 @@ function LandingPage({ pathname }: { pathname?: string }) {
         
         <main>
            {/* 1. Блок захвата */}
-           <Hero />
+           <Hero 
+              data={data?.hero} 
+              heroType={data?.methodology?.factors ? 'wheel' : 'slider'} 
+              factors={data?.methodology?.factors}
+              breadcrumbs={data?.breadcrumbs}
+              caseIds={data?.caseIds}
+           />
 
            {/* 2. Социальное доказательство №1 */}
-           <CasesResults />
+           <CasesResults caseIds={data?.caseIds} />
 
-           {/* 3. Смысловой блок: Почему мы и опыт */}
-           <WhyUs />
+           {/* 3. Смысловой блок */}
+           <WhyUs data={data?.whyUs} />
            <ExperienceBlock />
            <ComparisonBlock />
 
            {/* 4. Экспертиза и Методология */}
-           <WheelOfBalance />
-           <MethodologyComparison />
-           <FullFunnelBlock />
+           <WheelOfBalance data={data?.methodology} />
+           <MethodologyComparison data={data?.comparison} />
+           <FullFunnelBlock data={data?.funnel} />
            
-           {/* NEW: Мягкая вовлеченность через Квиз */}
-           <Quiz />
+           {(!data || data.showQuiz) && <Quiz />}
            
-           <ServicesIncluded />
+           <ServicesIncluded data={data?.servicesIncluded} />
 
            {/* 5. Твердый оффер (Аудит) */}
            <GrowthBlock />
@@ -68,32 +77,32 @@ function LandingPage({ pathname }: { pathname?: string }) {
            <ReviewsBlock />
 
            {/* NEW: Создаем Urgency перед расчетами */}
-           <UrgencyBlock />
+           {(!data || data.showUrgency) && <UrgencyBlock />}
 
            {/* 7. Коммерческий блок */}
-           <SeoCalculator />
-           <Pricing />
-           <DetailedStages />
+           {(!data || data.showCalculator) && <SeoCalculator />}
+           <Pricing data={data?.pricing} />
+           <DetailedStages data={data?.process} />
 
            {/* 8. Мягкая конверсия (Plan B) */}
-           <LeadMagnetBlock />
+           <LeadMagnetBlock data={data?.leadMagnet} />
 
            {/* 9. Дожим и Авторитет */}
-           <SeoBenefits />
+           <SeoBenefits data={data?.seoBenefits} />
            <AwardsBlock />
            <MediaBlock />
            <Team />
            <YoutubeBlock />
 
            {/* 10. Закрытие */}
-           <FAQ items={FAQS} />
+           <FAQ items={data?.faq || FAQS} />
            <DiscussProject />
 
-           {/* 11. SEO-слой (В самый низ) */}
+           {/* 11. SEO-слой */}
            <AdditionalServices />
            <GeoLinks />
            <CmsLinks />
-           <SeoSpoiler {...SEO_CONTENT} />
+           <SeoSpoiler data={data?.seoText} />
         </main>
 
         <Footer />

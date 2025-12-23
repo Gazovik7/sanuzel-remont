@@ -6,8 +6,9 @@ export const servicePage = {
     description: 'Профессиональный технический и поисковый аудит сайта. Найдем все ошибки, мешающие росту в ТОП Яндекс и Google.',
   },
   breadcrumbs: [
+    { label: 'Главная', href: '/' },
     { label: 'Услуги', href: '/#services' },
-    { label: 'Аудит сайта', href: '/services/seo-audit' },
+    { label: 'SEO-аудит', href: '/seo-audit' },
   ],
   hero: {
     badge: 'Аналитика и стратегия',

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { CASES_DATA, CLIENTS } from './constants';
 import { ArrowRight, TrendingUp, MapPin, Briefcase, Sparkles } from 'lucide-react';
@@ -7,10 +6,24 @@ import { useModal } from './Modal';
 
 const Link = ({href, children, ...props}: any) => <a href={href} {...props}>{children}</a>;
 
-const CasesResults: React.FC = () => {
+interface CasesResultsProps {
+  caseIds?: string[];
+}
+
+const CasesResults: React.FC<CasesResultsProps> = ({ caseIds }) => {
   const { openModal } = useModal();
 
-  // Duplicate clients list to create seamless loop
+  // Logic: if caseIds provided, filter and order by them. Else take first 7.
+  const displayCases = React.useMemo(() => {
+    if (caseIds && caseIds.length > 0) {
+      return caseIds
+        .map(id => CASES_DATA.find(c => c.id === id))
+        .filter(Boolean)
+        .slice(0, 7);
+    }
+    return CASES_DATA.slice(0, 7);
+  }, [caseIds]);
+
   const marqueeClients = [...CLIENTS, ...CLIENTS, ...CLIENTS];
 
   const handleWantSame = (caseTitle: string) => {
@@ -30,7 +43,6 @@ const CasesResults: React.FC = () => {
             <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Нам доверяют лидеры рынка</p>
          </div>
          <div className="relative w-full border-y border-gray-100 bg-white/50 backdrop-blur-sm py-6">
-            {/* Gradient Masks */}
             <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
             <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
             
@@ -71,7 +83,7 @@ const CasesResults: React.FC = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-           {CASES_DATA.slice(0, 7).map((item, idx) => (
+           {displayCases.map((item: any, idx: number) => (
               <motion.div 
                 key={idx}
                 initial={{ opacity: 0, y: 30 }}
@@ -80,7 +92,6 @@ const CasesResults: React.FC = () => {
                 transition={{ delay: idx * 0.05 }}
                 className="group flex flex-col h-full bg-white hover:bg-[#F9F9FB] rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl border border-gray-100"
               >
-                 {/* Image Area */}
                  <div className="relative h-48 overflow-hidden">
                     <img 
                         src={item.image} 
@@ -94,9 +105,7 @@ const CasesResults: React.FC = () => {
                     </div>
                  </div>
 
-                 {/* Content Area */}
                  <div className="p-5 flex flex-col flex-grow">
-                    {/* Meta Tags */}
                     <div className="flex items-center gap-3 text-[10px] uppercase font-bold text-gray-400 mb-3 tracking-wide">
                         {item.geo && (
                             <div className="flex items-center gap-1">
@@ -120,7 +129,6 @@ const CasesResults: React.FC = () => {
                         {item.desc}
                     </p>
 
-                    {/* Action Buttons */}
                     <div className="grid grid-cols-2 gap-2 mt-auto pt-4 border-t border-gray-100">
                         <Link 
                             href="/cases" 
@@ -139,7 +147,7 @@ const CasesResults: React.FC = () => {
               </motion.div>
            ))}
 
-           {/* SPECIAL 8th CARD: Next Success Story */}
+           {/* SPECIAL 8th CARD */}
            <motion.div 
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -150,7 +158,6 @@ const CasesResults: React.FC = () => {
                     <div className="w-16 h-16 rounded-full bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37] group-hover:scale-110 transition-transform duration-500">
                         <Sparkles size={32} />
                     </div>
-                    
                     <div className="space-y-3">
                         <h3 className="font-serif font-bold text-xl text-[#09090b]">
                             Ваш проект может быть <br/> <span className="italic text-[#D4AF37]">следующим</span>
@@ -159,7 +166,6 @@ const CasesResults: React.FC = () => {
                             Мы готовы разработать стратегию роста для вашего бизнеса и вывести сайт в ТОП-3.
                         </p>
                     </div>
-
                     <button 
                         onClick={() => openModal({ title: 'Обсудить проект', subtitle: 'Давайте сделаем ваш сайт нашим следующим успешным кейсом.' })}
                         className="w-full py-4 rounded-xl bg-[#09090b] text-white font-bold uppercase tracking-widest text-xs hover:bg-[#D4AF37] hover:text-black transition-all shadow-lg"

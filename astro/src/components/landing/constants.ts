@@ -204,6 +204,7 @@ export const LETTERHEAD_REVIEWS = [
 
 export const CASES_DATA = [
   {
+    id: '1',
     title: 'ТОП-1 в Яндекс в сфере ремонта кофемашин',
     result: 'Рост в 10 раз',
     desc: 'Рост посещаемости более, чем в 10 раз в нише ремонт бытовой техники.',
@@ -213,6 +214,7 @@ export const CASES_DATA = [
     category: 'seo-ru'
   },
   {
+    id: '2',
     title: 'Рост посещаемости интернет-магазина женской одежды',
     result: 'x10 трафик',
     desc: 'Интернет-магазин женской одежды. Работа с широкой семантикой.',
@@ -222,6 +224,7 @@ export const CASES_DATA = [
     category: 'seo-ru'
   },
   {
+    id: '3',
     title: 'Как вывести сайт строительной тематики из стагнации',
     result: '+3000 посетит.',
     desc: 'За 3 месяца работы вывели сайт строительной тематики из стагнации.',
@@ -231,6 +234,7 @@ export const CASES_DATA = [
     category: 'seo-ru'
   },
   {
+    id: '4',
     title: 'Запуск и продвижение интернет-магазина на OpenCart',
     result: 'с 0 до 11к',
     desc: 'Комплексное SEO продвижение магазина автозапчастей с нуля.',
@@ -239,18 +243,19 @@ export const CASES_DATA = [
     geo: 'РФ + СНГ',
     category: 'seo-ru'
   },
-    { 
-      title: 'Продвижение стоматологической клиники', 
-      result: '+45% заявок', 
-      desc: 'Локальное SEO для сети клиник. Работа с картами и репутацией.', 
-      image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800',
-      niche: 'Медицина',
-      geo: 'Москва',
-      category: 'seo-ru',
-      slug: 'medical-seo-growth'
-    },
-  
+  { 
+    id: '5',
+    title: 'Продвижение стоматологической клиники', 
+    result: '+45% заявок', 
+    desc: 'Локальное SEO для сети клиник. Работа с картами и репутацией.', 
+    image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800',
+    niche: 'Медицина',
+    geo: 'Москва',
+    category: 'seo-ru',
+    slug: 'medical-seo-growth'
+  },
   {
+    id: '6',
     title: 'SEO для юридической компании (B2B)',
     result: 'ТОП-3 Google',
     desc: 'Вывод сайта в топ по высокочастотным запросам в сфере арбитража.',
@@ -260,15 +265,17 @@ export const CASES_DATA = [
     category: 'seo-ru'
   },
   {
+    id: '7',
     title: 'Лидогенерация для застройщика',
     result: 'x3 Лиды',
     desc: 'Комплексный маркетинг: SEO + Контекст для продажи элитной недвижимости.',
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800', // Using a generic city/building image
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800',
     niche: 'Недвижимость',
     geo: 'Москва / Дубай',
     category: 'ads'
   },
   {
+    id: '8',
     title: 'Интернет-магазин дизайнерской мебели',
     result: '+120% выручка',
     desc: 'Техническая оптимизация и контент-маркетинг для мебельного бренда.',
@@ -277,8 +284,7 @@ export const CASES_DATA = [
     geo: 'РФ',
     category: 'seo-ru'
   },
-];
-export const PRICING_PLANS = [
+];export const PRICING_PLANS = [
   { 
     title: 'ПОДДЕРЖКА', 
     price: 'от 47 000 руб', 

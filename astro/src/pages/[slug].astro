@@ -1,9 +1,9 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import ServicePage from '../../components/landing/ServicePage';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ServicePage from '../components/landing/ServicePage';
 
 export function getStaticPaths() {
-  const pages = import.meta.glob('../../data/services/pages/*.ts', { eager: true });
+  const pages = import.meta.glob('../data/services/pages/*.ts', { eager: true });
   return Object.values(pages)
     .filter((module: any) => module && module.servicePage)
     .map((module: any) => {
@@ -22,7 +22,7 @@ const pathname = Astro.url.pathname;
 <BaseLayout
   title={data.seo.title}
   description={data.seo.description}
-  canonicalPath={`/services/${data.slug}/`}
+  canonicalPath={`/${data.slug}/`}
 >
   <ServicePage data={data} pathname={pathname} client:load />
 </BaseLayout>

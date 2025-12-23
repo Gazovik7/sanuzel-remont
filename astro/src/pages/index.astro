@@ -1,16 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import LandingPage from '../components/landing/LandingPage';
-
-const seo = {
-  title: "SEO продвижение сайтов в Москве | Smirnov Marketing",
-  description: "Комплексное SEO продвижение сайтов в Москве. Вывод в ТОП-3 Яндекс и Google с финансовыми гарантиями. Закажите бесплатный аудит!",
-};
+import { HOME_PAGE_DATA } from '../data/pages/home';
 ---
 
 <BaseLayout
-  title={seo.title}
-  description={seo.description}
+  title={HOME_PAGE_DATA.seo.title}
+  description={HOME_PAGE_DATA.seo.description}
 >
-  <LandingPage pathname={Astro.url.pathname} client:load />
+  <LandingPage data={HOME_PAGE_DATA} pathname={Astro.url.pathname} client:load />
 </BaseLayout>

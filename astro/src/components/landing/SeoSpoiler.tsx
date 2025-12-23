@@ -1,15 +1,22 @@
+
+'use client';
+
 import React, { useState } from 'react';
 import { ChevronDown, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import type { SeoTextData } from '../../types';
+import { SEO_CONTENT } from './constants';
 
 interface SeoSpoilerProps {
-  title?: string;
-  preview?: string;
-  fullText?: string;
+  data?: SeoTextData;
 }
 
-const SeoSpoiler: React.FC<SeoSpoilerProps> = ({ title, preview, fullText }) => {
+const SeoSpoiler: React.FC<SeoSpoilerProps> = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const title = data?.title || SEO_CONTENT.title;
+  const preview = data?.preview || SEO_CONTENT.preview;
+  const fullText = data?.fullText || SEO_CONTENT.fullText;
 
   if (!title || !fullText) return null;
 
