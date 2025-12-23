@@ -3,7 +3,7 @@ import '../styles/global.css';
 import LeadModalHost from '../components/islands/LeadModalHost';
 import ExitIntentModal from '../components/islands/ExitIntentModal';
 const SITE = {
-  logo: '/img/logo.png',
+  logo: '/img/logo/black/1.png',
 } as const;
 
 type Props = {
@@ -30,40 +30,40 @@ const schemaGraph: any[] = [
   {
     '@type': 'Organization',
     '@id': organizationId,
-    name: 'Ремонт Санузлов',
+    name: 'Smirnov Marketing',
     url: homeUrl,
     logo: {
       '@type': 'ImageObject',
       url: logoUrl,
     },
-    telephone: '+74951375239',
-    email: 'info@remont-sanuzlov.ru',
+    telephone: '+74993489777',
+    email: 'account@smirnov.marketing',
   },
   {
-    '@type': ['LocalBusiness', 'HomeAndConstructionBusiness'],
+    '@type': ['LocalBusiness', 'ProfessionalService'],
     '@id': localBusinessId,
-    name: 'Ремонт Санузлов',
+    name: 'Smirnov Marketing',
     url: homeUrl,
     image: logoUrl,
     logo: logoUrl,
-    telephone: '+74951375239',
-    email: 'info@remont-sanuzlov.ru',
+    telephone: '+74993489777',
+    email: 'account@smirnov.marketing',
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'RU',
       addressLocality: 'Москва',
-      streetAddress: 'Большой Саввинский пер., 9С1',
+      streetAddress: 'ул. Автозаводская, 23к2, БЦ "Парк Легенд"',
     },
     areaServed: [
       { '@type': 'City', name: 'Москва' },
-      { '@type': 'AdministrativeArea', name: 'Московская область' },
+      { '@type': 'AdministrativeArea', name: 'Россия' },
     ],
     openingHoursSpecification: [
       {
         '@type': 'OpeningHoursSpecification',
         dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
         opens: '09:00',
-        closes: '20:00',
+        closes: '21:00',
       },
     ],
     parentOrganization: { '@id': organizationId },
@@ -72,7 +72,7 @@ const schemaGraph: any[] = [
     '@type': 'WebSite',
     '@id': websiteId,
     url: homeUrl,
-    name: 'Ремонт Санузлов',
+    name: 'Smirnov Marketing',
     inLanguage: 'ru-RU',
     publisher: { '@id': organizationId },
   },
@@ -107,11 +107,11 @@ const baseSchema = { '@context': 'https://schema.org', '@graph': schemaGraph };
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-    <link rel="icon" type="image/png" href={SITE.logo} />
+    <link rel="icon" type="image/png" href="/img/faviconn.png" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="telephone" content="+74951375239" />
+    <meta name="telephone" content="+74993489777" />
     <meta name="yandex-verification" content="6ec9410bc9530ede" />
     <meta name="google-site-verification" content="pembRaERYI5PqeRje5zJfy7wXq9kr5UQo98kMw5f_8E" />
     <link rel="canonical" href={canonicalUrl.toString()} />
@@ -194,7 +194,7 @@ const baseSchema = { '@context': 'https://schema.org', '@graph': schemaGraph };
       <div class="absolute top-0 right-0 h-full w-[88%] max-w-sm bg-white shadow-2xl border-l border-gray-100 flex flex-col">
         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <a href="/" class="flex items-center gap-3" data-mobile-menu-link>
-            <img src="/img/logo.png" alt="Логотип" class="h-10 w-auto object-contain" />
+            <img src="/img/logo/black/1.png" alt="Логотип" class="h-10 w-auto object-contain" />
             <span class="text-sm font-heading font-extrabold text-slate-900">Меню</span>
           </a>
           <button

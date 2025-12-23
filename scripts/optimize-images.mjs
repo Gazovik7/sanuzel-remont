@@ -27,6 +27,10 @@ const resizeWidths = new Map([
   ['moscow-area.png', 900],
   ['direktor.png', 80],
   ['logo.png', 96],
+  ['2023_01_18_11_39_37.png', 800],
+  ['otziv_italiya.jpg', 800],
+  ['review_makini_ins_eng.png', 800],
+  ['scan_page_0001_1.jpg', 800],
 ]);
 
 const allowedExts = new Set(['.jpg', '.jpeg', '.png']);

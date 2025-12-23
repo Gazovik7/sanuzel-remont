@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+  border: 2px solid #f8fafc;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Grid Background Utility */
+.bg-grid {
+  background-size: 40px 40px;
+  background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Typography for Blog */
+.prose-chunk h2 { @apply text-3xl font-black text-gray-900 mt-12 mb-6; }
+.prose-chunk h3 { @apply text-2xl font-bold text-gray-900 mt-8 mb-4; }
+.prose-chunk p { @apply mb-6 leading-relaxed text-gray-600 text-lg; }
+.prose-chunk ul { @apply list-disc pl-6 mb-6 space-y-2 text-gray-600; }
+.prose-chunk ol { @apply list-decimal pl-6 mb-6 space-y-2 text-gray-600; }
+.prose-chunk blockquote { @apply border-l-4 border-primary pl-6 italic text-gray-700 my-8 bg-gray-50 p-4 rounded-r-xl; }
+.prose-chunk table { @apply w-full border-collapse text-sm md:text-base text-gray-900 my-4; }
+.prose-chunk thead { @apply bg-gray-100 text-gray-900; }
+.prose-chunk th { @apply p-4 text-left font-bold border-b border-gray-300; }
+.prose-chunk tbody tr { @apply bg-white; }
+.prose-chunk tbody tr:nth-child(even) { @apply bg-gray-50; }
+.prose-chunk td { @apply p-4 border-b border-gray-200 text-gray-700; }
+.prose-chunk figure { @apply my-10; }
+.prose-chunk img { @apply w-full rounded-2xl shadow-lg; }
+.prose-chunk figcaption { @apply text-center text-sm text-gray-500 mt-3; }
+.prose-chunk a { @apply text-blue-600 font-medium hover:underline; }
+.prose-chunk hr { @apply my-12 border-gray-200; }
+
+/* Global Animations */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+@keyframes shine {
+  100% {
+    left: 125%;
+  }
+}
+.animate-shine {
+  animation: shine 1s;
+}

@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceModernPage from '../../components/landing/ServiceModernPage';
+
+export function getStaticPaths() {
+  const pages = import.meta.glob('../../data/services/pages/*.ts', { eager: true });
+  return Object.values(pages)
+    .filter((module: any) => module && module.servicePage)
+    .map((module: any) => {
+      const data = module.servicePage;
+      return {
+        params: { slug: data.slug },
+        props: { data },
+      };
+    });
+}
+
+const { data } = Astro.props;
+
+const pathname = Astro.url.pathname;
+
+---
+
+
+
+<BaseLayout
+
+  title={data.seo.title}
+
+  description={data.seo.description}
+
+  canonicalPath={`/services/${data.slug}/`}
+
+>
+
+  <ServiceModernPage data={data} pathname={pathname} client:load />
+
+</BaseLayout>

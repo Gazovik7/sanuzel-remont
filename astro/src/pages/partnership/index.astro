@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PartnersModern from '../../components/landing/PartnersModern';
+
+const seo = {
+  title: 'Партнёрская программа | Smirnov Marketing',
+  description: 'Зарабатывайте на рекомендациях услуг SEO, рекламы и разработки. Прозрачные условия и ежемесячные выплаты до 15% с каждого клиента.',
+};
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath="/partnership/">
+  <PartnersModern pathname={Astro.url.pathname} client:load />
+</BaseLayout>

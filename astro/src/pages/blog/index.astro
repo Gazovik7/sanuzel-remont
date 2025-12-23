@@ -1,28 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import LegacyHeaderSolid from '../../components/blocks/LegacyHeaderSolid.astro';
-import LegacyContactsSection from '../../components/blocks/LegacyContactsSection.astro';
-import LegacyFooter from '../../components/blocks/LegacyFooter.astro';
-import LegacyMobileStickyBar from '../../components/blocks/LegacyMobileStickyBar.astro';
-import LegacyScrollTopButton from '../../components/blocks/LegacyScrollTopButton.astro';
+import BlogModern from '../../components/landing/BlogModern';
 
-import { BlogPage } from '../../legacy/components/BlogPage';
-
-const title = 'Блог о ремонте ванной и санузлов в Москве, идеи, рекомендации';
-const description =
-  'Полезные статьи о ремонте ванной и санузлов: советы специалистов, материалы, дизайн и выбор решений. Читайте блог Remont-Sanuzlov.';
+const seo = {
+  title: 'Блог Smirnov Marketing | Тренды и стратегии SEO продвижения',
+  description: 'Полезные статьи, кейсы и новости из мира поискового маркетинга. Узнайте, как масштабировать ваш бизнес в 2025 году.',
+};
 ---
 
-<BaseLayout title={title} description={description} canonicalPath="/blog/">
-  <div id="top" class="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col">
-    <LegacyHeaderSolid />
-    <main class="flex-1 pt-20 lg:pt-24">
-      <BlogPage onNavigate={() => {}} onCalculate={() => {}} />
-    </main>
-    <LegacyContactsSection />
-    <LegacyFooter />
-    <LegacyMobileStickyBar />
-    <LegacyScrollTopButton />
-  </div>
+<BaseLayout title={seo.title} description={seo.description} canonicalPath="/blog/">
+  <BlogModern pathname={Astro.url.pathname} client:load />
 </BaseLayout>
-

@@ -1,37 +1,15 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from 'fs';
 
-const root = path.join(process.cwd(), 'astro', 'dist');
-const targetExts = new Set(['.html', '.xml', '.txt']);
+const filePath = 'astro/src/components/landing/ServiceModernPage.tsx';
+let content = fs.readFileSync(filePath, 'utf8');
 
-const files = [];
-const walk = (dir) => {
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const absPath = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      walk(absPath);
-      continue;
-    }
-    if (targetExts.has(path.extname(entry.name))) {
-      files.push(absPath);
-    }
-  }
-};
+// Удаляем BOM (Byte Order Mark) если он есть
+content = content.replace(/^\uFEFF/, '');
 
-if (!fs.existsSync(root)) {
-  console.error(`Build folder not found: ${root}`);
-  process.exitCode = 1;
-} else {
-  walk(root);
-  let cleanedCount = 0;
-  for (const file of files) {
-    const data = fs.readFileSync(file);
-    if (!data.includes(0)) continue;
-    const cleaned = Buffer.from(data.filter((byte) => byte !== 0));
-    fs.writeFileSync(file, cleaned);
-    cleanedCount += 1;
-  }
-  if (cleanedCount) {
-    console.log(`Stripped NUL bytes from ${cleanedCount} file(s).`);
-  }
-}
+// Удаляем все странные невидимые символы, кроме стандартных пробелов и переносов
+// Оставляем только кириллицу, латиницу, цифры и стандартную пунктуацию
+content = content.replace(/[^\x20-\x7E\u0400-\u04FF\s\n\r\t]/g, '');
+
+// Перезаписываем файл в чистом UTF-8
+fs.writeFileSync(filePath, content, 'utf8');
+console.log('File sterilized successfully');

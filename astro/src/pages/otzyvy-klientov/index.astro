@@ -1,28 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import LegacyHeaderSolid from '../../components/blocks/LegacyHeaderSolid.astro';
-import LegacyContactsSection from '../../components/blocks/LegacyContactsSection.astro';
-import LegacyFooter from '../../components/blocks/LegacyFooter.astro';
-import LegacyMobileStickyBar from '../../components/blocks/LegacyMobileStickyBar.astro';
-import LegacyScrollTopButton from '../../components/blocks/LegacyScrollTopButton.astro';
+import ReviewsModern from '../../components/landing/ReviewsModern';
 
-import { ReviewsPage } from '../../legacy/components/ReviewsPage';
-
-const title = 'Отзывы клиентов о ремонте санузлов и качестве работы в Москве';
-const description =
-  'Реальные отзывы клиентов о ремонте санузлов: благодарности, фото, опыт и впечатления после работы. Проверьте репутацию компании Remont-Sanuzlov.';
+const seo = {
+  title: 'Отзывы клиентов Smirnov Marketing | Реальные результаты и рекомендации',
+  description: 'Читайте отзывы наших партнеров о результатах SEO продвижения и контекстной рекламы. Видео-интервью и кейсы Smirnov Marketing.',
+};
 ---
 
-<BaseLayout title={title} description={description} canonicalPath="/otzyvy-klientov/">
-  <div id="top" class="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col">
-    <LegacyHeaderSolid />
-    <main class="flex-1 pt-20 lg:pt-24">
-      <ReviewsPage onNavigate={() => {}} onCalculate={() => {}} />
-    </main>
-    <LegacyContactsSection />
-    <LegacyFooter />
-    <LegacyMobileStickyBar />
-    <LegacyScrollTopButton />
-  </div>
+<BaseLayout title={seo.title} description={seo.description} canonicalPath="/otzyvy-klientov/">
+  <ReviewsModern pathname={Astro.url.pathname} client:load />
 </BaseLayout>
-

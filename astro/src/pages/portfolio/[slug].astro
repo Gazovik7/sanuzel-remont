@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CaseStudyModernPage from '../../components/landing/CaseStudyModernPage';
+
+export function getStaticPaths() {
+  const pages = import.meta.glob('../../data/cases/pages/*.ts', { eager: true });
+  return Object.values(pages)
+    .filter((module: any) => module && module.caseData)
+    .map((module: any) => {
+      const data = module.caseData;
+      return {
+        params: { slug: data.slug },
+        props: { data },
+      };
+    });
+}
+
+const { data } = Astro.props;
+---
+
+<BaseLayout
+  title={data.seo.title}
+  description={data.seo.description}
+  canonicalPath={`/portfolio/${data.slug}/`}
+>
+  <CaseStudyModernPage data={data} client:load />
+</BaseLayout>
