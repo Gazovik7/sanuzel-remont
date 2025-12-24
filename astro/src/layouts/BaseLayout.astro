@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import LeadModalHost from '../components/islands/LeadModalHost';
 import ExitIntentModal from '../components/islands/ExitIntentModal';
+import Analytics from '../components/seo/Analytics.astro';
 const SITE = {
   logo: '/img/logo/black/1.png',
 } as const;
@@ -112,8 +113,6 @@ const baseSchema = { '@context': 'https://schema.org', '@graph': schemaGraph };
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="telephone" content="+74993489777" />
-    <meta name="yandex-verification" content="6ec9410bc9530ede" />
-    <meta name="google-site-verification" content="pembRaERYI5PqeRje5zJfy7wXq9kr5UQo98kMw5f_8E" />
     <link rel="canonical" href={canonicalUrl.toString()} />
 
     <meta property="og:type" content="website" />
@@ -169,19 +168,7 @@ const baseSchema = { '@context': 'https://schema.org', '@graph': schemaGraph };
       />
     </noscript>
 
-    <!-- Yandex.Metrika counter -->
-    <script is:inline type="text/javascript">
-      (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-      })(window, document,'script','https://mc.yandex.ru/metrika/tag.js', 'ym');
-
-      ym(87695701, 'init', {webvisor:true, clickmap:true, accurateTrackBounce:true, trackLinks:true});
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/87695701" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
+    <Analytics />
   </head>
   <body class="bg-white text-slate-900">
     <slot />
