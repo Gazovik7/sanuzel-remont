@@ -230,8 +230,20 @@ async function sendLead(payload: LeadCapturePayload) {
   body.set('phone', phone);
   const ymClientId = payload.data.ymClientId ? String(payload.data.ymClientId) : '';
   const ymUserId = payload.data.ymUserId ? String(payload.data.ymUserId) : '';
+  const name = payload.data.name ? String(payload.data.name) : '';
+  const repairType = payload.data.repairType
+    ? String(payload.data.repairType)
+    : payload.data.type
+    ? String(payload.data.type)
+    : '';
+  const replyTo = payload.data.replyTo ? String(payload.data.replyTo) : '';
+  const method = payload.data.method ? String(payload.data.method) : '';
   if (ymClientId) body.set('ym_client_id', ymClientId);
   if (ymUserId) body.set('ym_user_id', ymUserId);
+  if (name) body.set('name', name);
+  if (repairType) body.set('repairType', repairType);
+  if (replyTo) body.set('replyTo', replyTo);
+  if (method) body.set('method', method);
   const message = buildMessage(payload);
   if (message) body.set('message', message);
 
