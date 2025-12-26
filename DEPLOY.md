@@ -12,6 +12,11 @@ Configuration
 - Uses `.env.deploy` for FTP settings (for example `FTP_DEST`)
 - To change host/credentials/path, edit `.env.deploy` then rerun `npm run deploy`
 
+Partner API token
+- `astro/public/lead.php` reads the token from the `PARTNER_API_TOKEN` environment variable
+- Set `PARTNER_API_TOKEN` in your hosting control panel or via `.htaccess`:
+  - `SetEnv PARTNER_API_TOKEN "your_token_here"`
+
 Auto deploy on save (watch mode)
 - Run from project root: `npm run deploy:watch`
 - Watches `astro/src`, `astro/public`, `.env.deploy`, and key Astro config files

@@ -693,6 +693,10 @@ FTP_DEST=/public_html/
 
 **Расположение:** `astro/public/lead.php`
 
+**Partner API:**
+- Использует переменную окружения `PARTNER_API_TOKEN`
+- Задается в панели хостинга или в `.htaccess` через `SetEnv PARTNER_API_TOKEN "your_token_here"`
+
 **Принимает:**
 - `phone` (обязательно) - номер телефона клиента
 - `name` (опционально) - имя клиента
