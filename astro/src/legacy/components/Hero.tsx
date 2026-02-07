@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, Clock, FileText, Shield, ArrowRight, Star, Zap } from 'lucide-react';
+import ConsentCheckboxes from '../../components/islands/ConsentCheckboxes';
 import { formatPhone } from '../constants';
 
 interface HeroProps {
@@ -189,16 +190,12 @@ export const Hero: React.FC<HeroProps> = ({
                     </div>
                 </div>
                 
+                <ConsentCheckboxes />
+
                 <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 group mt-2">
                     Рассчитать стоимость
                     <ArrowRight className="w-5 h-5" />
                 </button>
-                
-                <div className="text-center">
-                    <span className="text-[10px] text-gray-400 uppercase tracking-widest">
-                        бесплатно и ни к чему не обязывает
-                    </span>
-                </div>
                 </form>
              </div>
           </div>

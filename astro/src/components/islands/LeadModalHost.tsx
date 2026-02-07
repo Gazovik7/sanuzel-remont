@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { X } from 'lucide-react';
+import ConsentCheckboxes from './ConsentCheckboxes';
 
 type LeadModalType = 'callback';
 
@@ -453,7 +454,7 @@ export default function LeadModalHost() {
               <div className="space-y-1">
                 <label className="text-xs font-bold text-gray-400 uppercase tracking-wide ml-1">Как ответить?</label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {[
+                  {[ 
                     { id: 'call', label: 'Звонок' },
                     { id: 'whatsapp', label: 'WhatsApp' },
                     { id: 'telegram', label: 'Telegram' },
@@ -479,15 +480,14 @@ export default function LeadModalHost() {
               </div>
             </div>
 
+            <ConsentCheckboxes />
+
             <button
               type="submit"
               className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all transform hover:-translate-y-0.5 active:scale-95"
             >
               Отправить заявку
             </button>
-            <p className="text-center text-xs text-gray-400 leading-tight">
-              Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
-            </p>
           </form>
       </div>
     </div>

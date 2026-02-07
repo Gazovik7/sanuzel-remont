@@ -1,5 +1,6 @@
 import React from 'react';
 import { Phone, MapPin, Clock, Mail, ArrowRight } from 'lucide-react';
+import ConsentCheckboxes from '../../components/islands/ConsentCheckboxes';
 import { Breadcrumbs } from './Breadcrumbs';
 import { COMPANY_PHONE, COMPANY_PHONE_TEL, COMPANY_ADDRESS, COMPANY_EMAIL } from '../constants';
 
@@ -162,6 +163,8 @@ export const ContactsPage: React.FC = () => {
                     />
                   </div>
                 </div>
+
+                <ConsentCheckboxes />
 
                 <button
                   type="submit"

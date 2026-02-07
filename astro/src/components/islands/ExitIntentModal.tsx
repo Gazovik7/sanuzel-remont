@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { X, Sparkles } from 'lucide-react';
+import ConsentCheckboxes from './ConsentCheckboxes';
 
 export default function ExitIntentModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -227,16 +228,14 @@ export default function ExitIntentModal() {
               />
             </div>
 
+            <ConsentCheckboxes />
+
             <button
               type="submit"
               className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-600/30 transition-all transform hover:-translate-y-0.5 active:scale-95"
             >
               Получить дизайн-проект и скидку
             </button>
-
-            <p className={`text-center text-xs text-gray-400 leading-tight ${isCompactMode ? 'mt-1' : ''}`}>
-              Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
-            </p>
           </form>
         </div>
       </div>

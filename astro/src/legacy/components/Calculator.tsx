@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Check, ChevronLeft, Calculator as CalcIcon, Home, Ruler, Layers, Sparkles } from 'lucide-react';
+import ConsentCheckboxes from '../../components/islands/ConsentCheckboxes';
 import { formatPhone } from '../constants';
 
 interface CalculatorProps {
@@ -221,18 +222,18 @@ const Calculator: React.FC<CalculatorProps> = ({ onComplete, defaultFinish = 'С
             </div>
 
             <div className="space-y-4 max-w-md mx-auto">
-                <input 
-                type="text" 
-                placeholder="Ваше имя" 
+                <input
+                type="text"
+                placeholder="Ваше имя"
                 value={formData.name}
                 onChange={(e) => updateField('name', e.target.value)}
                 className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600 outline-none bg-gray-50 focus:bg-white transition-all font-medium text-lg"
-                required 
+                required
                 />
-                <input 
+                <input
                 name="phone"
-                type="tel" 
-                placeholder="+7 (999) 000-00-00" 
+                type="tel"
+                placeholder="+7 (999) 000-00-00"
                 inputMode="tel"
                 autoComplete="tel"
                 maxLength={18}
@@ -240,8 +241,9 @@ const Calculator: React.FC<CalculatorProps> = ({ onComplete, defaultFinish = 'С
                 value={formData.phone}
                 onChange={(e) => updateField('phone', formatPhone(e.target.value))}
                 className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600 outline-none bg-gray-50 focus:bg-white transition-all font-medium text-lg"
-                required 
+                required
                 />
+                <ConsentCheckboxes />
             </div>
           </div>
         );

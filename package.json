@@ -5,11 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "npm --prefix astro run dev",
-    "build": "npm --prefix astro run build",
+    "build": "npm --prefix astro run build && node scripts/strip-nulls.mjs",
     "preview": "npm --prefix astro run preview",
     "check": "npm --prefix astro run check",
+    "check:indexability": "node scripts/check-indexability.mjs",
+    "check:blocks": "node scripts/check-blocks.mjs",
+    "check:all": "node scripts/check-indexability.mjs && node scripts/check-blocks.mjs",
+    "build:production": "npm run build && npm run check:all",
     "postinstall": "npm --prefix astro install",
-    "deploy": "npm run build && node scripts/strip-nulls.mjs && node scripts/deploy-ftp.mjs",
+    "deploy": "npm run build:production && node scripts/deploy-ftp.mjs",
     "deploy:watch": "node scripts/deploy-watch.mjs",
     "optimize:images": "node scripts/optimize-images.mjs",
     "images:webp": "node scripts/generate-webp.mjs"

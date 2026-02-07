@@ -1,4 +1,5 @@
 import React from 'react';
+import ConsentCheckboxes from '../ConsentCheckboxes';
 
 const REPAIR_OPTIONS = ['Ванная комната', 'Ванная + туалет', 'Совмещённый санузел', 'Туалет'] as const;
 
@@ -92,16 +93,14 @@ export default function LegacyContactsCtaForm() {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row items-center gap-6 mt-2 pt-4 border-t border-gray-200/20">
+      <div className="mt-2 pt-4 border-t border-gray-200/20 space-y-4">
+        <ConsentCheckboxes />
         <button
           type="submit"
-          className="w-full md:w-auto flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-5 px-8 rounded-xl transition-all shadow-xl shadow-blue-600/30 text-lg transform hover:-translate-y-1"
+          className="w-full md:w-auto bg-blue-600 hover:bg-blue-500 text-white font-bold py-5 px-8 rounded-xl transition-all shadow-xl shadow-blue-600/30 text-lg transform hover:-translate-y-1"
         >
           Получить смету и дизайн-проект
         </button>
-        <div className="text-xs text-gray-600 max-w-xs text-center md:text-left leading-tight">
-          Нажимая кнопку, вы соглашаетесь на обработку персональных данных.
-        </div>
       </div>
     </form>
   );

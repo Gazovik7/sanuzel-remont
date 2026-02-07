@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Check, X, Hammer, Clock, Shield, Trash2,
   Ruler, Search, ShoppingBag, HardHat, FileText,
@@ -577,7 +577,7 @@ export const TeamSection = ({ content, members, onAction }: { content: TeamBlock
                     <h4 className="font-bold text-xl text-white mb-2">Нужна консультация?</h4>
                     <p className="text-blue-100 text-sm mb-6">Оставьте заявку, и наш инженер свяжется с вами в течение 15 минут</p>
                     <button
-                        onClick={onAction}
+                        data-lead-open="callback"
                         className="w-full py-3 bg-white text-blue-600 rounded-xl font-bold hover:bg-blue-50 transition-colors shadow-lg"
                     >
                         Получить консультацию
@@ -766,12 +766,12 @@ export const ReviewsSection = ({
                 </div>
 
                 <div className="text-center">
-                    <button 
-                      onClick={() => onShowAllReviews && onShowAllReviews()}
+                    <a
+                      href="/otzyvy-klientov/"
                       className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/30 transform hover:-translate-y-1"
                     >
                         {content.buttonText} <ArrowRight className="w-5 h-5 ml-2" />
-                    </button>
+                    </a>
                 </div>
             </div>
         </section>
@@ -782,39 +782,27 @@ export const SeoTextSection = ({ content }: { content: SeoTextBlockConfig }) => 
   return (
     <section className="py-16">
       <div className="container mx-auto px-4 max-w-4xl">
-        <details className="seo-details">
-          <summary className="w-full text-left group flex items-start md:items-center justify-between gap-4 select-none cursor-pointer">
-            <h2 className="text-2xl md:text-3xl font-heading font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-              {content.summaryTitle}
-            </h2>
-            <div className="mt-1 md:mt-0 p-2 rounded-full bg-gray-50 group-hover:bg-blue-50 transition-colors shrink-0 border border-gray-100 group-hover:border-blue-100">
-              <ChevronDown className="seo-chevron w-6 h-6 text-gray-400 group-hover:text-blue-600 transition-transform duration-300" />
-            </div>
-          </summary>
-
-          <div className="mt-8">
-            <div className="prose prose-slate max-w-none text-gray-600 space-y-4">
-               {content.paragraphsHtml.map((html, idx) => (
-                  <p key={idx} dangerouslySetInnerHTML={{ __html: html }} />
-               ))}
-               <p dangerouslySetInnerHTML={{ __html: content.listIntroHtml }} />
-               <ul className="list-disc pl-5 space-y-2">
-                  {content.listItemsHtml.map((html, idx) => (
-                    <li key={idx} dangerouslySetInnerHTML={{ __html: html }} />
-                  ))}
-               </ul>
-              <p dangerouslySetInnerHTML={{ __html: content.closingHtml }} />
-            </div>
-          </div>
-        </details>
+        <h2 className="text-2xl md:text-3xl font-heading font-bold text-slate-900 mb-8">
+          {content.summaryTitle}
+        </h2>
+        <div className="prose prose-slate max-w-none text-gray-600 space-y-4">
+           {content.paragraphsHtml.map((html, idx) => (
+              <p key={idx} dangerouslySetInnerHTML={{ __html: html }} />
+           ))}
+           <p dangerouslySetInnerHTML={{ __html: content.listIntroHtml }} />
+           <ul className="list-disc pl-5 space-y-2">
+              {content.listItemsHtml.map((html, idx) => (
+                <li key={idx} dangerouslySetInnerHTML={{ __html: html }} />
+              ))}
+           </ul>
+          <p dangerouslySetInnerHTML={{ __html: content.closingHtml }} />
+        </div>
       </div>
     </section>
   );
 };
 
 export const FaqSection = ({ faqItems, content }: { faqItems: FaqItem[]; content: FaqBlockConfig }) => {
-  const [openIdx, setOpenIdx] = React.useState<number | null>(0);
-  
   const items = faqItems;
 
   return (
@@ -823,24 +811,21 @@ export const FaqSection = ({ faqItems, content }: { faqItems: FaqItem[]; content
         <h2 className="text-3xl md:text-5xl font-heading font-extrabold text-center mb-12 text-slate-900">{content.title}</h2>
         <div className="space-y-4">
           {items.map((item, idx) => (
-            <div key={idx} className={`bg-white rounded-2xl overflow-hidden transition-all duration-300 ${openIdx === idx ? 'bg-gray-50' : ''}`}>
-              <button 
-                onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
-                className="w-full flex items-center justify-between p-6 text-left"
-              >
-                <span className={`text-lg font-bold font-heading transition-colors ${openIdx === idx ? 'text-blue-700' : 'text-slate-900'}`}>{item.question}</span>
-                <span className={`transform transition-transform duration-300 text-blue-600 font-bold text-2xl leading-none ${openIdx === idx ? 'rotate-45' : ''}`}>
+            <details
+              key={idx}
+              className="faq-details bg-white rounded-2xl overflow-hidden group open:bg-gray-50"
+              open={idx === 0 ? true : undefined}
+            >
+              <summary className="w-full flex items-center justify-between p-6 text-left cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                <span className="text-lg font-bold font-heading text-slate-900 group-open:text-blue-700 transition-colors">{item.question}</span>
+                <span className="text-blue-600 font-bold text-2xl leading-none transition-transform duration-300 group-open:rotate-45">
                   +
                 </span>
-              </button>
-              <div className={`grid transition-all duration-300 ${openIdx === idx ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
-                <div className="overflow-hidden">
-                    <div className="p-6 pt-0 text-gray-600 leading-relaxed text-base border-t border-gray-200/50 mt-2 pt-4">
-                        {item.answer}
-                    </div>
-                </div>
+              </summary>
+              <div className="p-6 pt-0 text-gray-600 leading-relaxed text-base border-t border-gray-200/50">
+                <span>{item.answer}</span>
               </div>
-            </div>
+            </details>
           ))}
         </div>
       </div>
@@ -848,71 +833,19 @@ export const FaqSection = ({ faqItems, content }: { faqItems: FaqItem[]; content
   );
 };
 
-export const GeographySection = ({ onAction, content }: { onAction: () => void; content: GeographyBlockConfig }) => {
-   const [isExpandedCity, setIsExpandedCity] = useState(false);
-   const [openDistrictIdx, setOpenDistrictIdx] = useState<number | null>(null);
-
-   let MOSCOW_LOCATIONS = [
-      {
-        district: "Центральный (ЦАО)",
-        stations: ["Арбатская", "Бауманская", "Белорусская", "Библиотека им. Ленина", "Китай-город", "Комсомольская", "Краснопресненская", "Курская", "Лубянка", "Марксистская", "Маяковская", "Новокузнецкая", "Охотный Ряд", "Павелецкая", "Парк Культуры", "Полянка", "Пушкинская", "Серпуховская", "Смоленская", "Таганская", "Тверская", "Театральная", "Третьяковская", "Трубная", "Тургеневская", "Улица 1905 года", "Цветной бульвар", "Чеховская", "Чистые пруды"]
-      },
-      {
-        district: "Северный (САО)",
-        stations: ["Аэропорт", "Беговая", "Водный стадион", "Войковская", "Динамо", "Дмитровская", "Петровский парк", "Полежаевская", "Речной вокзал", "Сокол", "Тимирязевская", "Ховрино", "ЦСКА"]
-      },
-      {
-        district: "Северо-Восточный (СВАО)",
-        stations: ["Алексеевская", "Алтуфьево", "Бабушкинская", "Бибирево", "Ботанический сад", "Бутырская", "ВДНХ", "Владыкино", "Дмитровская", "Медведково", "Марьина Роща", "Отрадное", "Проспект Мира", "Рижская", "Ростокино", "Савеловская", "Свиблово"]
-      },
-      {
-        district: "Восточный (ВАО)",
-        stations: ["Авиамоторная", "Бульвар Рокоссовского", "Измайловская", "Новогиреево", "Новокосино", "Партизанская", "Первомайская", "Перово", "Преображенская площадь", "Семеновская", "Сокольники", "Черкизовская", "Щелковская", "Электрозаводская"]
-      },
-      {
-        district: "Юго-Восточный (ЮВАО)",
-        stations: ["Авиамоторная", "Братиславская", "Волжская", "Дубровка", "Кожуховская", "Кузьминки", "Лефортово", "Люблино", "Марьино", "Нижегородская", "Печатники", "Рязанский проспект", "Текстильщики"]
-      },
-      {
-        district: "Южный (ЮАО)",
-        stations: ["Автозаводская", "Алма-Атинская", "Аннино", "Варшавская", "Домодедовская", "Кантемировская", "Каширская", "Коломенская", "Красногвардейская", "Нагатинская", "Нагорная", "Орехово", "Пражская", "Технопарк", "Тульская", "Царицыно", "Чертановская", "Шаболовская", "Южная"]
-      },
-      {
-        district: "Юго-Западный (ЮЗАО)",
-        stations: ["Академическая", "Беляево", "Битцевский парк", "Бульвар Дмитрия Донского", "Калужская", "Коньково", "Ленинский проспект", "Нахимовский проспект", "Новоясеневская", "Профсоюзная", "Севастопольская", "Теплый Стан", "Университет", "Ясенево"]
-      },
-      {
-        district: "Западный (ЗАО)",
-        stations: ["Багратионовская", "Киевская", "Крылатское", "Кунцевская", "Мичуринский проспект", "Молодежная", "Парк Победы", "Пионерская", "Проспект Вернадского", "Раменки", "Славянский бульвар", "Солнцево", "Студенческая", "Тропарево", "Филевский парк", "Фили", "Юго-Западная"]
-      },
-      {
-        district: "Северо-Западный (СЗАО)",
-        stations: ["Волоколамская", "Митино", "Мякинино", "Октябрьское поле", "Планерная", "Пятницкое шоссе", "Спартак", "Строгино", "Сходненская", "Тушинская", "Щукинская"]
-      }
-   ];
-   MOSCOW_LOCATIONS = content.moscowLocations;
-
-   let MO_CITIES = [
-      "Балашиха", "Подольск", "Химки", "Мытищи", "Королёв", "Люберцы",
-      "Красногорск", "Одинцово", "Домодедово", "Электросталь", "Щёлково",
-      "Серпухов", "Коломна", "Долгопрудный", "Раменское", "Реутов", "Пушкино",
-      "Жуковский", "Орехово-Зуево", "Видное", "Ногинск", "Сергиев Посад", "Лобня",
-      "Ивантеевка", "Лыткарино", "Дзержинский", "Котельники", "Троицк"
-   ];
-   MO_CITIES = content.moCities;
-
-   // Limit initial view for cities
-   const visibleCities = isExpandedCity ? MO_CITIES : MO_CITIES.slice(0, 12);
+export const GeographySection = ({ onAction, content }: { onAction?: () => void; content: GeographyBlockConfig }) => {
+   const MOSCOW_LOCATIONS = content.moscowLocations;
+   const MO_CITIES = content.moCities;
 
    return (
       <section className="py-24 border-t border-gray-200 relative" id="geography">
          <div className="container mx-auto px-4 max-w-7xl">
             <div className="flex flex-col lg:flex-row gap-16">
-               
+
                {/* Left Content Column */}
                <div className="flex-1">
                   <h2 className="text-3xl md:text-5xl font-heading font-extrabold mb-8 text-slate-900">{content.title}</h2>
-                  
+
                   {/* SEO / LSI Text Block */}
                   <div className="bg-gray-50 rounded-2xl p-6 mb-10 border border-gray-100">
                       <p className="text-gray-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: content.seoTextHtml }} />
@@ -927,54 +860,45 @@ export const GeographySection = ({ onAction, content }: { onAction: () => void; 
                           </h3>
                           <div className="flex flex-col border-t border-gray-100">
                               {MOSCOW_LOCATIONS.map((loc, idx) => (
-                                  <div key={idx} className="border-b border-gray-100">
-                                      <button 
-                                        onClick={() => setOpenDistrictIdx(openDistrictIdx === idx ? null : idx)}
-                                        className={`w-full py-3 flex items-center justify-between text-left transition-colors group ${openDistrictIdx === idx ? 'text-blue-600 font-bold' : 'text-gray-600 hover:text-blue-600'}`}
-                                      >
+                                  <details key={idx} className="border-b border-gray-100 group geo-details">
+                                      <summary className="w-full py-3 flex items-center justify-between text-left cursor-pointer list-none [&::-webkit-details-marker]:hidden text-gray-600 hover:text-blue-600 group-open:text-blue-600 group-open:font-bold transition-colors">
                                           <span className="text-sm">{loc.district}</span>
-                                          {openDistrictIdx === idx ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 text-gray-300 group-hover:text-blue-400" />}
-                                      </button>
-                                      
-                                      {/* Hidden content for SEO, visible on user interaction */}
-                                      <div className={`grid transition-all duration-300 ${openDistrictIdx === idx ? 'grid-rows-[1fr] opacity-100 pb-4' : 'grid-rows-[0fr] opacity-0'}`}>
-                                          <div className="overflow-hidden">
-                                              <div className="flex flex-wrap gap-2 pt-2">
-                                                  {loc.stations.map((station, sIdx) => {
-                                                      const isLink = typeof station === 'object' && 'url' in station;
-                                                      const name = isLink ? station.name : station;
-                                                      const url = isLink ? station.url : null;
+                                          <ChevronDown className="w-4 h-4 text-gray-300 group-hover:text-blue-400 group-open:rotate-180 transition-transform duration-200" />
+                                      </summary>
+                                      <div className="flex flex-wrap gap-2 pb-4 pt-2">
+                                          {loc.stations.map((station, sIdx) => {
+                                              const isLink = typeof station === 'object' && 'url' in station;
+                                              const name = isLink ? station.name : station;
+                                              const url = isLink ? station.url : null;
 
-                                                      return url ? (
-                                                          <a
-                                                              key={sIdx}
-                                                              href={url}
-                                                              className="text-xs bg-gray-50 text-gray-500 px-2 py-1 rounded border border-gray-100 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-colors"
-                                                          >
-                                                              {name}
-                                                          </a>
-                                                      ) : (
-                                                          <span key={sIdx} className="text-xs bg-gray-50 text-gray-500 px-2 py-1 rounded border border-gray-100">
-                                                              {name}
-                                                          </span>
-                                                      );
-                                                  })}
-                                              </div>
-                                          </div>
+                                              return url ? (
+                                                  <a
+                                                      key={sIdx}
+                                                      href={url}
+                                                      className="text-xs bg-gray-50 text-gray-500 px-2 py-1 rounded border border-gray-100 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-colors"
+                                                  >
+                                                      {name}
+                                                  </a>
+                                              ) : (
+                                                  <span key={sIdx} className="text-xs bg-gray-50 text-gray-500 px-2 py-1 rounded border border-gray-100">
+                                                      {name}
+                                                  </span>
+                                              );
+                                          })}
                                       </div>
-                                  </div>
+                                  </details>
                               ))}
                           </div>
                       </div>
 
-                      {/* MO Cities List (Tag Cloud) */}
+                      {/* MO Cities List (Tag Cloud) - all cities visible for SEO */}
                       <div>
                           <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
                              <Map className="w-5 h-5 text-blue-500" />
                              {content.moCitiesTitle}
                           </h3>
                           <div className="flex flex-wrap gap-2 content-start relative">
-                              {visibleCities.map((city, i) => {
+                              {MO_CITIES.map((city, i) => {
                                   const isLink = typeof city === 'object' && 'url' in city;
                                   const name = isLink ? city.name : city;
                                   const url = isLink ? city.url : null;
@@ -997,17 +921,6 @@ export const GeographySection = ({ onAction, content }: { onAction: () => void; 
                                   );
                               })}
                           </div>
-                          
-                          <button 
-                            onClick={() => setIsExpandedCity(!isExpandedCity)}
-                            className="mt-6 flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors"
-                          >
-                             {isExpandedCity ? (
-                                <>{content.collapseCitiesText} <ChevronUp className="w-4 h-4" /></>
-                             ) : (
-                                <>{content.showAllCitiesText} <ChevronDown className="w-4 h-4" /></>
-                             )}
-                          </button>
                       </div>
                   </div>
                </div>
@@ -1015,7 +928,7 @@ export const GeographySection = ({ onAction, content }: { onAction: () => void; 
                {/* Right Map Column */}
                <div className="lg:w-[40%] w-full h-[400px] lg:h-auto min-h-[400px] bg-gray-200 rounded-[2.5rem] overflow-hidden relative shadow-2xl order-first lg:order-last">
                   <img src={content.mapImageSrc} alt={content.mapImageAlt} className="w-full h-full object-cover grayscale opacity-80 hover:opacity-100 transition-opacity duration-700" />
-                  
+
                   {/* Floating Card on Map */}
                   <div className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-gray-100">
                      <div className="flex items-center gap-4 mb-4">
@@ -1027,8 +940,8 @@ export const GeographySection = ({ onAction, content }: { onAction: () => void; 
                            <div className="text-xs text-gray-500">{content.mapCardSubtitle}</div>
                         </div>
                      </div>
-                     <button 
-                        onClick={onAction}
+                     <button
+                        data-lead-open="callback"
                         className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors"
                      >
                         {content.mapCtaText}
