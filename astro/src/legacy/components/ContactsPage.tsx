@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Phone, MapPin, Clock, Mail, ArrowRight } from 'lucide-react';
 import ConsentCheckboxes from '../../components/islands/ConsentCheckboxes';
 import { Breadcrumbs } from './Breadcrumbs';
@@ -7,6 +7,7 @@ import { COMPANY_PHONE, COMPANY_PHONE_TEL, COMPANY_ADDRESS, COMPANY_EMAIL } from
 const REPAIR_OPTIONS = ['Ванная комната', 'Ванная + туалет', 'Совмещённый санузел', 'Туалет'] as const;
 
 export const ContactsPage: React.FC = () => {
+  const [consented, setConsented] = useState(false);
   return (
     <div className="min-h-screen bg-slate-50 animate-in fade-in duration-500 pb-12">
       <div className="container mx-auto px-4 pt-6">
@@ -164,11 +165,11 @@ export const ContactsPage: React.FC = () => {
                   </div>
                 </div>
 
-                <ConsentCheckboxes />
+                <ConsentCheckboxes onChange={setConsented} />
 
                 <button
                   type="submit"
-                  className="w-full mt-2 bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-slate-800 transition-all transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2"
+                  className={`w-full mt-2 bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg transition-all transform flex items-center justify-center gap-2 ${consented ? 'hover:bg-slate-800 hover:-translate-y-0.5 active:scale-95' : 'opacity-40 cursor-not-allowed'}`}
                 >
                   Отправить заявку <ArrowRight className="w-5 h-5" />
                 </button>

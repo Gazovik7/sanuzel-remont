@@ -211,14 +211,20 @@ input[type='number'] {
   transform: rotate(180deg);
 }
 
-.seo-details > summary::-webkit-details-marker {
+/* FAQ accordion (details/summary) */
+.faq-details > summary::-webkit-details-marker {
   display: none;
 }
 
-.seo-details > summary {
+.faq-details > summary {
   list-style: none;
 }
 
-.seo-details[open] .seo-chevron {
-  transform: rotate(180deg);
+/* Geography districts accordion (details/summary) */
+.geo-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.geo-details > summary {
+  list-style: none;
 }

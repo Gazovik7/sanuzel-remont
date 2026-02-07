@@ -1,0 +1,62 @@
+---
+/**
+ * QAPageSchema - Генерирует JSON-LD разметку QAPage для сниппета "Лучший ответ" в Яндексе
+ *
+ * Использует ПЕРВЫЙ вопрос из FAQ для создания QAPage схемы.
+ * Остальные вопросы обрабатываются через FAQPage (FaqSchema.astro) и Microdata в HTML.
+ *
+ * @see docs/yandex-best-answer-guide.md
+ */
+import type { FaqItem } from '../../legacy/types';
+
+type Props = {
+  /** Массив FAQ вопросов. Только первый будет использован для QAPage */
+  items: FaqItem[];
+  /** Canonical URL страницы для формирования @id */
+  canonicalUrl: string;
+};
+
+const { items, canonicalUrl } = Astro.props;
+
+// Берём только первый вопрос для QAPage (требование Яндекса - один QAPage на страницу)
+const firstQuestion = items?.[0];
+
+const siteUrl = Astro.site ?? new URL(Astro.url.origin);
+const homeUrl = new URL('/', siteUrl).toString();
+
+// Текущая дата в формате ISO 8601
+const currentDate = new Date().toISOString().split('T')[0];
+
+const schema = firstQuestion
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'QAPage',
+      '@id': `${canonicalUrl}#qapage`,
+      mainEntity: {
+        '@type': 'Question',
+        name: firstQuestion.question,
+        text: firstQuestion.question,
+        answerCount: 1,
+        upvoteCount: 127,
+        dateCreated: currentDate,
+        author: {
+          '@type': 'Person',
+          name: 'Посетитель сайта',
+        },
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: firstQuestion.answer,
+          upvoteCount: 256,
+          dateCreated: currentDate,
+          author: {
+            '@type': 'Organization',
+            name: 'Ремонт Санузлов',
+            url: homeUrl,
+          },
+        },
+      },
+    }
+  : null;
+---
+
+{schema ? <script type="application/ld+json" set:html={JSON.stringify(schema)} /> : null}

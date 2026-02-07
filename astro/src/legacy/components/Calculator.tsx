@@ -17,6 +17,7 @@ const steps = [
 
 const Calculator: React.FC<CalculatorProps> = ({ onComplete, defaultFinish = 'Стандарт (Капитальный)' }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [consented, setConsented] = useState(false);
   const areaInputRef = useRef<HTMLInputElement | null>(null);
   const repairOptions = ['Ванная комната', 'Ванная + туалет', 'Совмещённый санузел', 'Туалет'];
   const [formData, setFormData] = useState({
@@ -243,7 +244,7 @@ const Calculator: React.FC<CalculatorProps> = ({ onComplete, defaultFinish = 'С
                 className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600 outline-none bg-gray-50 focus:bg-white transition-all font-medium text-lg"
                 required
                 />
-                <ConsentCheckboxes />
+                <ConsentCheckboxes onChange={setConsented} />
             </div>
           </div>
         );
@@ -290,7 +291,7 @@ const Calculator: React.FC<CalculatorProps> = ({ onComplete, defaultFinish = 'С
           {currentStep === steps.length - 1 ? (
              <button
              type="submit"
-             className="flex items-center px-10 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-600/30 transition-all transform hover:-translate-y-1 hover:scale-105 active:scale-95 text-lg"
+             className={`flex items-center px-10 py-4 rounded-xl bg-blue-600 text-white font-bold shadow-lg shadow-blue-600/30 transition-all transform text-lg ${consented ? 'hover:bg-blue-700 hover:-translate-y-1 hover:scale-105 active:scale-95' : 'opacity-40 cursor-not-allowed'}`}
            >
              Получить смету <Check className="w-5 h-5 ml-2" />
            </button>

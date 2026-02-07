@@ -9,11 +9,9 @@ import LegacyScrollTopButton from '../components/blocks/LegacyScrollTopButton.as
 import LegacyHero from '../components/islands/legacy/LegacyHero';
 import LegacyPortfolioSection from '../components/islands/legacy/LegacyPortfolioSection';
 import LegacyCalculator from '../components/islands/legacy/LegacyCalculator';
-import LegacyReviewsSection from '../components/islands/legacy/LegacyReviewsSection';
-import LegacyFaqSection from '../components/islands/legacy/LegacyFaqSection';
-import LegacyGeographySection from '../components/islands/legacy/LegacyGeographySection';
-import LegacyTeamSection from '../components/islands/legacy/LegacyTeamSection';
 import FaqSchema from '../components/seo/FaqSchema.astro';
+import QAPageSchema from '../components/seo/QAPageSchema.astro';
+import ServiceSchema from '../components/seo/ServiceSchema.astro';
 
 import {
   ComparisonSection,
@@ -26,6 +24,10 @@ import {
   VisualizationSection,
   GuaranteeSection,
   SeoTextSection,
+  FaqSection,
+  GeographySection,
+  TeamSection,
+  ReviewsSection,
 } from '../legacy/components/ContentSections';
 
 import { getService, type ServiceBlock } from '../data/services';
@@ -55,15 +57,20 @@ const geographyBlock = blockByType('geography');
 
 const title = service.seo.title;
 const description = service.seo.description;
+
+// Canonical URL для QAPageSchema (главная страница)
+const canonicalUrl = new URL('/', Astro.site ?? Astro.url.origin).toString();
 ---
 
 <BaseLayout title={title} description={description}>
   {faqBlock && <FaqSchema items={faqBlock.items} />}
+  {faqBlock && <QAPageSchema items={faqBlock.items} canonicalUrl={canonicalUrl} />}
+  <ServiceSchema name={title} description={description} packages={packagesBlock?.packages} />
   <div id="top" class="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col">
     <LegacyHeaderLanding />
 
     <main class="flex-1">
-      {heroBlock && <LegacyHero client:load config={heroBlock.config} />}
+      {heroBlock && <LegacyHero config={heroBlock.config} />}
 
       {comparisonBlock && (
         <div id="comparison" class="reveal bg-white">
@@ -136,7 +143,7 @@ const description = service.seo.description;
 
       {teamBlock && (
         <div class="reveal bg-white">
-          <LegacyTeamSection client:visible content={teamBlock.config} members={teamBlock.members} />
+          <TeamSection content={teamBlock.config} members={teamBlock.members} />
         </div>
       )}
 
@@ -148,8 +155,7 @@ const description = service.seo.description;
 
       {reviewsBlock && (
         <div id="reviews" class="reveal bg-white">
-          <LegacyReviewsSection
-            client:visible
+          <ReviewsSection
             content={reviewsBlock.config}
             videoReviews={reviewsBlock.videoReviews}
             whatsappReviews={reviewsBlock.whatsappReviews}
@@ -166,13 +172,13 @@ const description = service.seo.description;
 
       {faqBlock && (
         <div id="faq" class="reveal bg-slate-100">
-          <LegacyFaqSection client:visible content={faqBlock.config} items={faqBlock.items} />
+          <FaqSection faqItems={faqBlock.items} content={faqBlock.config} />
         </div>
       )}
 
       {geographyBlock && (
         <div id="geography" class="reveal bg-white">
-          <LegacyGeographySection client:visible content={geographyBlock.config} />
+          <GeographySection content={geographyBlock.config} />
         </div>
       )}
     </main>

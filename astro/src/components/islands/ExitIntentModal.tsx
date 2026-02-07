@@ -6,6 +6,7 @@ export default function ExitIntentModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [hasShown, setHasShown] = useState(false);
   const [isCompactMode, setIsCompactMode] = useState(false);
+  const [consented, setConsented] = useState(false);
   const startTsRef = useRef<number>(Date.now());
   const maxScrollRef = useRef(0);
   const scrollTriggerRef = useRef(0);
@@ -228,11 +229,11 @@ export default function ExitIntentModal() {
               />
             </div>
 
-            <ConsentCheckboxes />
+            <ConsentCheckboxes onChange={setConsented} />
 
             <button
               type="submit"
-              className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-600/30 transition-all transform hover:-translate-y-0.5 active:scale-95"
+              className={`w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-600/30 transition-all transform ${consented ? 'hover:from-blue-700 hover:to-blue-800 hover:-translate-y-0.5 active:scale-95' : 'opacity-40 cursor-not-allowed'}`}
             >
               Получить дизайн-проект и скидку
             </button>

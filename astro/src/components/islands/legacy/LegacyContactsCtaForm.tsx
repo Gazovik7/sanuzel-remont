@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ConsentCheckboxes from '../ConsentCheckboxes';
 
 const REPAIR_OPTIONS = ['Ванная комната', 'Ванная + туалет', 'Совмещённый санузел', 'Туалет'] as const;
 
 export default function LegacyContactsCtaForm() {
+  const [consented, setConsented] = useState(false);
   return (
     <form
       className="glass rounded-3xl p-8 md:p-12 max-w-4xl mx-auto shadow-2xl flex flex-col gap-6 text-left border border-white/10"
@@ -94,10 +95,10 @@ export default function LegacyContactsCtaForm() {
       </div>
 
       <div className="mt-2 pt-4 border-t border-gray-200/20 space-y-4">
-        <ConsentCheckboxes />
+        <ConsentCheckboxes onChange={setConsented} />
         <button
           type="submit"
-          className="w-full md:w-auto bg-blue-600 hover:bg-blue-500 text-white font-bold py-5 px-8 rounded-xl transition-all shadow-xl shadow-blue-600/30 text-lg transform hover:-translate-y-1"
+          className={`w-full md:w-auto bg-blue-600 text-white font-bold py-5 px-8 rounded-xl transition-all shadow-xl shadow-blue-600/30 text-lg transform ${consented ? 'hover:bg-blue-500 hover:-translate-y-1' : 'opacity-40 cursor-not-allowed'}`}
         >
           Получить смету и дизайн-проект
         </button>

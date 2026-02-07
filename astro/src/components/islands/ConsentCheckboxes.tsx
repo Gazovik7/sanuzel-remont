@@ -1,6 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export default function ConsentCheckboxes() {
+interface ConsentCheckboxesProps {
+  onChange?: (allChecked: boolean) => void;
+}
+
+export default function ConsentCheckboxes({ onChange }: ConsentCheckboxesProps) {
+  const [checks, setChecks] = useState({ personal: false, marketing: false });
+
+  const handleChange = (key: 'personal' | 'marketing', checked: boolean) => {
+    const next = { ...checks, [key]: checked };
+    setChecks(next);
+    onChange?.(next.personal && next.marketing);
+  };
+
   return (
     <div className="space-y-2.5">
       <label className="flex items-start gap-2 cursor-pointer">
@@ -8,6 +20,8 @@ export default function ConsentCheckboxes() {
           type="checkbox"
           name="consent_personal_data"
           required
+          checked={checks.personal}
+          onChange={(e) => handleChange('personal', e.target.checked)}
           className="mt-0.5 shrink-0 w-4 h-4 accent-blue-600 cursor-pointer"
         />
         <span className="text-xs text-gray-500 leading-snug select-none">
@@ -37,6 +51,8 @@ export default function ConsentCheckboxes() {
           type="checkbox"
           name="consent_marketing"
           required
+          checked={checks.marketing}
+          onChange={(e) => handleChange('marketing', e.target.checked)}
           className="mt-0.5 shrink-0 w-4 h-4 accent-blue-600 cursor-pointer"
         />
         <span className="text-xs text-gray-500 leading-snug select-none">

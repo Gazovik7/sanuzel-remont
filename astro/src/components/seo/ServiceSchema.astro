@@ -1,0 +1,56 @@
+---
+import type { Package } from '../../legacy/types';
+
+interface Props {
+  name: string;
+  description: string;
+  url?: string;
+  packages?: Package[];
+}
+
+const { name, description, url, packages } = Astro.props;
+
+const siteUrl = Astro.site ? Astro.site.toString() : 'https://remont-sanuzlov.ru';
+const homeUrl = new URL('/', siteUrl).toString();
+const localBusinessId = `${homeUrl}#localbusiness`;
+
+// Helper to parse price string to number
+const parsePrice = (priceStr: string) => {
+  const match = priceStr.replace(/\s/g, '').match(/(\d+)/);
+  return match ? parseInt(match[1], 10) : undefined;
+};
+
+const serviceSchema: any = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': url ? `${url}#service` : undefined,
+  name,
+  description,
+  provider: { '@id': localBusinessId },
+  areaServed: { '@type': 'City', name: 'Москва' },
+  serviceType: name,
+};
+
+if (packages && packages.length > 0) {
+  serviceSchema.hasOfferCatalog = {
+    '@type': 'OfferCatalog',
+    name: 'Пакеты услуг',
+    itemListElement: packages.map((pkg, index) => {
+        const price = parsePrice(pkg.price);
+        return {
+            '@type': 'Offer',
+            itemOffered: {
+                '@type': 'Service',
+                name: pkg.title,
+                description: pkg.subtitle + '. ' + pkg.features.join('. '),
+            },
+            price: price,
+            priceCurrency: 'RUB',
+            position: index + 1
+        };
+    }),
+  };
+}
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />

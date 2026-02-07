@@ -21,6 +21,7 @@ export const Hero: React.FC<HeroProps> = ({
 }) => {
   const repairOptions = ['Ванная комната', 'Ванная + туалет', 'Совмещённый санузел', 'Туалет'];
   const [form, setForm] = useState({ name: '', phone: '', type: repairOptions[0], replyTo: 'call' });
+  const [consented, setConsented] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -190,9 +191,9 @@ export const Hero: React.FC<HeroProps> = ({
                     </div>
                 </div>
                 
-                <ConsentCheckboxes />
+                <ConsentCheckboxes onChange={setConsented} />
 
-                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 group mt-2">
+                <button type="submit" className={`w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 group mt-2 transition-all ${consented ? 'hover:bg-blue-700' : 'opacity-40 cursor-not-allowed'}`}>
                     Рассчитать стоимость
                     <ArrowRight className="w-5 h-5" />
                 </button>

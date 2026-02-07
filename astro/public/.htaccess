@@ -45,6 +45,22 @@ SetEnv PARTNER_API_TOKEN "cf159936c20fa886c56d3a816c5b61ae2d3bcd43b87744d5b7e62a
   </FilesMatch>
 </IfModule>
 
+# ==========================================
+# 301 Redirects (deleted pages)
+# ==========================================
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^master-bondarenko-yuriy-aleksandrovich/?$ / [R=301,L]
+  RewriteRule ^master-po-remontu-vannov/?$ / [R=301,L]
+  RewriteRule ^master-samoylov-sergey-ivanovich/?$ / [R=301,L]
+  RewriteRule ^master-samoylov-sergey-ivanovich-2/?$ / [R=301,L]
+  RewriteRule ^master-semerov-pavel-nikolaevich/?$ / [R=301,L]
+  RewriteRule ^master-stin-sergey-mihaylovich/?$ / [R=301,L]
+  RewriteRule ^master-veklovskiy-oleg-dmitrievich/?$ / [R=301,L]
+  RewriteRule ^remont-tualeta-pod-klyuch/?$ / [R=301,L]
+  RewriteRule ^remont-v-vannoy-komnate-s-materialami/?$ / [R=301,L]
+</IfModule>
+
 # Block .env files from being served
 <FilesMatch "^\.env">
   Require all denied

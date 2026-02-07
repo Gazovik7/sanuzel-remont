@@ -15,12 +15,6 @@ import LegacyPortfolioSectionBudget from '../islands/legacy/LegacyPortfolioSecti
 import LegacyCalculator from '../islands/legacy/LegacyCalculator';
 import LegacyCalculatorBudget from '../islands/legacy/LegacyCalculatorBudget';
 
-import LegacyReviewsSection from '../islands/legacy/LegacyReviewsSection';
-import LegacyFaqSection from '../islands/legacy/LegacyFaqSection';
-import LegacyFaqBudgetSection from '../islands/legacy/LegacyFaqBudgetSection';
-import LegacyGeographySection from '../islands/legacy/LegacyGeographySection';
-import LegacyTeamSection from '../islands/legacy/LegacyTeamSection';
-
 import {
   ComparisonSection,
   QualityControlSection,
@@ -32,9 +26,15 @@ import {
   VisualizationSection,
   GuaranteeSection,
   SeoTextSection,
+  FaqSection,
+  GeographySection,
+  TeamSection,
+  ReviewsSection,
 } from '../../legacy/components/ContentSections';
 import { Breadcrumbs } from '../../legacy/components/Breadcrumbs';
 import FaqSchema from '../seo/FaqSchema.astro';
+import QAPageSchema from '../seo/QAPageSchema.astro';
+import ServiceSchema from '../seo/ServiceSchema.astro';
 
 import { getServiceBySlug, type ServiceBlock } from '../../data/services';
 
@@ -70,20 +70,24 @@ const geographyBlock = blockByType('geography');
 const title = service.seo.title;
 const description = service.seo.description;
 
+// Canonical URL для QAPageSchema
+const canonicalUrl = new URL(service.canonicalPath ?? Astro.url.pathname, Astro.site ?? Astro.url.origin).toString();
+
 const isBudget = heroBlock?.variant === 'budget';
-const isFaqBudget = faqBlock?.variant === 'budget';
 const isPortfolioBudget = portfolioBlock?.variant === 'budget';
 const isCalculatorBudget = calculatorBlock?.variant === 'budget';
 ---
 
-<BaseLayout title={title} description={description} canonicalPath={service.canonicalPath}>
+<BaseLayout title={title} description={description} canonicalPath={service.canonicalPath} breadcrumbs={breadcrumbBlock?.items}>
   {faqBlock && <FaqSchema items={faqBlock.items} />}
+  {faqBlock && <QAPageSchema items={faqBlock.items} canonicalUrl={canonicalUrl} />}
+  <ServiceSchema name={title} description={description} packages={packagesBlock?.packages} />
   <div id="top" class="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col">
     <LegacyHeaderLanding />
 
     <main class="flex-1">
-      {heroBlock && isBudget && <LegacyHeroBudget client:load config={heroBlock.config} />}
-      {heroBlock && !isBudget && <LegacyHero client:load config={heroBlock.config} />}
+      {heroBlock && isBudget && <LegacyHeroBudget config={heroBlock.config} />}
+      {heroBlock && !isBudget && <LegacyHero config={heroBlock.config} />}
 
       {breadcrumbBlock && (
         <div class="bg-white">
@@ -170,7 +174,7 @@ const isCalculatorBudget = calculatorBlock?.variant === 'budget';
 
       {teamBlock && (
         <div class="reveal bg-white">
-          <LegacyTeamSection client:visible content={teamBlock.config} members={teamBlock.members} />
+          <TeamSection content={teamBlock.config} members={teamBlock.members} />
         </div>
       )}
 
@@ -182,8 +186,7 @@ const isCalculatorBudget = calculatorBlock?.variant === 'budget';
 
       {reviewsBlock && (
         <div id="reviews" class="reveal bg-white">
-          <LegacyReviewsSection
-            client:visible
+          <ReviewsSection
             content={reviewsBlock.config}
             videoReviews={reviewsBlock.videoReviews}
             whatsappReviews={reviewsBlock.whatsappReviews}
@@ -198,20 +201,15 @@ const isCalculatorBudget = calculatorBlock?.variant === 'budget';
         </div>
       )}
 
-      {faqBlock && isFaqBudget && (
+      {faqBlock && (
         <div id="faq" class="reveal bg-slate-100">
-          <LegacyFaqBudgetSection client:visible content={faqBlock.config} items={faqBlock.items} />
-        </div>
-      )}
-      {faqBlock && !isFaqBudget && (
-        <div id="faq" class="reveal bg-slate-100">
-          <LegacyFaqSection client:visible content={faqBlock.config} items={faqBlock.items} />
+          <FaqSection faqItems={faqBlock.items} content={faqBlock.config} />
         </div>
       )}
 
       {geographyBlock && (
         <div id="geography" class="reveal bg-white">
-          <LegacyGeographySection client:visible content={geographyBlock.config} />
+          <GeographySection content={geographyBlock.config} />
         </div>
       )}
     </main>

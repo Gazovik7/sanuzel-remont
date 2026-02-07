@@ -273,6 +273,7 @@ async function sendLead(payload: LeadCapturePayload) {
 export default function LeadModalHost() {
   const [isOpen, setIsOpen] = useState(false);
   const [type, setType] = useState<LeadModalType>('callback');
+  const [consented, setConsented] = useState(false);
   const repairTypeOptions = ['Ванная комната', 'Ванная + туалет', 'Совмещённый санузел', 'Туалет'];
 
   const api = useMemo(
@@ -480,11 +481,11 @@ export default function LeadModalHost() {
               </div>
             </div>
 
-            <ConsentCheckboxes />
+            <ConsentCheckboxes onChange={setConsented} />
 
             <button
               type="submit"
-              className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all transform hover:-translate-y-0.5 active:scale-95"
+              className={`w-full py-4 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-600/30 transition-all transform ${consented ? 'hover:bg-blue-700 hover:-translate-y-0.5 active:scale-95' : 'opacity-40 cursor-not-allowed'}`}
             >
               Отправить заявку
             </button>

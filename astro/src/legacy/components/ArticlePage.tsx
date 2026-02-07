@@ -110,6 +110,11 @@ export const ArticlePage: React.FC<ArticlePageProps> = ({ id, onNavigate, onCalc
       jobTitle: post.author.role,
     },
     publisher: { '@id': `${siteHomeUrl}#organization` },
+    reviewedBy: post.reviewer ? {
+      '@type': 'Person',
+      name: post.reviewer.name,
+      jobTitle: post.reviewer.role,
+    } : undefined,
   };
 
   return (

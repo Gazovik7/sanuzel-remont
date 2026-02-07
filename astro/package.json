@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 0.0.0.0 --port 4321",
-    "build": "astro build",
+    "build": "astro build && node ../scripts/strip-nulls.mjs",
     "preview": "astro preview --host 0.0.0.0 --port 4173",
     "check": "astro check"
   },

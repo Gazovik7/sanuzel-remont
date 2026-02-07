@@ -781,22 +781,31 @@ export const ReviewsSection = ({
 export const SeoTextSection = ({ content }: { content: SeoTextBlockConfig }) => {
   return (
     <section className="py-16">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <h2 className="text-2xl md:text-3xl font-heading font-bold text-slate-900 mb-8">
-          {content.summaryTitle}
-        </h2>
-        <div className="prose prose-slate max-w-none text-gray-600 space-y-4">
-           {content.paragraphsHtml.map((html, idx) => (
-              <p key={idx} dangerouslySetInnerHTML={{ __html: html }} />
-           ))}
-           <p dangerouslySetInnerHTML={{ __html: content.listIntroHtml }} />
-           <ul className="list-disc pl-5 space-y-2">
-              {content.listItemsHtml.map((html, idx) => (
-                <li key={idx} dangerouslySetInnerHTML={{ __html: html }} />
+      <div className="container mx-auto px-4 max-w-3xl">
+        <details className="seo-text-details bg-white rounded-2xl overflow-hidden group border border-gray-100 shadow-sm">
+          <summary className="w-full flex items-center justify-between p-6 md:p-8 text-left cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            <h2 className="text-xl md:text-2xl font-heading font-bold text-slate-900 group-open:text-blue-700 transition-colors pr-4">
+              {content.summaryTitle}
+            </h2>
+            <span className="text-blue-600 font-bold text-2xl leading-none transition-transform duration-300 group-open:rotate-45 shrink-0">
+              +
+            </span>
+          </summary>
+          <div className="px-6 md:px-8 pb-6 md:pb-8 pt-0 border-t border-gray-100">
+            <div className="prose prose-slate max-w-none text-gray-600 space-y-4 mt-6">
+              {content.paragraphsHtml.map((html, idx) => (
+                <p key={idx} dangerouslySetInnerHTML={{ __html: html }} />
               ))}
-           </ul>
-          <p dangerouslySetInnerHTML={{ __html: content.closingHtml }} />
-        </div>
+              <p dangerouslySetInnerHTML={{ __html: content.listIntroHtml }} />
+              <ul className="list-disc pl-5 space-y-2">
+                {content.listItemsHtml.map((html, idx) => (
+                  <li key={idx} dangerouslySetInnerHTML={{ __html: html }} />
+                ))}
+              </ul>
+              <p dangerouslySetInnerHTML={{ __html: content.closingHtml }} />
+            </div>
+          </div>
+        </details>
       </div>
     </section>
   );
