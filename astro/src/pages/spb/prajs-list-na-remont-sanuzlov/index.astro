@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import LegacyHeaderSolid from '../../../components/blocks/LegacyHeaderSolid.astro';
+import LegacyContactsSection from '../../../components/blocks/LegacyContactsSection.astro';
+import LegacyFooter from '../../../components/blocks/LegacyFooter.astro';
+import LegacyMobileStickyBar from '../../../components/blocks/LegacyMobileStickyBar.astro';
+import LegacyScrollTopButton from '../../../components/blocks/LegacyScrollTopButton.astro';
+
+import { PriceList } from '../../../legacy/components/PriceList';
+
+const title = 'Цены на ремонт санузлов | Стоимость ремонтных работ в ванной комнате в Санкт-Петербурге';
+const description =
+  'Цены на ремонт санузлов | Стоимость ремонтных работ в ванной комнате в Санкт-Петербурге и области.';
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/spb/prajs-list-na-remont-sanuzlov/">
+  <div id="top" class="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col">
+    <LegacyHeaderSolid />
+    <main class="flex-1 pt-20 lg:pt-24">
+      <PriceList
+        onNavigate={() => {}}
+        breadcrumbItems={[
+          { label: 'Санкт-Петербург', href: '/spb/' },
+          { label: 'Прайс-лист', isActive: true },
+        ]}
+      />
+    </main>
+    <LegacyContactsSection />
+    <LegacyFooter />
+    <LegacyMobileStickyBar />
+    <LegacyScrollTopButton />
+  </div>
+</BaseLayout>

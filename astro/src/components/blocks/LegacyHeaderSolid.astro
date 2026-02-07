@@ -1,9 +1,15 @@
+---
+const isSpb = Astro.url.pathname.startsWith('/spb');
+const prefix = isSpb ? '/spb' : '';
+const tagline = isSpb ? 'Ремонт ванных комнат<br />в СПб и Ленобласти под ключ' : 'Ремонт ванных комнат<br />в Москве и области под ключ';
+---
+
 <header
   class="site-header is-solid fixed top-0 w-full z-40 transition-all duration-500 bg-white/95 backdrop-blur-md shadow-sm py-3"
 >
   <div class="container mx-auto px-4 flex items-center justify-between">
     <div class="flex items-center gap-4">
-      <a href="/" class="flex-shrink-0 flex items-center gap-2 group"
+      <a href={isSpb ? '/spb/' : '/'} class="flex-shrink-0 flex items-center gap-2 group"
         ><img
           src="/img/logo.png"
           alt="Логотип"
@@ -12,7 +18,7 @@
       <div
         class="site-tagline hidden md:block text-xs font-medium leading-tight transition-colors duration-300 text-gray-500"
       >
-        Ремонт ванных комнат<br />в Москве и области под ключ
+        <Fragment set:html={tagline} />
       </div>
     </div>
     <nav class="site-nav hidden xl:flex items-center gap-6 font-heading">
@@ -71,35 +77,35 @@
             <ul class="space-y-3">
               <li>
                 <a
-                  href="/byudzhetnyy-remont-v-vannoy-komnate/"
+                  href={`${prefix}/byudzhetnyy-remont-v-vannoy-komnate/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >Бюджетный</a
                 >
               </li>
               <li>
                 <a
-                  href="/kapitalnyj-remont-v-vannoj/"
+                  href={`${prefix}/kapitalnyj-remont-v-vannoj/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >Капитальный</a
                 >
               </li>
               <li>
                 <a
-                  href="/kosmeticheskij-remont-vannoj/"
+                  href={`${prefix}/kosmeticheskij-remont-vannoj/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >Косметический</a
                 >
               </li>
               <li>
                 <a
-                  href="/evroremont-vannoj-komnaty/"
+                  href={`${prefix}/evroremont-vannoj-komnaty/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >Евро</a
                 >
               </li>
               <li>
                 <a
-                  href="/remont-malenkoy-vannoy-komnaty/"
+                  href={`${prefix}/remont-malenkoy-vannoy-komnaty/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >Маленькая ванная</a
                 >
@@ -134,35 +140,35 @@
             <ul class="space-y-3">
               <li>
                 <a
-                  href="/remont-sovmeschennogo-sanuzla/"
+                  href={`${prefix}/remont-sovmeschennogo-sanuzla/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >Совмещённый санузел</a
                 >
               </li>
               <li>
                 <a
-                  href="/remont-razdelnogo-sanuzla/"
+                  href={`${prefix}/remont-razdelnogo-sanuzla/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >Раздельный санузел</a
                 >
               </li>
               <li>
                 <a
-                  href="/remont-vannoy-v-novostroyke/"
+                  href={`${prefix}/remont-vannoy-v-novostroyke/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >В новостройке</a
                 >
               </li>
               <li>
                 <a
-                  href="/remont-vannoy-v-panelnom-dome/"
+                  href={`${prefix}/remont-vannoy-v-panelnom-dome/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >В панельном доме</a
                 >
               </li>
               <li>
                 <a
-                  href="/remont-vannoj-komnaty-v-hrushchevke/"
+                  href={`${prefix}/remont-vannoj-komnaty-v-hrushchevke/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >В Хрущёвке</a
                 >
@@ -195,42 +201,42 @@
             <ul class="space-y-3">
               <li>
                 <a
-                  href="/remont-vannoy-komnaty-v-rassrochku/"
+                  href={`${prefix}/remont-vannoy-komnaty-v-rassrochku/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >В рассрочку</a
                 >
               </li>
               <li>
                 <a
-                  href="/santekhnicheskie-raboty/"
+                  href={`${prefix}/santekhnicheskie-raboty/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >Сантехника</a
                 >
               </li>
               <li>
                 <a
-                  href="/ukladka-plitki-v-vannoy-komnate/"
+                  href={`${prefix}/ukladka-plitki-v-vannoy-komnate/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >Плитка</a
                 >
               </li>
               <li>
                 <a
-                  href="/demontazhnye-raboty/"
+                  href={`${prefix}/demontazhnye-raboty/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >Демонтаж</a
                 >
               </li>
               <li>
                 <a
-                  href="/pereplanirovka-sanuzla/"
+                  href={`${prefix}/pereplanirovka-sanuzla/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >Перепланировка</a
                 >
               </li>
               <li>
                 <a
-                  href="/remont-tualeta-panelyami/"
+                  href={`${prefix}/remont-tualeta-panelyami/`}
                   class="text-gray-500 hover:text-blue-600 font-medium text-sm transition-all text-left block w-full hover:translate-x-1 duration-200"
                   >Панели ПВХ</a
                 >
@@ -282,7 +288,7 @@
               </div>
             </div>
             <a
-              href="/"
+              href={`${prefix}/`}
               class="p-4 rounded-2xl hover:bg-gray-50 transition-colors group/item"
             >
               <div class="flex items-center justify-between">
@@ -296,7 +302,7 @@
               </p>
             </a>
             <a
-              href="/byudzhetnyy-remont-v-vannoy-komnate/"
+              href={`${prefix}/byudzhetnyy-remont-v-vannoy-komnate/`}
               class="p-4 rounded-2xl hover:bg-gray-50 transition-colors group/item"
             >
               <div class="flex items-center justify-between">
@@ -340,7 +346,7 @@
               </div>
             </div>
             <a
-              href="/prajs-list-na-remont-sanuzlov/"
+              href={`${prefix}/prajs-list-na-remont-sanuzlov/`}
               class="p-4 rounded-2xl hover:bg-gray-50 transition-colors group/item"
             >
               <div class="font-bold text-slate-900 group-hover/item:text-blue-600">
@@ -351,7 +357,7 @@
               </p>
             </a>
             <a
-              href="/portfolio/"
+              href={`${prefix}/portfolio/`}
               class="p-4 rounded-2xl hover:bg-gray-50 transition-colors group/item"
             >
               <div class="font-bold text-slate-900 group-hover/item:text-blue-600">
@@ -391,7 +397,7 @@
               </div>
             </div>
             <a
-              href="/about-us/"
+              href={`${prefix}/about-us/`}
               class="p-4 rounded-2xl hover:bg-gray-50 transition-colors group/item"
             >
               <div class="font-bold text-slate-900 group-hover/item:text-blue-600">
@@ -402,7 +408,7 @@
               </p>
             </a>
             <a
-              href="/otzyvy-klientov/"
+              href={`${prefix}/otzyvy-klientov/`}
               class="p-4 rounded-2xl hover:bg-gray-50 transition-colors group/item"
             >
               <div class="font-bold text-slate-900 group-hover/item:text-blue-600">
@@ -413,7 +419,7 @@
               </p>
             </a>
             <a
-              href="/contacts/"
+              href={`${prefix}/contacts/`}
               class="p-4 rounded-2xl hover:bg-gray-50 transition-colors group/item"
             >
               <div class="font-bold text-slate-900 group-hover/item:text-blue-600">
@@ -427,7 +433,7 @@
         </div>
       </div>
       <a
-        href="/otzyvy-klientov/"
+        href={`${prefix}/otzyvy-klientov/`}
         class="site-nav-link text-sm font-bold tracking-wide hover:text-blue-500 transition-all text-slate-800"
         >ОТЗЫВЫ</a
       >
@@ -437,22 +443,22 @@
         >БЛОГ</a
       >
       <a
-        href="/about-us/"
+        href={`${prefix}/about-us/`}
         class="site-nav-link text-sm font-bold tracking-wide hover:text-blue-500 transition-all text-slate-800"
         >О НАС</a
       >
       <a
-        href="/contacts/"
+        href={`${prefix}/contacts/`}
         class="site-nav-link text-sm font-bold tracking-wide hover:text-blue-500 transition-all text-slate-800"
         >КОНТАКТЫ</a
       >
       <a
-        href="/prajs-list-na-remont-sanuzlov/"
+        href={`${prefix}/prajs-list-na-remont-sanuzlov/`}
         class="site-nav-link text-sm font-bold tracking-wide hover:text-blue-500 transition-all text-slate-800"
         >ЦЕНЫ</a
       >
       <a
-        href="/portfolio/"
+        href={`${prefix}/portfolio/`}
         class="site-nav-link text-sm font-bold tracking-wide hover:text-blue-500 transition-all text-slate-800"
         >ПОРТФОЛИО</a
       >

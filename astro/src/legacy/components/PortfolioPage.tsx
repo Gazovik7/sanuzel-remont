@@ -8,9 +8,10 @@ import { PORTFOLIO, BUDGET_PORTFOLIO } from '../constants';
 interface PortfolioPageProps {
   onNavigate?: (mode: any) => void;
   onCalculate?: () => void;
+  breadcrumbItems?: { label: string; href?: string; isActive?: boolean }[];
 }
 
-export const PortfolioPage: React.FC<PortfolioPageProps> = ({ onNavigate, onCalculate }) => {
+export const PortfolioPage: React.FC<PortfolioPageProps> = ({ onNavigate, onCalculate, breadcrumbItems }) => {
   const [filter, setFilter] = useState<'all' | 'premium' | 'budget'>('all');
 
   // Объединяем данные для отображения
@@ -29,7 +30,7 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ onNavigate, onCalc
     <div className="min-h-screen bg-slate-50 animate-in fade-in duration-500 pb-12">
       <div className="container mx-auto px-4 pt-6">
         <Breadcrumbs 
-            items={[{ label: 'Портфолио', isActive: true }]} 
+            items={breadcrumbItems ?? [{ label: 'Портфолио', isActive: true }]}
             onNavigate={onNavigate} 
         />
         

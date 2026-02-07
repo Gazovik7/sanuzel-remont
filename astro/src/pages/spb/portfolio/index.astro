@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import LegacyHeaderSolid from '../../../components/blocks/LegacyHeaderSolid.astro';
+import LegacyContactsSection from '../../../components/blocks/LegacyContactsSection.astro';
+import LegacyFooter from '../../../components/blocks/LegacyFooter.astro';
+import LegacyMobileStickyBar from '../../../components/blocks/LegacyMobileStickyBar.astro';
+import LegacyScrollTopButton from '../../../components/blocks/LegacyScrollTopButton.astro';
+
+import LegacyPortfolioPage from '../../../components/islands/legacy/LegacyPortfolioPage';
+
+const title = 'Портфолио готовых проектов и фото до и после в Санкт-Петербурге';
+const description =
+  'Портфолио выполненных ремонтов санузлов в Санкт-Петербурге: фото до и после, дизайн, результаты и качество.';
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/spb/portfolio/">
+  <div id="top" class="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col">
+    <LegacyHeaderSolid />
+    <main class="flex-1 pt-20 lg:pt-24">
+      <LegacyPortfolioPage
+        client:load
+        breadcrumbItems={[
+          { label: 'Санкт-Петербург', href: '/spb/' },
+          { label: 'Портфолио', isActive: true },
+        ]}
+      />
+    </main>
+    <LegacyContactsSection />
+    <LegacyFooter />
+    <LegacyMobileStickyBar />
+    <LegacyScrollTopButton />
+  </div>
+</BaseLayout>

@@ -135,7 +135,7 @@ const DATA: PriceCategory[] = [
   }
 ];
 
-export const PriceList = ({ onBack, onNavigate }: { onBack?: () => void, onNavigate: (mode: any) => void }) => {
+export const PriceList = ({ onBack, onNavigate, breadcrumbItems }: { onBack?: () => void, onNavigate: (mode: any) => void, breadcrumbItems?: { label: string; href?: string; isActive?: boolean }[] }) => {
   const [search, setSearch] = useState('');
 
   const filteredData = useMemo(() => {
@@ -155,7 +155,7 @@ export const PriceList = ({ onBack, onNavigate }: { onBack?: () => void, onNavig
       
       <div className="container mx-auto px-4 pt-6 max-w-5xl">
         <Breadcrumbs 
-            items={[{ label: 'Прайс-лист', isActive: true }]} 
+            items={breadcrumbItems ?? [{ label: 'Прайс-лист', isActive: true }]}
             onNavigate={onNavigate} 
         />
         

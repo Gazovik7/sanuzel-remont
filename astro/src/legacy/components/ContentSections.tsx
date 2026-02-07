@@ -845,6 +845,7 @@ export const FaqSection = ({ faqItems, content }: { faqItems: FaqItem[]; content
 export const GeographySection = ({ onAction, content }: { onAction?: () => void; content: GeographyBlockConfig }) => {
    const MOSCOW_LOCATIONS = content.moscowLocations;
    const MO_CITIES = content.moCities;
+   const hasAnyStations = MOSCOW_LOCATIONS.some(loc => loc.stations.length > 0);
 
    return (
       <section className="py-24 border-t border-gray-200 relative" id="geography">
@@ -867,6 +868,7 @@ export const GeographySection = ({ onAction, content }: { onAction?: () => void;
                              <MapPin className="w-5 h-5 text-red-500" />
                              {content.moscowDistrictsTitle}
                           </h3>
+                          {hasAnyStations ? (
                           <div className="flex flex-col border-t border-gray-100">
                               {MOSCOW_LOCATIONS.map((loc, idx) => (
                                   <details key={idx} className="border-b border-gray-100 group geo-details">
@@ -898,6 +900,18 @@ export const GeographySection = ({ onAction, content }: { onAction?: () => void;
                                   </details>
                               ))}
                           </div>
+                          ) : (
+                          <div className="flex flex-wrap gap-2 content-start">
+                              {MOSCOW_LOCATIONS.map((loc, idx) => (
+                                  <span
+                                      key={idx}
+                                      className="bg-white border border-gray-200 px-3 py-1.5 rounded-full text-sm text-gray-600 shadow-sm"
+                                  >
+                                      {loc.district}
+                                  </span>
+                              ))}
+                          </div>
+                          )}
                       </div>
 
                       {/* MO Cities List (Tag Cloud) - all cities visible for SEO */}
@@ -935,6 +949,7 @@ export const GeographySection = ({ onAction, content }: { onAction?: () => void;
                </div>
 
                {/* Right Map Column */}
+               {content.mapImageSrc && (
                <div className="lg:w-[40%] w-full h-[400px] lg:h-auto min-h-[400px] bg-gray-200 rounded-[2.5rem] overflow-hidden relative shadow-2xl order-first lg:order-last">
                   <img src={content.mapImageSrc} alt={content.mapImageAlt} className="w-full h-full object-cover grayscale opacity-80 hover:opacity-100 transition-opacity duration-700" />
 
@@ -965,6 +980,7 @@ export const GeographySection = ({ onAction, content }: { onAction?: () => void;
                       </div>
                   </div>
                </div>
+               )}
             </div>
          </div>
       </section>

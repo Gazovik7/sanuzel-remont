@@ -14,6 +14,8 @@ type Props = {
 };
 
 const { title, description, canonicalPath, breadcrumbs } = Astro.props;
+const isSpb = Astro.url.pathname.startsWith('/spb');
+const prefix = isSpb ? '/spb' : '';
 const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, Astro.site ?? Astro.url.origin);
 const ogImageUrl = new URL(SITE.logo, Astro.site ?? Astro.url.origin);
 
@@ -220,7 +222,7 @@ const baseSchema = { '@context': 'https://schema.org', '@graph': schemaGraph };
       <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm" data-mobile-menu-backdrop></div>
       <div class="absolute top-0 right-0 h-full w-[88%] max-w-sm bg-white shadow-2xl border-l border-gray-100 flex flex-col">
         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <a href="/" class="flex items-center gap-3" data-mobile-menu-link>
+          <a href={isSpb ? '/spb/' : '/'} class="flex items-center gap-3" data-mobile-menu-link>
             <img src="/img/logo.png" alt="Логотип" class="h-10 w-auto object-contain" />
             <span class="text-sm font-heading font-extrabold text-slate-900">Меню</span>
           </a>
@@ -262,58 +264,58 @@ const baseSchema = { '@context': 'https://schema.org', '@graph': schemaGraph };
                 <div class="mt-2 space-y-4 px-3 pb-2">
                   <div class="space-y-2">
                     <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">По типу ремонта</div>
-                    <a href="/byudzhetnyy-remont-v-vannoy-komnate/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/byudzhetnyy-remont-v-vannoy-komnate/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       Бюджетный
                     </a>
-                    <a href="/kapitalnyj-remont-v-vannoj/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/kapitalnyj-remont-v-vannoj/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       Капитальный
                     </a>
-                    <a href="/kosmeticheskij-remont-vannoj/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/kosmeticheskij-remont-vannoj/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       Косметический
                     </a>
-                    <a href="/evroremont-vannoj-komnaty/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/evroremont-vannoj-komnaty/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       Евро
                     </a>
-                    <a href="/remont-malenkoy-vannoy-komnaty/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/remont-malenkoy-vannoy-komnaty/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       Маленькая ванная
                     </a>
                   </div>
                   <div class="space-y-2">
                     <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">По помещениям</div>
-                    <a href="/remont-sovmeschennogo-sanuzla/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/remont-sovmeschennogo-sanuzla/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       Совмещённый санузел
                     </a>
-                    <a href="/remont-razdelnogo-sanuzla/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/remont-razdelnogo-sanuzla/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       Раздельный санузел
                     </a>
-                    <a href="/remont-vannoy-v-novostroyke/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/remont-vannoy-v-novostroyke/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       В новостройке
                     </a>
-                    <a href="/remont-vannoy-v-panelnom-dome/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/remont-vannoy-v-panelnom-dome/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       В панельном доме
                     </a>
-                    <a href="/remont-vannoj-komnaty-v-hrushchevke/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/remont-vannoj-komnaty-v-hrushchevke/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       В Хрущёвке
                     </a>
                   </div>
                   <div class="space-y-2">
                     <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Работы и сервис</div>
-                    <a href="/remont-vannoy-komnaty-v-rassrochku/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/remont-vannoy-komnaty-v-rassrochku/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       В рассрочку
                     </a>
-                    <a href="/santekhnicheskie-raboty/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/santekhnicheskie-raboty/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       Сантехника
                     </a>
-                    <a href="/ukladka-plitki-v-vannoy-komnate/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/ukladka-plitki-v-vannoy-komnate/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       Плитка
                     </a>
-                    <a href="/demontazhnye-raboty/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/demontazhnye-raboty/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       Демонтаж
                     </a>
-                    <a href="/pereplanirovka-sanuzla/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/pereplanirovka-sanuzla/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       Перепланировка
                     </a>
-                    <a href="/remont-tualeta-panelyami/" class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
+                    <a href={`${prefix}/remont-tualeta-panelyami/`} class="block py-1 text-sm text-slate-600 hover:text-blue-600" data-mobile-menu-link>
                       Панели ПВХ
                     </a>
                   </div>
@@ -321,12 +323,12 @@ const baseSchema = { '@context': 'https://schema.org', '@graph': schemaGraph };
               </details>
             </li>
             <li>
-              <a href="/portfolio/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
+              <a href={`${prefix}/portfolio/`} class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
                 Портфолио
               </a>
             </li>
             <li>
-              <a href="/otzyvy-klientov/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
+              <a href={`${prefix}/otzyvy-klientov/`} class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
                 Отзывы
               </a>
             </li>
@@ -336,17 +338,17 @@ const baseSchema = { '@context': 'https://schema.org', '@graph': schemaGraph };
               </a>
             </li>
             <li>
-              <a href="/about-us/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
+              <a href={`${prefix}/about-us/`} class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
                 О нас
               </a>
             </li>
             <li>
-              <a href="/contacts/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
+              <a href={`${prefix}/contacts/`} class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
                 Контакты
               </a>
             </li>
             <li>
-              <a href="/prajs-list-na-remont-sanuzlov/" class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
+              <a href={`${prefix}/prajs-list-na-remont-sanuzlov/`} class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-slate-50 font-bold text-slate-900" data-mobile-menu-link>
                 Цены (прайс-лист)
               </a>
             </li>

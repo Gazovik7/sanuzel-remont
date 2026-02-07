@@ -6,12 +6,18 @@ import { COMPANY_PHONE, COMPANY_PHONE_TEL, COMPANY_ADDRESS, COMPANY_EMAIL } from
 
 const REPAIR_OPTIONS = ['Ванная комната', 'Ванная + туалет', 'Совмещённый санузел', 'Туалет'] as const;
 
-export const ContactsPage: React.FC = () => {
+interface ContactsPageProps {
+  address?: string;
+  hideMap?: boolean;
+  breadcrumbItems?: { label: string; href?: string; isActive?: boolean }[];
+}
+
+export const ContactsPage: React.FC<ContactsPageProps> = ({ address, hideMap, breadcrumbItems }) => {
   const [consented, setConsented] = useState(false);
   return (
     <div className="min-h-screen bg-slate-50 animate-in fade-in duration-500 pb-12">
       <div className="container mx-auto px-4 pt-6">
-        <Breadcrumbs items={[{ label: 'Контакты', isActive: true }]} />
+        <Breadcrumbs items={breadcrumbItems ?? [{ label: 'Контакты', isActive: true }]} />
 
         <div className="mb-12">
           <h1 className="text-3xl md:text-5xl font-bold font-heading text-slate-900 mb-4">Наши контакты</h1>
@@ -45,7 +51,7 @@ export const ContactsPage: React.FC = () => {
                 </div>
                 <div>
                   <div className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-1">Адрес</div>
-                  <div className="text-lg font-bold text-slate-900 leading-tight">{COMPANY_ADDRESS}</div>
+                  <div className="text-lg font-bold text-slate-900 leading-tight">{address ?? COMPANY_ADDRESS}</div>
                 </div>
               </div>
 
@@ -179,7 +185,7 @@ export const ContactsPage: React.FC = () => {
         </div>
 
         {/* Map Section */}
-        <div className="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-gray-200 max-w-6xl mx-auto map-tabs">
+        {!hideMap && <div className="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-gray-200 max-w-6xl mx-auto map-tabs">
           <div className="flex flex-wrap">
             <input id="map-yandex" type="radio" name="map" className="sr-only" defaultChecked />
             <label htmlFor="map-yandex" className="map-tab flex-1 py-4 font-bold text-sm uppercase tracking-wider">
@@ -214,7 +220,7 @@ export const ContactsPage: React.FC = () => {
             </div>
           </div>
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   );

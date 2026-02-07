@@ -6,14 +6,15 @@ import { PAPER_REVIEWS, VIDEO_REVIEWS, WHATSAPP_REVIEWS } from '../constants';
 interface ReviewsPageProps {
   onNavigate: (mode: any) => void;
   onCalculate: () => void;
+  breadcrumbItems?: { label: string; href?: string; isActive?: boolean }[];
 }
 
-export const ReviewsPage: React.FC<ReviewsPageProps> = ({ onNavigate, onCalculate }) => {
+export const ReviewsPage: React.FC<ReviewsPageProps> = ({ onNavigate, onCalculate, breadcrumbItems }) => {
   const hasVideo = VIDEO_REVIEWS.length > 0;
   return (
     <div className="min-h-screen bg-slate-50 animate-in fade-in duration-500 pb-12">
       <div className="container mx-auto px-4 pt-6 max-w-6xl">
-        <Breadcrumbs items={[{ label: 'Отзывы', isActive: true }]} onNavigate={onNavigate} />
+        <Breadcrumbs items={breadcrumbItems ?? [{ label: 'Отзывы', isActive: true }]} onNavigate={onNavigate} />
 
         <div className="mb-12 text-center max-w-3xl mx-auto">
           <h1 className="text-3xl md:text-5xl font-bold font-heading text-slate-900 mb-6">Отзывы клиентов</h1>

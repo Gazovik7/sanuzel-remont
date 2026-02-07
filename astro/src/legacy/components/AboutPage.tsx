@@ -6,14 +6,15 @@ import { Shield, Users, Banknote, Heart, CheckCircle2, ArrowRight } from 'lucide
 interface AboutPageProps {
   onNavigate: (mode: any) => void;
   onCalculate: () => void;
+  breadcrumbItems?: { label: string; href?: string; isActive?: boolean }[];
 }
 
-export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onCalculate }) => {
+export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onCalculate, breadcrumbItems }) => {
   return (
     <div className="min-h-screen bg-slate-50 animate-in fade-in duration-500 pb-12">
       <div className="container mx-auto px-4 pt-6 max-w-5xl">
         <Breadcrumbs 
-            items={[{ label: 'О компании', isActive: true }]} 
+            items={breadcrumbItems ?? [{ label: 'О компании', isActive: true }]}
             onNavigate={onNavigate} 
         />
 
