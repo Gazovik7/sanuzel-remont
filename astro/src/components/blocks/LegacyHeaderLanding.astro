@@ -2,6 +2,8 @@
 const isSpb = Astro.url.pathname.startsWith('/spb');
 const prefix = isSpb ? '/spb' : '';
 const tagline = isSpb ? 'Ремонт ванных комнат<br />в СПб и Ленобласти под ключ' : 'Ремонт ванных комнат<br />в Москве и области под ключ';
+const phoneTel = isSpb ? '+78122448556' : '+74951375239';
+const phoneDisplay = isSpb ? '8 (812) 244-85-56' : '8 (495) 137-52-39';
 ---
 
 <header
@@ -466,10 +468,10 @@ const tagline = isSpb ? 'Ремонт ванных комнат<br />в СПб �
     <div class="flex items-center gap-4 lg:gap-6">
       <div class="hidden md:block text-right">
         <a
-          href="tel:+74951375239"
+          href={`tel:${phoneTel}`}
           class="site-phone block font-heading font-bold text-xl tracking-tight hover:text-blue-600 transition-colors text-white drop-shadow-sm"
         >
-          8 (495) 137-52-39
+          {phoneDisplay}
         </a>
       </div>
       <a
@@ -481,7 +483,7 @@ const tagline = isSpb ? 'Ремонт ванных комнат<br />в СПб �
       </a>
       <div class="flex xl:hidden items-center gap-3">
         <a
-          href="tel:+74951375239"
+          href={`tel:${phoneTel}`}
           class="site-mobile-btn--phone w-10 h-10 backdrop-blur border rounded-full flex items-center justify-center transition-all bg-white/10 border-white/20 text-white"
         >
           <svg

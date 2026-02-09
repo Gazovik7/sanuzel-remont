@@ -1,6 +1,9 @@
 export const COMPANY_PHONE = '8 (495) 137-52-39';
 export const COMPANY_PHONE_TEL = '+74951375239';
 export const COMPANY_ADDRESS = 'г. Москва, Большой Саввинский пер., 9С1';
+
+export const SPB_PHONE = '8 (812) 244-85-56';
+export const SPB_PHONE_TEL = '+78122448556';
 export const COMPANY_EMAIL = 'info@remont-sanuzlov.ru';
 export const COMPANY_LOGO = '/img/logo.png';
 

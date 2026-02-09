@@ -2,6 +2,8 @@
 const isSpb = Astro.url.pathname.startsWith('/spb');
 const prefix = isSpb ? '/spb' : '';
 const addressText = isSpb ? 'г. Санкт-Петербург' : 'г. Москва, Большой Саввинский пер., 9С1';
+const phoneTel = isSpb ? '+78122448556' : '+74951375239';
+const phoneDisplay = isSpb ? '8 (812) 244-85-56' : '8 (495) 137-52-39';
 const currentYear = new Date().getFullYear();
 const copyrightText = isSpb ? `Ремонт санузлов в Санкт-Петербурге c 2018-${currentYear}` : `Ремонт санузлов в Москве c 2018-${currentYear}`;
 const crossLinkHref = isSpb ? '/' : '/spb/';
@@ -85,9 +87,9 @@ const crossLinkText = isSpb ? 'Ремонт ванных комнат в Мос�
         <h3 class="font-heading font-bold text-2xl mb-6">Контакты</h3>
         <div class="space-y-6">
           <a
-            href="tel:+74951375239"
+            href={`tel:${phoneTel}`}
             class="block text-2xl font-bold hover:text-blue-400 transition-colors"
-            >8 (495) 137-52-39</a
+            >{phoneDisplay}</a
           >
           <div class="flex items-start gap-3 text-sm text-gray-400">
             <svg

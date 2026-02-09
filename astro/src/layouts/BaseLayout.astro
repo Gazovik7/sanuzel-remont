@@ -16,6 +16,7 @@ type Props = {
 const { title, description, canonicalPath, breadcrumbs } = Astro.props;
 const isSpb = Astro.url.pathname.startsWith('/spb');
 const prefix = isSpb ? '/spb' : '';
+const phoneTel = isSpb ? '+78122448556' : '+74951375239';
 const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, Astro.site ?? Astro.url.origin);
 const ogImageUrl = new URL(SITE.logo, Astro.site ?? Astro.url.origin);
 
@@ -39,7 +40,7 @@ const schemaGraph: any[] = [
       '@type': 'ImageObject',
       url: logoUrl,
     },
-    telephone: '+74951375239',
+    telephone: phoneTel,
     email: 'info@remont-sanuzlov.ru',
   },
   {
@@ -49,18 +50,23 @@ const schemaGraph: any[] = [
     url: homeUrl,
     image: logoUrl,
     logo: logoUrl,
-    telephone: '+74951375239',
+    telephone: phoneTel,
     email: 'info@remont-sanuzlov.ru',
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'RU',
-      addressLocality: 'Москва',
-      streetAddress: 'Большой Саввинский пер., 9С1',
+      addressLocality: isSpb ? 'Санкт-Петербург' : 'Москва',
+      ...(isSpb ? {} : { streetAddress: 'Большой Саввинский пер., 9С1' }),
     },
-    areaServed: [
-      { '@type': 'City', name: 'Москва' },
-      { '@type': 'AdministrativeArea', name: 'Московская область' },
-    ],
+    areaServed: isSpb
+      ? [
+          { '@type': 'City', name: 'Санкт-Петербург' },
+          { '@type': 'AdministrativeArea', name: 'Ленинградская область' },
+        ]
+      : [
+          { '@type': 'City', name: 'Москва' },
+          { '@type': 'AdministrativeArea', name: 'Московская область' },
+        ],
     openingHoursSpecification: [
       {
         '@type': 'OpeningHoursSpecification',
@@ -132,7 +138,7 @@ const baseSchema = { '@context': 'https://schema.org', '@graph': schemaGraph };
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="telephone" content="+74951375239" />
+    <meta name="telephone" content={phoneTel} />
     <meta name="yandex-verification" content="6ec9410bc9530ede" />
     <meta name="yandex-verification" content="0a7bd801f74aa807" />
     <meta name="google-site-verification" content="pembRaERYI5PqeRje5zJfy7wXq9kr5UQo98kMw5f_8E" />
